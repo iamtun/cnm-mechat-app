@@ -4,7 +4,7 @@ import ButtonPrimary from '../components/buttons/ButtonPrimary';
 
 function RegisterScreen({ navigation }) {
     const onMoveScreen = () => {
-        navigation.navigate('AuthencationScreen');
+        navigation.navigate('AuthenticationScreen');
     };
 
     return (
