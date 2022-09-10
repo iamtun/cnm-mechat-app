@@ -23,9 +23,10 @@ function HomeTabNavigator() {
                 },
                 //tabBarInactiveTintColor: '#219ebc',
                 tabBarActiveTintColor: '#219ebc',
+                header: () => null,
             })}
         >
-            <Tab.Screen name="Messages" component={MessageListScreen} options={{tabBarBadge: 3}}/>
+            <Tab.Screen name="Messages" component={MessageListScreen} options={{ tabBarBadge: 3 }} />
             <Tab.Screen name="PhoneBook" component={PhoneBookScreen} />
         </Tab.Navigator>
     );
