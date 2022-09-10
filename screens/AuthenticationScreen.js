@@ -1,5 +1,5 @@
 import { View, Text, StyleSheet, TextInput, Platform, Touchable, TouchableOpacity } from 'react-native';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import GlobalStyle from '../styles/GlobalStyle';
 import ButtonPrimary from '../components/buttons/ButtonPrimary';
@@ -7,13 +7,24 @@ import ButtonPrimary from '../components/buttons/ButtonPrimary';
 function AuthenticationScreen({ navigation }) {
     const [phoneNumber, setPhoneNumber] = useState('0343220597');
     const [counter, setCounter] = useState(10);
+    const [intervalId, setIntervalId] = useState(null);
 
+    if (counter === 0) {
+        clearInterval(intervalId);
+        setCounter(20);
+    }
+
+    //functions
     const onMoveScreen = () => {
         navigation.navigate('HomeScreen');
     };
 
     const sendBackOTP = () => {
-        //handle countdown counter
+        const interval = setInterval(() => {
+            setCounter((prev) => setCounter(prev - 1));
+        }, 1000);
+
+        setIntervalId(interval);
     };
 
     return (
