@@ -8,8 +8,7 @@ import {
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import LoginStyles from "../styles/LoginStyles";
-import TextInputAccount from "../components/buttons/TextInputAccount";
-import TextInputPassword from "../components/buttons/TextInputPassword";
+import TextInputPrimary from "../components/buttons/TextInputPrimary";
 
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {
@@ -27,24 +26,17 @@ function RegisterScreen({ navigation }) {
         <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
       </View>
       {/* Register */}
-      <View style={LoginStyles.input}>
+      <View style={LoginStyles.enterData}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={20}
         >
-          <TextInputAccount style={LoginStyles.inputData} />
-
-          <TextInputPassword
-            style={[LoginStyles.inputData, LoginStyles.pass]}
-          />
-          
-          <TextInputPassword
-            style={[LoginStyles.inputData, LoginStyles.pass]}
-          />
+          <TextInputPrimary placeholder="Số điện thoại" isPass={false} />
+          <TextInputPrimary placeholder="Nhập mật khẩu" isPass={true} />
+          <TextInputPrimary placeholder="Nhập lại mật khẩu" isPass={true} />
         </KeyboardAvoidingView>
 
         <ButtonPrimary
-          style={LoginStyles.btnLogin}
           title="Đăng ký"
           onPress={registerScreen}
         />

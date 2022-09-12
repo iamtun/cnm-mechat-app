@@ -1,10 +1,9 @@
 import { View, Image, Text, KeyboardAvoidingView } from "react-native";
-
+import { StyleSheet } from "react-native";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
-import TextInputAccount from "../components/buttons/TextInputAccount";
-import TextInputPassword from "../components/buttons/TextInputPassword";
+import TextInputPrimary from "../components/buttons/TextInputPrimary";
 
 function LoginScreen({ navigation }) {
   const onMoveScreen = () => {
@@ -14,6 +13,7 @@ function LoginScreen({ navigation }) {
   const clickResigter = () => {
     navigation.navigate("RegisterScreen");
   };
+
   return (
     <View style={GlobalStyle.container}>
       {/* logo */}
@@ -27,26 +27,23 @@ function LoginScreen({ navigation }) {
         <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
       </View>
       {/* Login */}
-      <View style={LoginStyles.input}>
+      <View style={LoginStyles.enterData}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={20}
         >
-          <TextInputAccount style={LoginStyles.inputData} />
-          <TextInputPassword
-            style={[LoginStyles.inputData, LoginStyles.pass]}
-          />
+          <TextInputPrimary placeholder="Số điện thoại" isPass={false} />
+          <TextInputPrimary placeholder="Mật khẩu" isPass={true} />
         </KeyboardAvoidingView>
 
-        <View style={LoginStyles.output}>
-          <Text style={LoginStyles.fogotPass}>Quên mật khẩu?</Text>
-          <Text style={LoginStyles.register} onPress={clickResigter}>
+        <View style={styles.newData}>
+          <Text style={styles.fogotPassword}>Quên mật khẩu?</Text>
+          <Text style={styles.register} onPress={clickResigter}>
             Đăng ký
           </Text>
         </View>
 
         <ButtonPrimary
-          style={LoginStyles.btnLogin}
           title="Đăng nhập"
           onPress={onMoveScreen}
         />
@@ -54,5 +51,20 @@ function LoginScreen({ navigation }) {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  newData: {
+    width: 340,
+    flexDirection: "row",
+    justifyContent: "flex-end",
+  },
+  fogotPassword: {
+    textDecorationLine: "underline",
+    marginRight: 8,
+  },
+  register: {
+    color: "#1E99CA",
+  } 
+})
 
 export default LoginScreen;
