@@ -1,15 +1,10 @@
-import {
-  View,
-  Image,
-  TextInput,
-  Text,
-  KeyboardAvoidingView,
-} from "react-native";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { View, Image, Text, KeyboardAvoidingView } from "react-native";
+
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
+import TextInputAccount from "../components/buttons/TextInputAccount";
+import TextInputPassword from "../components/buttons/TextInputPassword";
 
 function LoginScreen({ navigation }) {
   const onMoveScreen = () => {
@@ -21,6 +16,7 @@ function LoginScreen({ navigation }) {
   };
   return (
     <View style={GlobalStyle.container}>
+      {/* logo */}
       <View style={LoginStyles.logo}>
         <Image
           style={LoginStyles.img}
@@ -28,32 +24,18 @@ function LoginScreen({ navigation }) {
         />
 
         <Text style={LoginStyles.title}>Đăng nhập</Text>
-
         <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
       </View>
+      {/* Login */}
       <View style={LoginStyles.input}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={20}
         >
-          <TextInput
-            placeholder="Số điện thoại"
-            style={LoginStyles.inputData}
-          ></TextInput>
-
-          <View style={LoginStyles.inputData}>
-            <TextInput
-              style={LoginStyles.pass}
-              secureTextEntry={true}
-              placeholder="Mật khẩu"
-            ></TextInput>
-            <Icon
-            //   style={LoginStyles.iconShowPass}
-              name="eye-outline"
-              color="#000"
-              size={20}
-            />
-          </View>
+          <TextInputAccount style={LoginStyles.inputData} />
+          <TextInputPassword
+            style={[LoginStyles.inputData, LoginStyles.pass]}
+          />
         </KeyboardAvoidingView>
 
         <View style={LoginStyles.output}>

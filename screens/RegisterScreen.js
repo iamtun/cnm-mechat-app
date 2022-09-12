@@ -1,8 +1,15 @@
-import { View, Image,Text,KeyboardAvoidingView,TextInput } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  KeyboardAvoidingView,
+  TextInput,
+} from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import LoginStyles from "../styles/LoginStyles";
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import TextInputAccount from "../components/buttons/TextInputAccount";
+import TextInputPassword from "../components/buttons/TextInputPassword";
 
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {
@@ -10,52 +17,30 @@ function RegisterScreen({ navigation }) {
   };
   return (
     <View style={GlobalStyle.container}>
+      {/* logo */}
       <View style={LoginStyles.logo}>
         <Image
           style={LoginStyles.img}
           source={require("../assets/mechat-logo.png")}
         />
-
         <Text style={LoginStyles.title}>Đăng ký</Text>
-
         <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
       </View>
+      {/* Register */}
       <View style={LoginStyles.input}>
         <KeyboardAvoidingView
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={20}
         >
-          <TextInput
-            placeholder="Số điện thoại"
-            style={LoginStyles.inputData}
-          ></TextInput>
+          <TextInputAccount style={LoginStyles.inputData} />
 
-          <View style={LoginStyles.inputData}>
-            <TextInput
-              style={LoginStyles.pass}
-              placeholder="Mật khẩu"
-              secureTextEntry={true}
-            ></TextInput>
-            <FontAwesome
-              style={LoginStyles.iconShowPass}
-              name="eye"
-              color="#000"
-              size={20}
-            />
-          </View>
-          <View style={[LoginStyles.inputData]}>
-            <TextInput
-              style={LoginStyles.pass}
-              secureTextEntry={true}
-              placeholder="Nhập lại mật khẩu"
-            ></TextInput>
-            <FontAwesome
-              style={LoginStyles.iconShowPass}
-              name="eye"
-              color="#000"
-              size={20}
-            />
-          </View>
+          <TextInputPassword
+            style={[LoginStyles.inputData, LoginStyles.pass]}
+          />
+          
+          <TextInputPassword
+            style={[LoginStyles.inputData, LoginStyles.pass]}
+          />
         </KeyboardAvoidingView>
 
         <ButtonPrimary
