@@ -8,8 +8,8 @@ import {
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import LoginStyles from "../styles/LoginStyles";
-import TextInputAccount from "../components/buttons/TextInputAccount";
 import TextInputPassword from "../components/buttons/TextInputPassword";
+import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {
@@ -32,7 +32,7 @@ function RegisterScreen({ navigation }) {
           behavior={Platform.OS === "ios" ? "padding" : "height"}
           keyboardVerticalOffset={20}
         >
-          <TextInputAccount style={LoginStyles.inputData} />
+          <TextInputPrimary placeholder="Nhập số điện thoại"/>
 
           <TextInputPassword
             style={[LoginStyles.inputData, LoginStyles.pass]}
