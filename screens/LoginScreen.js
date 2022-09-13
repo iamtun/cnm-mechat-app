@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
-import TextInputPrimary from "../components/buttons/TextInputPrimary";
+import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function LoginScreen({ navigation }) {
   const onMoveScreen = () => {

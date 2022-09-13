@@ -7,7 +7,7 @@ import {
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import LoginStyles from "../styles/LoginStyles";
-import TextInputPrimary from "../components/buttons/TextInputPrimary";
+import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {

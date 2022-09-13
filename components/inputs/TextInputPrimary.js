@@ -3,7 +3,7 @@ import { View, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet } from "react-native";
 
-function InputPrimary({ placeholder, isPass }) {
+function TextInputPrimary({ placeholder, isPass }) {
   const [isPassState, setIsPassState] = useState(isPass);
 
   return (
@@ -44,4 +44,4 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
 });
-export default InputPrimary;
+export default TextInputPrimary;
