@@ -10,7 +10,7 @@ function LoginScreen({ navigation }) {
     navigation.navigate("AuthenticationScreen");
   };
 
-  const clickResigter = () => {
+  const clickRegister = () => {
     navigation.navigate("RegisterScreen");
   };
 
@@ -38,7 +38,7 @@ function LoginScreen({ navigation }) {
 
         <View style={styles.newData}>
           <Text style={styles.fogotPassword}>Quên mật khẩu?</Text>
-          <Text style={styles.register} onPress={clickResigter}>
+          <Text style={styles.register} onPress={clickRegister}>
             Đăng ký
           </Text>
         </View>
