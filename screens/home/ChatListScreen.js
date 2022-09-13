@@ -1,17 +1,34 @@
-import { View, Text } from 'react-native';
+import { View, Text, StyleSheet, TextInput, RefreshControl, ScrollView } from 'react-native';
 import GlobalStyle from '../../styles/GlobalStyle';
-import ButtonPrimary from '../../components/buttons/ButtonPrimary';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import SearchBar from '../../components/searchBar/SearchBar';
+import { useEffect, useState } from 'react';
+
+const messages = [
+    {
+        id: 1,
+        name: 'Le Tuan',
+        image: '',
+        message: 'Đi nhậu nè',
+    },
+    {
+        id: 2,
+        name: 'Thanh Nho',
+        image: '',
+        message: 'Đi chơi không bro?',
+    },
+];
 
 function ChatListScreen({ navigation }) {
-    const onMoveScreen = () => {
-        navigation.navigate('');
-    };
+    const [isRefresh, setIsRefresh] = useState(false);
 
     return (
-        <View style={GlobalStyle.container}>
-            <Text>This is Chat List Screen</Text>
-            <ButtonPrimary title="Chat List" onPress={onMoveScreen} />
-        </View>
+        <>
+            <SearchBar isRefresh={isRefresh} />
+            <ScrollView>
+                <RefreshControl onRefresh={() => setIsRefresh(!isRefresh)} />
+            </ScrollView>
+        </>
     );
 }
 
