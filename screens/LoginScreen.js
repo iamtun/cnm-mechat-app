@@ -1,8 +1,8 @@
 import { View, Image, Text, KeyboardAvoidingView } from "react-native";
 import { StyleSheet } from "react-native";
-import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
+import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function LoginScreen({ navigation }) {

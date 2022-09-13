@@ -5,8 +5,8 @@ import {
   KeyboardAvoidingView,
 } from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
-import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import LoginStyles from "../styles/LoginStyles";
+import ButtonPrimary from "../components/buttons/ButtonPrimary";
 import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function RegisterScreen({ navigation }) {

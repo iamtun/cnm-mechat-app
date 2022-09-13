@@ -1,7 +1,9 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MessageListScreen from '../screens/home/MessageScreen';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import PhoneBookScreen from '../screens/home/PhoneBookScreen';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import ChatListScreen from'../screens/home/ChatListScreen';
+import ProfileScreen from '../screens/home/ProfileScreen';
+
 const Tab = createBottomTabNavigator();
 
 function HomeTabNavigator() {
@@ -12,22 +14,23 @@ function HomeTabNavigator() {
                     let iconName;
 
                     if (route.name === 'Messages') {
-                        iconName = 'comment';
-                        color = focused ? '#219ebc' : '#ccc';
+                        iconName = 'message-processing';
                     } else if (route.name === 'PhoneBook') {
-                        iconName = 'book';
-                        color = focused ? '#219ebc' : '#ccc';
+                        iconName = 'book-account';
+                    } else if (route.name === 'Profile') {
+                        iconName = 'account';
                     }
 
-                    return <FontAwesome5 name={iconName} size={20} color={color} />;
+                    return <Icon name={iconName} size={20} color={color} />;
                 },
-                //tabBarInactiveTintColor: '#219ebc',
+                tabBarInactiveTintColor: '#ccc',
                 tabBarActiveTintColor: '#219ebc',
                 header: () => null,
             })}
         >
-            <Tab.Screen name="Messages" component={MessageListScreen} options={{ tabBarBadge: 3 }} />
+            <Tab.Screen name="Messages" component={ChatListScreen} options={{ tabBarBadge: 3 }} />
             <Tab.Screen name="PhoneBook" component={PhoneBookScreen} />
+            <Tab.Screen name="Profile" component={ProfileScreen} />
         </Tab.Navigator>
     );
 }
