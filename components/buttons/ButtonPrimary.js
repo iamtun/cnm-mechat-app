@@ -11,15 +11,15 @@ function ButtonPrimary({ title, onPress }) {
 const styles = StyleSheet.create({
   button: {
     marginTop: 30,
-    width: 350,
+    width: 330,
     height: 50,
     backgroundColor: "#3777F3",
-    borderRadius: 15,
+    borderRadius: 10,
     flexDirection: "column",
     justifyContent: "center",
   },
   textButton: {
-    fontSize: 20,
+    fontSize: 16,
     color: "#fff",
     textAlign: "center",
     fontWeight: "600",
