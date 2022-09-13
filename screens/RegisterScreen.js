@@ -3,7 +3,6 @@ import {
   Image,
   Text,
   KeyboardAvoidingView,
-  TextInput,
 } from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
