@@ -37,7 +37,7 @@ function AuthenticationScreen({ navigation }) {
             <TextInput
                 style={[GlobalStyle.textSize, styles.textInput]}
                 {...(Platform.OS === 'ios'
-                    ? { keyboardType: 'numbers-and-punctuation' }
+                    ? { keyboardType: 'number-pad' }
                     : { keyboardType: 'number-pad' })}
             />
 
@@ -60,8 +60,8 @@ const styles = StyleSheet.create({
         padding: 8,
     },
     textInput: {
-        width: 300,
-        padding: 8,
+        width: 330,
+        paddingVertical: 12,
         borderWidth: 1,
         borderColor: '#333',
         borderRadius: 8,

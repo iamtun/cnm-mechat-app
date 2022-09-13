@@ -24,7 +24,7 @@ function ChatListScreen({ navigation }) {
 
     return (
         <>
-            <SearchBar isRefresh={isRefresh} />
+            <SearchBar isRefresh={isRefresh} setIsRefresh={setIsRefresh}/>
             <ScrollView>
                 <RefreshControl onRefresh={() => setIsRefresh(!isRefresh)} />
             </ScrollView>
