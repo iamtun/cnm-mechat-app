@@ -9,7 +9,7 @@
     - B3: 
         - Luồng màn hình ngoài: `npm install @react-navigation/native-stack`
         - Luồng màn hình home:  `npm install @react-navigation/bottom-tabs`
-    - B4: Tạo routers cho ứng dụng. Nếu có lỗi thư viện thì chạy dòng lệnh: `npm start -- --reset-cache` rồi chạy lại ứng dụng.
+    - B4: Tạo routers cho ứng dụng. Nếu có lỗi thư viện thì chạy dòng lệnh: `npm start --reset-cache` rồi chạy lại ứng dụng.
         - RootStackNavigator: Luồng các màn hình xử lý bên ngoài -> Login, Register, Authencation
         - HomeTabNavigator: Luồng các màn hình chính
     - B5: Tải thư viện icon: `https://github.com/oblador/react-native-vector-icons`
