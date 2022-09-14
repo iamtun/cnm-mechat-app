@@ -1,8 +1,6 @@
-import { View, Text, StyleSheet, TextInput, RefreshControl, ScrollView } from 'react-native';
-import GlobalStyle from '../../styles/GlobalStyle';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { RefreshControl, ScrollView } from 'react-native';
 import SearchBar from '../../components/searchBar/SearchBar';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 const messages = [
     {
@@ -24,7 +22,7 @@ function ChatListScreen({ navigation }) {
 
     return (
         <>
-            <SearchBar isRefresh={isRefresh} setIsRefresh={setIsRefresh}/>
+            <SearchBar isRefresh={isRefresh} setIsRefresh={setIsRefresh} />
             <ScrollView>
                 <RefreshControl onRefresh={() => setIsRefresh(!isRefresh)} />
             </ScrollView>
