@@ -234,7 +234,7 @@ function MessageScreen({ route }) {
         <>
             <Header />
             <View style={styles.messageView}>
-                <TopBar name={name} memberGroup={5}/>
+                <TopBar name={name}/>
                 <GiftedChat
                     placeholder="Nhập tin nhắn ..."
                     messages={messages}
