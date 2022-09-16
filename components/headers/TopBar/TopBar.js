@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 function TopBar({ name, memberGroup }) {
     return (
         <View style={[styles.topBar, styles.row]}>
-            <View style={[styles.leftBar, styles.row]}>
+            <View style={[styles.leftBar]}>
                 <Icon name="arrow-left" size={30} color="#fff" />
                 <View style={styles.group}>
                     <Text style={styles.nameText}>{name}</Text>
@@ -14,16 +14,16 @@ function TopBar({ name, memberGroup }) {
             <View style={[styles.rightBar, styles.row]}>
                 {memberGroup ? (
                     <>
-                        <Icon name="video-outline" size={30} color="#fff" />
-                        <Icon name="magnify" size={30} color="#fff" />
+                        <Icon name="video-outline" size={30} style={styles.icon} />
+                        <Icon name="magnify" size={30} style={styles.icon} />
                     </>
                 ) : (
                     <>
-                        <Icon name="phone" size={30} color="#fff" />
-                        <Icon name="video-outline" size={30} color="#fff" />
+                        <Icon name="phone" size={30} style={styles.icon} />
+                        <Icon name="video-outline" size={30} style={styles.icon} />
                     </>
                 )}
-                <Icon name="format-list-bulleted" size={30} color="#fff" />
+                <Icon name="format-list-bulleted" size={30} style={styles.icon} />
             </View>
         </View>
     );
@@ -33,25 +33,35 @@ const styles = StyleSheet.create({
     topBar: {
         position: 'absolute',
         width: '100%',
-        height: 45,
+        height: 44,
         backgroundColor: '#3777F3',
     },
     leftBar: {
-        width: '35%',
+        width: '50%',
         paddingHorizontal: 16,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
     },
+    group: {
+        marginLeft: 8,
+    }, 
     nameText: {
         fontSize: 16,
         color: '#fff',
     },
     rightBar: {
-        width: '35%',
+        width: '45%',
         paddingHorizontal: 16,
     },
     row: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
+    },
+    icon: {
+        fontWeight: '500',
+        color: '#fff',
     },
 });
 export default TopBar;
