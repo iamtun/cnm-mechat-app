@@ -23,7 +23,7 @@
         //use
         <FontAwesome5 name={iconName} size={20} color={color} />
         //hoặc
-        <Icon name="arrow-left" size={30} color="#fff" />
+        <Icon name={iconName} size={30} color="#fff" />
     ```
 
 ### Hướng dẫn dùng thư viện react-native-walkthrough-tooltip:

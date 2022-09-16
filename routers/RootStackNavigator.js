@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen, RegisterScreen, AuthenticationScreen } from '../screens';
 import HomeScreen from '../screens/home/HomeScreen';
-
+import MessageScreen from '../screens/messages/MessageScreen';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -10,13 +10,14 @@ function RootStackNavigator() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
-                    header: () => null, // navigate no header screen
+                   headerShown: false,
                 }}
             >
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
                 <Stack.Screen name="AuthenticationScreen" component={AuthenticationScreen} />
                 <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="MessageScreen" component={MessageScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );
