@@ -4,7 +4,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet } from 'react-native';
 
 function TextInputPrimary({ placeholder, isPass }) {
-    const [isPassState, setIsPassState] = useState(isPass);
+  const [isPassState, setIsPassState] = useState(isPass);
+
 
     return (
         <View style={styles.frameInput}>
