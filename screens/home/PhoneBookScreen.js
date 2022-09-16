@@ -1,119 +1,88 @@
-import { View, Text, ScrollView } from "react-native";
+import { View, FlatList, Text } from "react-native";
 import { StyleSheet } from "react-native";
-import { Avatar } from "react-native-elements";
+import { ListItem, Avatar } from "react-native-elements";
 import SearchBar from "../../components/searchBar/SearchBar";
 import Icon from "react-native-vector-icons/Ionicons";
+import { AlphabetList } from "react-native-section-alphabet-list";
 
 function PhoneBookScreen({ navigation }) {
-  const onMoveScreen = () => {
-    navigation.navigate("");
-  };
+
+  const user = [
+    {
+      value: "Juliano Gaspar",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "lCUTs2",
+    },
+    {
+      value: "Amanda Cristina",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "TXdL0c",
+    },
+    {
+      value: "Benato Silva",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "zqsiEw",
+    },
+    {
+      value: "Luis Miguel Atari",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "iaT1Ex",
+    },
+    {
+      value: "Gomes Salsicha",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "OvMd5e",
+    },
+    {
+      value: "Cosinha Maria",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "25zqAO",
+    },
+    {
+      value: "Rosinha Maria",
+      phone: "+1234567",
+      avatar: require("../../assets/hinh-anh-conan.jpg"),
+      key: "8cWuu3",
+    },
+  ];
+
+  function getUserItem(item) {
+    return (
+      <View styles={{ flex: 1 }}>
+        <ListItem key={item.key} bottomDivider>
+          <Avatar rounded size="large" source={item.avatar} />
+          <ListItem.Content>
+            <ListItem.Title>{item.value}</ListItem.Title>
+            <ListItem.Subtitle>{item.phone}</ListItem.Subtitle>
+          </ListItem.Content>
+          <Icon
+            style={{ marginRight: 20 }}
+            name="call-outline"
+            color="#000"
+            size={20}
+          />
+          <Icon name="videocam-outline" color="#000" size={20} />
+        </ListItem>
+      </View>
+    );
+  }
 
   return (
     <>
       <SearchBar />
-        <ScrollView>
-          <View style={styles.user}>
-            <Avatar
-              rounded
-              size={60}
-              source={require("../../assets/hinh-anh-conan.jpg")}
-            ></Avatar>
-            <View style={styles.infoUser}>
-              <Text style={styles.nameUser}>Minh Phuong</Text>
-              <Text style={styles.phoneUser}>+123456</Text>
-            </View>
-            <View style={styles.call}>
-              <Icon
-                style={{ marginRight: 20 }}
-                name="call-outline"
-                color="#000"
-                size={20}
-              />
-              <Icon name="videocam-outline" color="#000" size={20} />
-            </View>
-          </View>
-        </ScrollView>
-        <ScrollView>
-          <View>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-            <Text>A</Text>
-          </View>
-        </ScrollView>
+      <AlphabetList
+        data={user}
+        letterItemStyle={{ height: 90 }}
+        renderCustomItem={(item) => getUserItem(item)}
+        renderCustomSectionHeader={(section) => <Text>{section.title}</Text>}
+      />
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: "row",
-    backgroundColor: "#fff",
-  },
-  user: {
-    alignItems: "center",
-    flexDirection: "row",
-    marginLeft: 20,
-  },
-  infoUser: {
-    width: "50%",
-    margin: 5,
-    marginLeft: 30,
-  },
-  nameUser: {
-    fontWeight: "bold",
-    fontSize: 18,
-  },
-  phoneUser: {
-    paddingTop: 5,
-  },
-  call: {
-    flexDirection: "row",
-  },
-});
 export default PhoneBookScreen;

@@ -17,11 +17,13 @@
     "expo-status-bar": "~1.4.0",
     "react": "18.0.0",
     "react-native": "0.69.5",
+    "react-native-atoz-list": "^1.0.5",
     "react-native-circles": "^1.0.1",
     "react-native-elements": "^3.4.2",
     "react-native-progress-circle": "^2.1.0",
     "react-native-safe-area-context": "^3.1.9",
     "react-native-screens": "~3.15.0",
+    "react-native-section-alphabet-list": "^2.1.0",
     "react-native-vector-icons": "^9.2.0"
   },
   "devDependencies": {
