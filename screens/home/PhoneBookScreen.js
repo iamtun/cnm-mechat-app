@@ -1,12 +1,11 @@
-import { View, FlatList, Text } from "react-native";
-import { StyleSheet } from "react-native";
+import { View, Text } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import SearchBar from "../../components/searchBar/SearchBar";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AlphabetList } from "react-native-section-alphabet-list";
+import Header from '../../components/headers/Header';
 
-function PhoneBookScreen({ navigation }) {
-
+function PhoneBookScreen({ route }) {
   const user = [
     {
       value: "Juliano Gaspar",
@@ -75,6 +74,7 @@ function PhoneBookScreen({ navigation }) {
 
   return (
     <>
+      <Header />
       <SearchBar />
       <AlphabetList
         data={user}
