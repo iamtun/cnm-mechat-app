@@ -5,7 +5,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { AlphabetList } from "react-native-section-alphabet-list";
 import Header from '../../components/headers/Header';
 
-function PhoneBookScreen({ }) {
+function PhoneBookScreen({ route }) {
   const user = [
     {
       value: "Juliano Gaspar",
