@@ -5,7 +5,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Header from '../../components/headers/Header';
 import TopBar from '../../components/headers/TopBar/TopBar';
 
-function MessageScreen({ route }) {
+
+function MessageScreen({ route, navigation }) {
     const { name } = route.params;
     const [messages, setMessages] = useState([]);
 
@@ -234,8 +235,9 @@ function MessageScreen({ route }) {
         <>
             <Header />
             <View style={styles.messageView}>
-                <TopBar name={name}/>
+                <TopBar name={name} navigation={navigation}/>
                 <GiftedChat
+                    wrapInSafeArea={false}//fix padding top content
                     placeholder="Nhập tin nhắn ..."
                     messages={messages}
                     onSend={(messages) => onSend(messages)}
@@ -247,7 +249,8 @@ function MessageScreen({ route }) {
                     scrollToBottom
                     scrollToBottomComponent={scrollToBottomComponent}
                 />
-                {Platform.OS === 'android' && <KeyboardAvoidingView behavior="padding" />}
+                {/* fix keyboard in android platform */}
+                {Platform.OS === 'android' && <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={80}/> }
             </View>
         </>
     );
@@ -262,9 +265,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     messageView: {
-        position: 'relative',
-        width: '100%',
-        height: '93%',
+        flex:1,
+        paddingBottom: 24,
         backgroundColor: '#fff',
     },
 });

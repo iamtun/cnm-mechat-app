@@ -1,11 +1,15 @@
 import { View, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function TopBar({ name, memberGroup }) {
+function TopBar({ name, memberGroup, navigation }) {
+    const handleClickArrowLeftIcon = () => {
+        navigation.goBack();
+    };
+
     return (
         <View style={[styles.topBar, styles.row]}>
             <View style={[styles.leftBar]}>
-                <Icon name="arrow-left" size={30} color="#fff" />
+                <Icon name="arrow-left" size={30} color="#fff" onPress={handleClickArrowLeftIcon} />
                 <View style={styles.group}>
                     <Text style={styles.nameText}>{name}</Text>
                     {memberGroup && <Text style={{ color: '#fff' }}>{`${memberGroup} người`}</Text>}
@@ -31,7 +35,6 @@ function TopBar({ name, memberGroup }) {
 
 const styles = StyleSheet.create({
     topBar: {
-        position: 'absolute',
         width: '100%',
         height: 44,
         backgroundColor: '#3777F3',
@@ -45,7 +48,7 @@ const styles = StyleSheet.create({
     },
     group: {
         marginLeft: 8,
-    }, 
+    },
     nameText: {
         fontSize: 16,
         color: '#fff',
