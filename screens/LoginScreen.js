@@ -2,7 +2,10 @@ import { View, Image, Text, KeyboardAvoidingView } from "react-native";
 import { StyleSheet } from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
+<<<<<<< HEAD
 import ButtonPrimary from "../components/buttons/ButtonPrimary";
+=======
+>>>>>>> a8601d49d91cd4c7cd3a5a9780ce2e4f058cd7a3
 import TextInputPrimary from "../components/inputs/TextInputPrimary";
 
 function LoginScreen({ navigation }) {
