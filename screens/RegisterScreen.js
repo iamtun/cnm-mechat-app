@@ -31,6 +31,7 @@ function RegisterScreen({ navigation }) {
           keyboardVerticalOffset={20}
         >
           <TextInputPrimary placeholder="Số điện thoại" isPass={false} />
+          <TextInputPrimary placeholder="Tên người dùng" isPass={false} />
           <TextInputPrimary placeholder="Nhập mật khẩu" isPass={true} />
           <TextInputPrimary placeholder="Nhập lại mật khẩu" isPass={true} />
         </KeyboardAvoidingView>
