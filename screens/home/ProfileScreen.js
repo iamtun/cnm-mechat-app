@@ -1,13 +1,15 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import Header from "../../components/headers/Header";
 import { ListItem, Avatar } from "react-native-elements";
-import { TouchableOpacity } from "react-native";
-import { onPress } from "deprecated-react-native-prop-types/DeprecatedTextPropTypes";
+import { TouchableOpacity,Alert  } from "react-native";
+import { LogBox } from "react-native";
 
 function ProfileScreen({ navigation }) {
   const logoutScreen = () => {
     navigation.navigate("LoginScreen");
   };
+
+  LogBox.ignoreLogs(["EventEmitter.removeListener"]);
 
   const settings = [
     {
@@ -31,10 +33,33 @@ function ProfileScreen({ navigation }) {
       key: "iaT1Ex",
     },
   ];
+  const showConfirmDialog = () => {
+     Alert.alert(
+      "ĐĂNG XUẤT",
+      "Bạn có muốn đăng xuất?",
+      [
+        {
+          text: "Có",
+          onPress: () => {
+            logoutScreen();
+          },
+        },
+        {
+          text: "Không",
+        },
+      ]
+    );
+  }
 
   function getUserItem({ item: settings }) {
     return (
-      <TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          if (settings.name == "Logout") {
+            showConfirmDialog();
+          }
+        }}
+      >
         <ListItem key={settings.key} bottomDivider>
           <Avatar rounded size={55} source={settings.icon} />
           <ListItem.Content>
@@ -51,13 +76,13 @@ function ProfileScreen({ navigation }) {
         <Text style={styles.info}>TRANG CÁ NHÂN</Text>
       </View>
       <View style={styles.viewSettings}>
-        <View style={styles.topSetting}/>
+        <View style={styles.topSetting} />
         <FlatList
-            style={styles.setting}
-            data={settings}
-            keyExtractor={(settings) => settings.key}
-            renderItem={getUserItem}
-          />
+          style={styles.setting}
+          data={settings}
+          keyExtractor={(settings) => settings.key}
+          renderItem={getUserItem}
+        />
       </View>
       <View style={styles.image}>
         <Avatar
@@ -111,14 +136,15 @@ const styles = StyleSheet.create({
   viewSettings: {
     width: "100%",
     height: "100%",
-    backgroundColor:"#fff",
+    backgroundColor: "#fff",
     padding: 20,
   },
-  setting:{
-    flex:1
+  setting: {
+    flex: 1,
   },
   topSetting: {
-    flex:0.1
+    flex: 0.1,
   },
 });
-export default ProfileScreen;
+
+export default ProfileScreen
