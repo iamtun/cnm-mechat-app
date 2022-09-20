@@ -5,10 +5,6 @@ import { StyleSheet } from 'react-native';
 
 function TextInputPrimary({ placeholder, isPass }) {
   const [isPassState, setIsPassState] = useState(isPass);
-<<<<<<< HEAD
-
-=======
->>>>>>> a8601d49d91cd4c7cd3a5a9780ce2e4f058cd7a3
 
     return (
         <View style={styles.frameInput}>
