@@ -3,6 +3,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LoginScreen, RegisterScreen, AuthenticationScreen } from '../screens';
 import HomeScreen from '../screens/home/HomeScreen';
 import MessageScreen from '../screens/messages/MessageScreen';
+
+
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -10,7 +12,7 @@ function RootStackNavigator() {
         <NavigationContainer>
             <Stack.Navigator
                 screenOptions={{
-                   headerShown: false,
+                    headerShown: false,
                 }}
             >
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />

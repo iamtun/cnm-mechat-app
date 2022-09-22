@@ -2,10 +2,15 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 function ChatItem({ name, image, message, navigation }) {
     return (
-        <TouchableOpacity style={styles.body} onPress={() => {navigation.navigate('MessageScreen', {name})}}>
+        <TouchableOpacity
+            style={styles.body}
+            onPress={() => {
+                navigation.navigate('MessageScreen', { name });
+            }}
+        >
             <View style={styles.imageView}>
                 {image ? (
-                    <Image source={{ uri:  image  }} style={styles.image} />
+                    <Image source={{ uri: image }} style={styles.image} />
                 ) : (
                     <Image source={require('../../assets/no-avatar.png')} style={styles.image} />
                 )}

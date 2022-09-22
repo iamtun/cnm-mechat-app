@@ -2,9 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { View, StyleSheet, KeyboardAvoidingView, Text } from 'react-native';
 import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Header from '../../components/headers/Header';
-import TopBar from '../../components/headers/TopBar/TopBar';
-
+import Header from '../../components/Headers/Header';
+import TopBar from '../../components/Headers/TopBar/TopBar';
 
 function MessageScreen({ route, navigation }) {
     const { name } = route.params;
@@ -28,166 +27,6 @@ function MessageScreen({ route, navigation }) {
                 createdAt: new Date(),
                 user: {
                     _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 3,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 4,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 5,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 6,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 7,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 8,
-                text: 'Hello React, How are you?',
-                createdAt: new Date(),
-                user: {
-                    _id: 1,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 9,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 10,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 11,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 12,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 13,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 14,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 15,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 16,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 17,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
-                    name: 'React Native',
-                    avatar: 'https://placeimg.com/140/140/any',
-                },
-            },
-            {
-                _id: 18,
-                text: 'Hello developer',
-                createdAt: new Date(),
-                user: {
-                    _id: 2,
                     name: 'React Native',
                     avatar: 'https://placeimg.com/140/140/any',
                 },
@@ -235,9 +74,9 @@ function MessageScreen({ route, navigation }) {
         <>
             <Header />
             <View style={styles.messageView}>
-                <TopBar name={name} navigation={navigation}/>
+                <TopBar name={name} navigation={navigation} />
                 <GiftedChat
-                    wrapInSafeArea={false}//fix padding top content
+                    wrapInSafeArea={false} //fix padding top content
                     placeholder="Nhập tin nhắn ..."
                     messages={messages}
                     onSend={(messages) => onSend(messages)}
@@ -250,7 +89,7 @@ function MessageScreen({ route, navigation }) {
                     scrollToBottomComponent={scrollToBottomComponent}
                 />
                 {/* fix keyboard in android platform */}
-                {Platform.OS === 'android' && <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={80}/> }
+                {Platform.OS === 'android' && <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={80} />}
             </View>
         </>
     );
@@ -265,8 +104,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#fff',
     },
     messageView: {
-        flex:1,
-        paddingBottom: 24,
+        flex: 1,
+        paddingBottom: 20,
         backgroundColor: '#fff',
     },
 });
