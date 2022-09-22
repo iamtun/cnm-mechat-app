@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet, TextInput, Platform, Touchable, TouchableOpacity } from 'react-native';
-import { useState, useEffect, useRef } from 'react';
+import { View, Text, StyleSheet, TextInput, Platform, TouchableOpacity } from 'react-native';
+import { useState} from 'react';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import GlobalStyle from '../styles/GlobalStyle';
-import ButtonPrimary from '../components/buttons/ButtonPrimary';
+import ButtonPrimary from '../components/Buttons/ButtonPrimary';
 
 function AuthenticationScreen({ navigation }) {
     const [phoneNumber, setPhoneNumber] = useState('0343220597');

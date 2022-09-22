@@ -1,9 +1,9 @@
 import { View, Text } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
-import SearchBar from "../../components/searchBar/SearchBar";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AlphabetList } from "react-native-section-alphabet-list";
-import Header from '../../components/headers/Header';
+import SearchBar from "../../components/SearchBar";
+import Header from '../../components/Headers/Header';
 
 function PhoneBookScreen({ route }) {
   const user = [
