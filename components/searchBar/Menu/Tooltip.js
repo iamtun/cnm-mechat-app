@@ -15,14 +15,14 @@ const items = [
     },
 ];
 
-function ToolTip({ children, isVisible, setIsVisible}) {
+function ToolTip({ children, isVisible, setIsVisible }) {
     return (
         <Tooltip
             isVisible={isVisible}
             content={
                 <>
                     {items.map((item) => (
-                        <MenuItem icon={item.icon} title={item.title} key={item.id}/>
+                        <MenuItem icon={item.icon} title={item.title} key={item.id} />
                     ))}
                 </>
             }
@@ -30,7 +30,9 @@ function ToolTip({ children, isVisible, setIsVisible}) {
             placement={'bottom'}
             onClose={() => setIsVisible(!isVisible)}
             contentStyle={{ width: 150, height: 100 }}
-            {...(Platform.OS === 'ios' ? {tooltipStyle:{ marginLeft: 17, marginTop: 10 }} : {tooltipStyle:{ marginLeft: 17, marginTop: -40 }})}
+            {...(Platform.OS === 'ios'
+                ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
+                : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
         >
             {children}
         </Tooltip>

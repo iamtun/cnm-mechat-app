@@ -1,56 +1,23 @@
 import { FlatList, RefreshControl, ScrollView } from 'react-native';
 import { useState } from 'react';
-import SearchBar from '../../components/searchBar/SearchBar';
-import ChatItem from '../../components/chats/ChatItem';
-import Header from '../../components/headers/Header';
+
+import SearchBar from "../../components/searchBar/index";
+import ChatItem from '../../components/ChatItem';
+import Header from '../../components/Header';
 const chats = [
     {
         id: 1,
         name: 'Le Tuan',
         image: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
         message: 'Đi nhậu nè',
+        time: 3,
     },
     {
         id: 2,
         name: 'Thanh Nho',
         image: '',
         message: 'Đi chơi không bro?',
-    },
-    {
-        id: 3,
-        name: 'Le Tuan',
-        image: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-        message: 'Đi nhậu nè',
-    },
-    {
-        id: 4,
-        name: 'Thanh Nho',
-        image: '',
-        message: 'Đi chơi không bro?',
-    },
-    {
-        id: 5,
-        name: 'Le Tuan',
-        image: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-        message: 'Đi nhậu nè',
-    },
-    {
-        id: 6,
-        name: 'Thanh Nho',
-        image: '',
-        message: 'Đi chơi không bro?',
-    },
-    {
-        id: 7,
-        name: 'Le Tuan',
-        image: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-        message: 'Đi nhậu nè',
-    },
-    {
-        id: 8,
-        name: 'Thanh Nho',
-        image: '',
-        message: 'Đi chơi không bro?',
+        time: 5,
     },
 ];
 
@@ -68,11 +35,12 @@ function ChatListScreen({ navigation }) {
                         name={item.name}
                         image={item.image}
                         message={item.message}
-                        key={item.id}
+                        time={item.time}
                         navigation={navigation}
+                        key={item.id}
                     />
                 )}
-                refreshControl={<RefreshControl onRefresh={() => setIsRefresh(true)}/>}
+                refreshControl={<RefreshControl onRefresh={() => setIsRefresh(true)} refreshing={false}/>}
             />
         </>
     );

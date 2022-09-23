@@ -18,16 +18,16 @@ function TopBar({ name, memberGroup, navigation }) {
             <View style={[styles.rightBar, styles.row]}>
                 {memberGroup ? (
                     <>
-                        <Icon name="video-outline" size={30} style={styles.icon} />
-                        <Icon name="magnify" size={30} style={styles.icon} />
+                        <Icon name="video-outline" size={24} style={styles.icon} />
+                        <Icon name="magnify" size={24} style={styles.icon} />
                     </>
                 ) : (
                     <>
-                        <Icon name="phone" size={30} style={styles.icon} />
-                        <Icon name="video-outline" size={30} style={styles.icon} />
+                        <Icon name="phone" size={24} style={styles.icon} />
+                        <Icon name="video-outline" size={24} style={styles.icon} />
                     </>
                 )}
-                <Icon name="format-list-bulleted" size={30} style={styles.icon} />
+                <Icon name="format-list-bulleted" size={24} style={styles.icon} />
             </View>
         </View>
     );
@@ -36,7 +36,7 @@ function TopBar({ name, memberGroup, navigation }) {
 const styles = StyleSheet.create({
     topBar: {
         width: '100%',
-        height: 44,
+        height: 60,
         backgroundColor: '#3777F3',
     },
     leftBar: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
         color: '#fff',
     },
     rightBar: {
-        width: '45%',
+        width: '40%',
         paddingHorizontal: 16,
     },
     row: {

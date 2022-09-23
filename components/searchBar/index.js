@@ -3,31 +3,32 @@ import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ToolTip from './Menu/Tooltip';
 
-function SearchBar({ isRefresh, setIsRefresh }) {
+function SearchBar() {
     const [isVisible, setIsVisible] = useState(false);
-
+    const [isSearch, setIsSearch] = useState(false);
+    
     const onOpenSearch = () => {
-        setIsRefresh(false);
+        setIsSearch(true);
     };
 
     const onHideSearch = () => {
-        setIsRefresh(true);
+        setIsSearch(false);
     };
 
     const onOpenMenu = () => setIsVisible(true);
 
     return (
         <View style={styles.searchBar}>
-            {isRefresh === true ? (
+            {isSearch === true ? (
                 <>
-                    <Icon name="arrow-left" size={30} color="#fff" onPress={onOpenSearch} />
+                    <Icon name="arrow-left" size={30} color="#fff" onPress={onHideSearch} />
                     <TextInput style={styles.inputSearch} placeholder="Tìm kiếm" />
                 </>
             ) : (
                 <>
                     <Icon name="magnify" size={30} color="#fff" />
                     <View style={styles.textSearch}>
-                        <Text style={styles.textSearch} onPress={onHideSearch}>
+                        <Text style={styles.textSearch} onPress={onOpenSearch}>
                             Tìm Kiếm
                         </Text>
                     </View>
