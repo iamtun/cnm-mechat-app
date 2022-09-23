@@ -3,7 +3,7 @@ import { ListItem, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AlphabetList } from "react-native-section-alphabet-list";
 import SearchBar from "../../components/SearchBar";
-import Header from '../../components/Headers/Header';
+import Header from '../../components/Header';
 
 function PhoneBookScreen({ route }) {
   const user = [

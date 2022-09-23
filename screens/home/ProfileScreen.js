@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, FlatList } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { TouchableOpacity, Alert } from 'react-native';
 import { LogBox } from 'react-native';
-import Header from '../../components/Headers/Header';
+import Header from '../../components/Header';
 
 function ProfileScreen({ navigation }) {
     const logoutScreen = () => {
