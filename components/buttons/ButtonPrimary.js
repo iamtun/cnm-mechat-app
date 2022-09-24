@@ -8,6 +8,7 @@ function ButtonPrimary({ title, onPress }) {
     );
 }
 
+
 const styles = StyleSheet.create({
     button: {
         marginTop: 30,
