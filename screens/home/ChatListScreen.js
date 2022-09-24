@@ -9,38 +9,35 @@ const chats = [
         id: 1,
         name: 'Le Tuan',
         image: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-        message: 'Đi nhậu nè',
+        lastMessage: 'Đi nhậu nè',
         time: 3,
     },
     {
         id: 2,
         name: 'Thanh Nho',
         image: '',
-        message: 'Đi chơi không bro?',
+        lastMessage: 'Đi chơi không bro?',
         time: 5,
     },
 ];
 
 function ChatListScreen({ navigation }) {
-    const [isRefresh, setIsRefresh] = useState(false);
-
     return (
         <>
             <Header />
-            <SearchBar isRefresh={isRefresh} setIsRefresh={setIsRefresh} />
+            <SearchBar />
             <FlatList
                 data={chats}
                 renderItem={({ item }) => (
                     <ChatItem
                         name={item.name}
                         image={item.image}
-                        message={item.message}
+                        message={item.lastMessage}
                         time={item.time}
                         navigation={navigation}
                         key={item.id}
                     />
                 )}
-                refreshControl={<RefreshControl onRefresh={() => setIsRefresh(true)} refreshing={false}/>}
             />
         </>
     );
