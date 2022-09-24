@@ -3,9 +3,14 @@ import { Platform } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
+import { useDispatch } from 'react-redux';
+import messageListSlice from '../../../redux/slice/MessageSlice';
+
 function MessageInputBox() {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
+
+    const dispatch = useDispatch();
 
     const handleWriteText = (value) => {
         setMessage(value);
@@ -17,8 +22,20 @@ function MessageInputBox() {
     };
 
     const handleSendMessage = () => {
-        console.log(message);
-    }
+        dispatch(
+            messageListSlice.actions.sendMessage({
+                id: 'm10',
+                content: message,
+                user: {
+                    id: 'u1',
+                    name: 'Le Tuan',
+                    avatar: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
+                },
+                createAt: {createAt : new Date()}.createAt.toLocaleString(),
+            }),
+        );
+        setMessage('');
+    };
 
     return (
         <View style={[styles.body, styles.row]}>
@@ -26,6 +43,7 @@ function MessageInputBox() {
             <View style={styles.inputView}>
                 <TextInput
                     placeholder="Nhập tin nhắn"
+                    value={message}
                     style={[styles.input, { paddingTop: Platform.OS === 'ios' ? 25 : 0 }]}
                     multiline
                     onChangeText={handleWriteText}
@@ -33,7 +51,12 @@ function MessageInputBox() {
             </View>
             <View style={[styles.row, styles.rightIcons, { justifyContent: isWrite ? 'flex-end' : 'space-around' }]}>
                 {isWrite ? (
-                    <Icon name="send" size={32} style={[styles.icon, { color: '#3777F3' }]} onPress={handleSendMessage}/>
+                    <Icon
+                        name="send"
+                        size={32}
+                        style={[styles.icon, { color: '#3777F3' }]}
+                        onPress={handleSendMessage}
+                    />
                 ) : (
                     <>
                         <Icon name="microphone" size={32} style={styles.icon} />
