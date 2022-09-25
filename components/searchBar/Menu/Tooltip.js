@@ -2,19 +2,6 @@ import { Platform } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import MenuItem from './MenuItem';
 
-const items = [
-    {
-        id: 1,
-        icon: 'account-multiple-plus-outline',
-        title: 'Tạo nhóm',
-    },
-    {
-        id: 2,
-        icon: 'account-plus-outline',
-        title: 'Thêm bạn',
-    },
-];
-
 function ToolTip({ children, isVisible, setIsVisible }) {
     return (
         <Tooltip

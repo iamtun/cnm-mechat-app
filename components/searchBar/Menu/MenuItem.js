@@ -1,11 +1,11 @@
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function MenuItem({ icon, title }) {
+function MenuItem({ icon, title, color, onPress }) {
     return (
-        <TouchableOpacity style={styles.body}>
+        <TouchableOpacity style={styles.body} onPress={onPress}>
             <Icon name={icon} size={20} />
-            <Text style={styles.title}>{title}</Text>
+            <Text style={[styles.title, { color: color }]}>{title}</Text>
         </TouchableOpacity>
     );
 }
