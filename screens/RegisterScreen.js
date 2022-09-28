@@ -6,13 +6,16 @@ import {
 } from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
-import ButtonPrimary from "../components/buttons/ButtonPrimary";
-import TextInputPrimary from "../components/inputs/TextInputPrimary";
+import ButtonPrimary from "../components/Buttons/ButtonPrimary";
+import TextInputPrimary from "../components/Inputs/TextInputPrimary";
+
 
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {
     navigation.navigate("LoginScreen");
   };
+
+  
   return (
     <View style={GlobalStyle.container}>
       {/* logo */}

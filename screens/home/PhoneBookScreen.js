@@ -2,7 +2,7 @@ import { View, Text } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
 import { AlphabetList } from "react-native-section-alphabet-list";
-import SearchBar from "../../components/searchBar/index";
+import SearchBar from "../../components/searchBar";
 import Header from '../../components/Header';
 
 function PhoneBookScreen({ route }) {
