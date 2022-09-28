@@ -1,18 +1,38 @@
-import { View, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import Header from '../../components/Header';
+import MessageInputBox from '../../components/Messages/MessageInputBox';
+import MessageItem from '../../components/Messages/MessageItem';
 import TopBar from '../../components/Messages/TopBar/TopBar';
+
+import { useSelector } from 'react-redux';
+import { messageListSelector } from '../../redux/selector';
 
 function MessageScreen({ route, navigation }) {
     const { name } = route.params;
 
+    const messages = useSelector(messageListSelector);
+
     return (
         <>
             <Header />
-            <View style={styles.messageView}>
-                <TopBar name={name} navigation={navigation} />
-                
-            </View>
+            <KeyboardAvoidingView
+                behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 10}
+            >
+                <View style={styles.body}>
+                    <TopBar name={name} navigation={navigation} />
+                    <FlatList
+                        data={messages}
+                        renderItem={({ item }) => <MessageItem message={item} />}
+                        keyExtractor={(item) => item.id}
+                        inverted
+                        contentContainerStyle={{ flexDirection: 'column-reverse' }}
+                    />
+                </View>
+                <MessageInputBox />
+            </KeyboardAvoidingView>
         </>
     );
 }
@@ -20,10 +40,8 @@ function MessageScreen({ route, navigation }) {
 const styles = StyleSheet.create({
     body: {
         width: '100%',
-        height: '100%',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        backgroundColor: '#fff',
+        height: '90%',
+        backgroundColor: '#ccc',
     },
     messageView: {
         flex: 1,

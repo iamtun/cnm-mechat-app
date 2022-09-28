@@ -35,6 +35,7 @@ function TextInputPrimary({ placeholder, isPass}, ref) {
   );
 }
 
+
 const styles = StyleSheet.create({
   frameInput: {
     borderColor: "#5D90F5",
