@@ -6,7 +6,7 @@ import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
 import { useRef, useState } from "react";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { firebaseConfig } from "../connection-firebase/firebase";
+import { firebaseConfig } from "../utils/firebase";
 import firebase from "firebase/compat/app";
 
 function LoginScreen({ navigation }) {
@@ -44,7 +44,8 @@ function LoginScreen({ navigation }) {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfig}
-        title="CAPTCHA"
+        title="Xác thực"
+        cancelLabel="Hủy"
       />
       {/* logo */}
       <View style={LoginStyles.logo}>
@@ -60,6 +61,7 @@ function LoginScreen({ navigation }) {
         <TextInputPrimary
           ref={phoneNumberLoginRef}
           placeholder="Nhập số điện thoại"
+          keyboardType="number-pad"
         />
         <TextInputPrimary ref={passLoginRef} placeholder="Mật khẩu" isPass />
         <View style={styles.newData}>
