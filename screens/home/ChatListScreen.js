@@ -1,7 +1,7 @@
 import { FlatList, RefreshControl, ScrollView } from 'react-native';
 import { useState } from 'react';
 
-import SearchBar from '../../components/SearchBar';
+import SearchBar from "../../components/searchBar";
 import ChatItem from '../../components/ChatItem';
 import Header from '../../components/Header';
 const chats = [

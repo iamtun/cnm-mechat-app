@@ -9,10 +9,13 @@ import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
 
+
 function RegisterScreen({ navigation }) {
   const registerScreen = () => {
     navigation.navigate("LoginScreen");
   };
+
+  
   return (
     <View style={GlobalStyle.container}>
       {/* logo */}
