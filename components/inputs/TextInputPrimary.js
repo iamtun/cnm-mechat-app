@@ -3,7 +3,7 @@ import { View, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import { StyleSheet } from "react-native";
 
-function TextInputPrimary({ placeholder, isPass}, ref) {
+function TextInputPrimary({ placeholder, isPass, keyboardType}, ref) {
   const [isPassState, setIsPassState] = useState(isPass);
   const [text, setText] = useState("");
 
@@ -22,6 +22,7 @@ function TextInputPrimary({ placeholder, isPass}, ref) {
         secureTextEntry={isPassState}
         value={text}
         onChangeText={handleChangeText}
+        keyboardType={keyboardType}
       />
       {isPass && (
         <Icon
