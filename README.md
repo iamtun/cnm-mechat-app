@@ -2,108 +2,117 @@
 
 ### Dựng layout cho ứng dụng -> Sử dụng react-navigation
 
-- Tạo các màn hình
-- Cài đặt thư viện react-navigation:
+-   Tạo các màn hình
+-   Cài đặt thư viện react-navigation:
 
-  - B1: `npm install @react-navigation/native`
-  - B2 - Lưu ý cái này dùng cho expo: `npx expo install react-native-screens react-native-safe-area-context`
-  - B3:
-    - Luồng màn hình ngoài: `npm install @react-navigation/native-stack`
-    - Luồng màn hình home: `npm install @react-navigation/bottom-tabs`
-  - B4: Tạo routers cho ứng dụng. Nếu có lỗi thư viện thì chạy dòng lệnh: `npm start --reset-cache` rồi chạy lại ứng dụng.
-    - RootStackNavigator: Luồng các màn hình xử lý bên ngoài -> Login, Register, Authencation
-    - HomeTabNavigator: Luồng các màn hình chính
-  - B5: Tải thư viện icon: `https://github.com/oblador/react-native-vector-icons`
-  - B6: Tiến hành sử dụng thư viện
+    -   B1: `npm install @react-navigation/native`
+    -   B2 - Lưu ý cái này dùng cho expo: `npx expo install react-native-screens react-native-safe-area-context`
+    -   B3:
+        -   Luồng màn hình ngoài: `npm install @react-navigation/native-stack`
+        -   Luồng màn hình home: `npm install @react-navigation/bottom-tabs`
+    -   B4: Tạo routers cho ứng dụng. Nếu có lỗi thư viện thì chạy dòng lệnh: `npm start --reset-cache` rồi chạy lại ứng dụng.
+        -   RootStackNavigator: Luồng các màn hình xử lý bên ngoài -> Login, Register, Authencation
+        -   HomeTabNavigator: Luồng các màn hình chính
+    -   B5: Tải thư viện icon: `https://github.com/oblador/react-native-vector-icons`
+    -   B6: Tiến hành sử dụng thư viện
 
-  ```js
-      //import
-      import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-      //hoặc
-      import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+    ```js
+        //import
+        import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+        //hoặc
+        import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-      //use
-      <FontAwesome5 name={iconName} size={20} color={color} />
-      //hoặc
-      <Icon name={iconName} size={30} color="#fff" />
-  ```
+        //use
+        <FontAwesome5 name={iconName} size={20} color={color} />
+        //hoặc
+        <Icon name={iconName} size={30} color="#fff" />
+    ```
 
 ### Hướng dẫn dùng thư viện react-native-walkthrough-tooltip:
 
-- B1: Cài đặt thư viện: `npm i react-native-walkthrough-tooltip`
-- B2: import thư viện
-  ```js
-  import Tooltip from "react-native-walkthrough-tooltip";
-  ```
-- B3: Sử dụng:
+-   B1: Cài đặt thư viện: `npm i react-native-walkthrough-tooltip`
+-   B2: import thư viện
+    ```js
+    import Tooltip from 'react-native-walkthrough-tooltip';
+    ```
+-   B3: Sử dụng:
 
-  ```js
-  <Tooltip
-    isVisible={isVisible}
-    content={
-      <>
-        {items.map((item) => (
-          <MenuItem icon={item.icon} title={item.title} key={item.id} />
-        ))}
-      </>
-    }
-    //style tool tips
-    placement={"bottom"}
-    onClose={() => setIsVisible(!isVisible)}
-    contentStyle={{ width: 150, height: 200 }}
-    tooltipStyle={{ marginLeft: 17, marginTop: 10 }}
-  >
-    {children}
-  </Tooltip>
-  ```
+    ```js
+    <Tooltip
+        isVisible={isVisible}
+        content={
+            <>
+                {items.map((item) => (
+                    <MenuItem icon={item.icon} title={item.title} key={item.id} />
+                ))}
+            </>
+        }
+        //style tool tips
+        placement={'bottom'}
+        onClose={() => setIsVisible(!isVisible)}
+        contentStyle={{ width: 150, height: 200 }}
+        tooltipStyle={{ marginLeft: 17, marginTop: 10 }}
+    >
+        {children}
+    </Tooltip>
+    ```
 
-- contentStyle: Tùy chỉnh độ rộng cao của menu
-- tooltipStyle: Tùy chỉnh menu theo ý muốn giống y hệt css bình thường
+-   contentStyle: Tùy chỉnh độ rộng cao của menu
+-   tooltipStyle: Tùy chỉnh menu theo ý muốn giống y hệt css bình thường
 
 ### Hướng dẫn sử dụng useRef
 
-- Tạo useRef với null value ở component cha
-  ```js
-  const nameRef = useRef(null);
-  ```
-- Tạo component con
+-   Tạo useRef với null value ở component cha
+    ```js
+    const nameRef = useRef(null);
+    ```
+-   Tạo component con
+
+    ```js
+    function TextInputPrimary({ placeholder, isPass }, ref) {
+        const [isPassState, setIsPassState] = useState(isPass);
+        const [text, setText] = useState('');
+
+        const handleChangeText = (value) => {
+            setText((preValue) => {
+                ref.current = value;
+                setText(value);
+            });
+        };
+
+        return (
+            <View style={styles.frameInput}>
+                <TextInput
+                    style={styles.textInput}
+                    placeholder={placeholder}
+                    secureTextEntry={isPassState}
+                    value={text}
+                    onChangeText={handleChangeText}
+                />
+                {isPass && (
+                    <Icon name="eye-outline" color="#000" size={20} onPress={() => setIsPassState(!isPassState)} />
+                )}
+            </View>
+        );
+    }
+    export default forwardRef(TextInputPrimary);
+    ```
+
+-   Sử dụng ở component cha
+    ```js
+    <TextInputPrimary ref={phoneNumber} placeholder="Nhập số điện thoại" />
+    ```
+
+### Hướng dẫn fix lỗi idb trên thư viện firebase
+
+-   Tạo file `metro.config.js`
 
   ```js
-  function TextInputPrimary({ placeholder, isPass }, ref) {
-    const [isPassState, setIsPassState] = useState(isPass);
-    const [text, setText] = useState("");
+    const { getDefaultConfig } = require('expo/metro-config');
 
-    const handleChangeText = (value) => {
-      setText((preValue) => {
-        ref.current = value;
-        setText(value);
-      });
-    };
+    const defaultConfig = getDefaultConfig(__dirname);
 
-    return (
-      <View style={styles.frameInput}>
-        <TextInput
-          style={styles.textInput}
-          placeholder={placeholder}
-          secureTextEntry={isPassState}
-          value={text}
-          onChangeText={handleChangeText}
-        />
-        {isPass && (
-          <Icon
-            name="eye-outline"
-            color="#000"
-            size={20}
-            onPress={() => setIsPassState(!isPassState)}
-          />
-        )}
-      </View>
-    );
-  }
-  export default forwardRef(TextInputPrimary);
-  ```
+    defaultConfig.resolver.assetExts.push('cjs');
 
-- Sử dụng ở component cha
-  ```js
-  <TextInputPrimary ref={phoneNumber} placeholder="Nhập số điện thoại" />
+    module.exports = defaultConfig;
   ```
