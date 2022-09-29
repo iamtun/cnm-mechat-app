@@ -28,7 +28,7 @@
       "favicon": "./assets/favicon.png"
     },
     "packagerOpts":{
-      "sourceExts" :["cjs"]
+      "sourceExts" :["jsx", "js", "ts", "tsx", "cjs"]
     },
     "expo": {
       "plugins": [
