@@ -2,21 +2,22 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import SearchItem from './SearchItem';
+import { useDispatch } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
-
-const users = [
-    {
-        id: 'u1',
-        name: 'Thanh Nho',
-        avatar: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-    },
-    {
-        id: 'u2',
-        name: 'Le Tuan',
-        avatar: 'https://zpsocial-f51-org.zadn.vn/2bb60175220bcc55951a.jpg',
-    },
-];
+import filterSlice from '../../redux/slice/filterSlice';
+import { KeyboardAvoidingView } from 'react-native';
+// const users = [
+//     {
+//         id: 'u1',
+//         name: 'Thanh Nho',
+//         avatar: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
+//     },
+//     {
+//         id: 'u2',
+//         name: 'Le Tuan',
+//         avatar: 'https://zpsocial-f51-org.zadn.vn/2bb60175220bcc55951a.jpg',
+//     },
+// ];
 
 const items = [
     {
@@ -34,7 +35,8 @@ const items = [
 function SearchBar() {
     const [isVisible, setIsVisible] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
-    const [searchInput, setSearchInput] = useState('');
+    const [searchInput, setSearchInput] = useState(null);
+    const dispatch = useDispatch();
 
     const onOpenSearch = () => {
         setIsSearch(true);
@@ -42,12 +44,16 @@ function SearchBar() {
 
     const onHideSearch = () => {
         setIsSearch(false);
+        setSearchInput(null);
+        dispatch(filterSlice.actions.searchFilterChange(null));
     };
 
     const onOpenMenu = () => setIsVisible(true);
 
     const handleSearchInput = (value) => {
-        setSearchInput(value);
+        setSearchInput(() => setSearchInput(value));
+
+        dispatch(filterSlice.actions.searchFilterChange(value));
     };
 
     return (
@@ -89,7 +95,9 @@ function SearchBar() {
             >
                 <Icon name="plus" size={30} color="#fff" onPress={onOpenMenu} />
             </Tooltip>
+
         </View>
+
     );
 }
 
