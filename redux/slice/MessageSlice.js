@@ -56,7 +56,7 @@ const messageListSlice = createSlice({
             },
             {
                 id: 'm6',
-                content: 'Fine, and u',
+                content: 'Fine, and you',
                 user: {
                     id: 'u2',
                     name: 'Thanh Nho',
