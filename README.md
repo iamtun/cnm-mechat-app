@@ -107,12 +107,22 @@
 
 -   Tạo file `metro.config.js`
 
-  ```js
-    const { getDefaultConfig } = require('expo/metro-config');
+```js
+const { getDefaultConfig } = require('expo/metro-config');
 
-    const defaultConfig = getDefaultConfig(__dirname);
+const defaultConfig = getDefaultConfig(__dirname);
 
-    defaultConfig.resolver.assetExts.push('cjs');
+defaultConfig.resolver.assetExts.push('cjs');
 
-    module.exports = defaultConfig;
-  ```
+module.exports = defaultConfig;
+```
+
+### Xóa cảnh báo:
+
+`EventEmitter.removeListener('change', ...): Method has been deprecated. Please instead use remove() on the subscription returned by EventEmitter.addListener.`
+
+```js
+import { LogBox } from 'react-native';
+
+LogBox.ignoreLogs(['EventEmitter.removeListener']);
+```

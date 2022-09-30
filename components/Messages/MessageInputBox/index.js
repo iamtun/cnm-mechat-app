@@ -4,7 +4,7 @@ import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useDispatch } from 'react-redux';
-import messageListSlice from '../../../redux/slice/MessageSlice';
+import messageListSlice from '../../../redux/slice/messageSlice';
 
 function MessageInputBox() {
     const [isWrite, setIsWrite] = useState(false);

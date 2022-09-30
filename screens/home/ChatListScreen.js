@@ -1,9 +1,11 @@
-import { FlatList, RefreshControl, ScrollView } from 'react-native';
-import { useState } from 'react';
+import { FlatList } from 'react-native';
+import { useSelector } from 'react-redux';
 
-import SearchBar from "../../components/SearchBar";
+import { usersRemainingSelector } from '../../redux/selector';
+import SearchBar from '../../components/SearchBar';
 import ChatItem from '../../components/ChatItem';
 import Header from '../../components/Header';
+import SearchItem from '../../components/SearchBar/SearchItem';
 const chats = [
     {
         id: 1,
@@ -22,23 +24,34 @@ const chats = [
 ];
 
 function ChatListScreen({ navigation }) {
+    const userSearching = useSelector(usersRemainingSelector);
+    //console.log(userSearching);
     return (
         <>
             <Header />
             <SearchBar />
-            <FlatList
-                data={chats}
-                renderItem={({ item }) => (
-                    <ChatItem
-                        name={item.name}
-                        image={item.image}
-                        message={item.lastMessage}
-                        time={item.time}
-                        navigation={navigation}
-                        key={item.id}
-                    />
-                )}
-            />
+            {userSearching ? (
+                <FlatList
+                    data={userSearching}
+                    renderItem={({ item }) => (
+                        <SearchItem name={item.fullName} phonNumber={item.phoneNumber} image={item.avatar}/>
+                    )}
+                />
+            ) : (
+                <FlatList
+                    data={chats}
+                    renderItem={({ item }) => (
+                        <ChatItem
+                            name={item.name}
+                            image={item.image}
+                            message={item.lastMessage}
+                            time={item.time}
+                            navigation={navigation}
+                            key={item.id}
+                        />
+                    )}
+                />
+            )}
         </>
     );
 }
