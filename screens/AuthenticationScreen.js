@@ -13,14 +13,13 @@ import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import firebase from "firebase/compat/app";
-import { getItem, setItem } from "../utils/asyncStorage";
+import {setItem } from "../utils/asyncStorage";
 
 function AuthenticationScreen({ route, navigation }) {
   //data receiver from login screen
   const confirm = route.params.verificationId;
   const token = route.params.token;
-  console.log("----Token", token);
-
+  
   //screen's variables
   const [counter, setCounter] = useState(10);
   const [intervalId, setIntervalId] = useState(null);
@@ -55,9 +54,7 @@ function AuthenticationScreen({ route, navigation }) {
       .then( async () => {
         setCode("");
         setItem("user_token", token);
-
-        const token_user = await getItem("user_token");
-        navigation.navigate("HomeScreen",{token_user});
+        navigation.navigate("HomeScreen",{token: token});
       })
       .catch((err) => {
         Alert.alert("Mã không tồn tại hoặc quá hạn");
