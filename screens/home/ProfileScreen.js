@@ -33,6 +33,7 @@ function ProfileScreen({ navigation }) {
             key: 'iaT1Ex',
         },
     ];
+
     const showConfirmDialog = () => {
         Alert.alert('ĐĂNG XUẤT', 'Bạn có muốn đăng xuất?', [
             {
@@ -65,6 +66,7 @@ function ProfileScreen({ navigation }) {
             </TouchableOpacity>
         );
     }
+    
     return (
         <View style={styles.container}>
             <Header />

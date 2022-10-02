@@ -14,8 +14,8 @@ function RootStackNavigator() {
                 screenOptions={{
                     headerShown: false,
                 }}
-
-                initialRouteName="HomeScreen" //user was login
+                
+                // initialRouteName="HomeScreen" //user was login
             >
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
