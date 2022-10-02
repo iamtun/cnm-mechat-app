@@ -1,18 +1,19 @@
-import { View, Image, Text, KeyboardAvoidingView } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  KeyboardAvoidingView
+} from "react-native";
 import { StyleSheet, Platform } from "react-native";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../utils/firebase";
 import firebase from "firebase/compat/app";
-import { user_login } from "../utils/users_api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Alert } from "react-native";
-import { useEffect } from "react";
-import { getItem, setItem } from "../utils/asyncStorage";
+import { getItem } from "../utils/asyncStorage";
 
 function LoginScreen({ navigation }) {
   // //ui ref
@@ -22,6 +23,15 @@ function LoginScreen({ navigation }) {
   //firebase
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
+
+  useEffect(() => {
+    const getToken = async () => {
+      const _token = await getItem("user_token");
+      if (_token) navigation.navigate("HomeScreen", { token: _token });
+    };
+
+    getToken();
+  }, []);
 
   // function
   const senOTP = async () => {
@@ -73,10 +83,10 @@ function LoginScreen({ navigation }) {
     sign()
       .then((token) => {
         senOTP().then((otp) => {
-          setVerificationId(otp)
-            navigation.navigate("AuthenticationScreen", {
+          setVerificationId(otp);
+          navigation.navigate("AuthenticationScreen", {
             verificationId: otp,
-            token: token
+            token: token,
           });
         });
       })
@@ -84,7 +94,7 @@ function LoginScreen({ navigation }) {
         console.log(`sign err: ${err}`);
       });
   };
-  
+
   return (
     <View style={GlobalStyle.container}>
       <FirebaseRecaptchaVerifierModal
