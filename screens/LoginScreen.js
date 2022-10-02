@@ -8,9 +8,14 @@ import { useRef, useState } from "react";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import { firebaseConfig } from "../utils/firebase";
 import firebase from "firebase/compat/app";
+import { user_login } from "../utils/users_api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
+import { useEffect } from "react";
+import { getItem, setItem } from "../utils/asyncStorage";
 
 function LoginScreen({ navigation }) {
-  //ui ref
+  // //ui ref
   const phoneNumberLoginRef = useRef(null);
   const passLoginRef = useRef(null);
 
@@ -18,7 +23,8 @@ function LoginScreen({ navigation }) {
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
 
-  const sendOTP = async () => {
+  // function
+  const senOTP = async () => {
     let _phoneNumber = "+84" + phoneNumberLoginRef.current.slice(1);
 
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
@@ -26,19 +32,59 @@ function LoginScreen({ navigation }) {
       _phoneNumber,
       recaptchaVerifier.current
     );
-
     if (verificationId) {
-      setVerificationId(verificationId);
-      navigation.navigate("AuthenticationScreen", {
-        verificationId: verificationId,
-      });
+      return verificationId;
     }
+  };
+
+  const sign = () => {
+    return fetch(
+      "https://back-end-me-chat-final.vercel.app/api/v1/users/login",
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-type": "application/json",
+        },
+        body: JSON.stringify({
+          phoneNumber: phoneNumberLoginRef.current,
+          passWord: passLoginRef.current,
+        }),
+      }
+    )
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.status == "success") {
+          return resData._token;
+        }
+        //return catch
+        throw new Error("404");
+      })
+      .catch((err) => {
+        throw new Error(err);
+      });
   };
 
   const clickRegister = () => {
     navigation.navigate("RegisterScreen");
   };
 
+  const _handleLogin = () => {
+    sign()
+      .then((token) => {
+        senOTP().then((otp) => {
+          setVerificationId(otp)
+            navigation.navigate("AuthenticationScreen", {
+            verificationId: otp,
+            token: token
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(`sign err: ${err}`);
+      });
+  };
+  
   return (
     <View style={GlobalStyle.container}>
       <FirebaseRecaptchaVerifierModal
@@ -71,7 +117,7 @@ function LoginScreen({ navigation }) {
           </Text>
         </View>
 
-        <ButtonPrimary title="Đăng nhập" onPress={sendOTP} />
+        <ButtonPrimary title="Đăng nhập" onPress={_handleLogin} />
       </View>
       {Platform.OS === "ios" ? (
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={60} />
