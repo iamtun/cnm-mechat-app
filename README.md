@@ -126,3 +126,32 @@ import { LogBox } from 'react-native';
 
 LogBox.ignoreLogs(['EventEmitter.removeListener']);
 ```
+
+### Cách sử dụng env trong react-native
+
+-   Cài đặt thư viện: `npm install react-native-dotenv`
+
+-   Config babel
+
+```js
+    module.exports = function (api) {
+        api.cache(true);
+        return {
+            presets: ['babel-preset-expo'],
+            plugins: ['module:react-native-dotenv'],
+        };
+    };
+```
+- Sử dụng
+```js
+    //tạo file config để import env
+    import {API_USERS} from "@env"
+
+    export default {
+        API_USERS
+    }
+
+    //import config khi cần chạy biến môi trường
+    import config from "./config"
+    console.log(config.API_USERS); //localhost:3000/users
+```

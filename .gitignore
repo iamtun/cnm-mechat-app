@@ -13,5 +13,6 @@ web-build/
 #user setting
 .vscode
 .prettierrc
+.env
 # macOS
 .DS_Store

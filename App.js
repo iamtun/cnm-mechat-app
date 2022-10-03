@@ -3,10 +3,9 @@ import { Provider } from 'react-redux';
 import store from './redux/store';
 
 import { LogBox } from "react-native";
-import { getItem } from './utils/asyncStorage';
-import { useEffect, useLayoutEffect, useState } from 'react';
-
 LogBox.ignoreLogs(["EventEmitter.removeListener"]);
+import config from "./config"
+console.log(config.API_USERS);
 
 export default function App() {
     return (
