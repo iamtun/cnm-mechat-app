@@ -14,7 +14,7 @@ function ProfileScreen({ navigation }) {
 
   const logoutScreen = () => {
     remove();
-    navigation.navigate("LoginScreen", {flag: true});
+    navigation.navigate("LoginScreen");
   };
   
   const settings = [

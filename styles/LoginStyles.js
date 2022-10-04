@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
     height: 200,
   },
   title: {
-    fontSize: 30,
+    fontSize: 24,
     fontWeight: "bold",
     alignItems: "center",
     justifyContent: "center",
@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
     color: "#C2C2C2",
   },
   enterData: {
-    marginTop: 20,
+    marginTop: 10,
     justifyContent: "center",
     alignItems: "center",
   }
