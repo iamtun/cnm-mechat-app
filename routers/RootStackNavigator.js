@@ -20,7 +20,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="LoginScreen" component={LoginScreen} />
                 <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
                 <Stack.Screen name="AuthenticationScreen" component={AuthenticationScreen} />
-                <Stack.Screen name="HomeScreen" component={HomeScreen} />
+                <Stack.Screen name="HomeScreen" component={HomeScreen} options={{gestureEnabled: false}}/>
                 <Stack.Screen name="MessageScreen" component={MessageScreen} />
             </Stack.Navigator>
         </NavigationContainer>

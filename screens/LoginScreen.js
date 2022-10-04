@@ -11,15 +11,20 @@ import firebase from 'firebase/compat/app';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUserInfo } from '../redux/slice/userInfoSlice';
 import config from '../config';
-import { userInfoSelector } from '../redux/selector';
-import { useCallback } from 'react';
+import { getItem } from '../utils/asyncStorage';
+import { Alert } from 'react-native';
 
-function LoginScreen({ navigation }) {
+function LoginScreen({ navigation, route }) {
+    // const flag = route.params;
+    // console.log(`flag: [${flag === true}]`);
+
+    // - Cần nhận 1 giá trị từ logout để set isLoading = false!
+    // - Cần kiểm tra input
     // //ui ref
     const phoneNumberLoginRef = useRef(null);
     const passLoginRef = useRef(null);
     const dispatch = useDispatch();
-    const _userInfoSelector = useSelector(userInfoSelector);
+    const [isLoading, setIsLoading] = useState(true);
     //firebase
     const recaptchaVerifier = useRef(null);
     const [verificationId, setVerificationId] = useState(null);
@@ -27,22 +32,31 @@ function LoginScreen({ navigation }) {
     //actions
 
     useEffect(() => {
-        dispatch(fetchUserInfo());
-
-        if(_userInfoSelector){
-            navigation.navigate('HomeScreen', {screen: "HomeScreen"});
-        }
+        getItem('user_token').then((token) => {
+            setTimeout(() => {
+                console.log(`[token]: ${token}`);
+                if (token) {
+                    dispatch(fetchUserInfo());
+                    navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
+                } else {
+                    setIsLoading(false);
+                }
+            }, 1000);
+        });
     }, []);
-
 
     // function
     const senOTP = async () => {
         let _phoneNumber = '+84' + phoneNumberLoginRef.current.slice(1);
 
-        const phoneProvider = new firebase.auth.PhoneAuthProvider();
-        const verificationId = await phoneProvider.verifyPhoneNumber(_phoneNumber, recaptchaVerifier.current);
-        if (verificationId) {
-            return verificationId;
+        try {
+            const phoneProvider = new firebase.auth.PhoneAuthProvider();
+            const verificationId = await phoneProvider.verifyPhoneNumber(_phoneNumber, recaptchaVerifier.current);
+            if (verificationId) {
+                return verificationId;
+            }
+        } catch (err) {
+            console.log(err);
         }
     };
 
@@ -63,12 +77,15 @@ function LoginScreen({ navigation }) {
                 if (resData.status == 'success') {
                     return resData._token;
                 }
+                console.log(resData);
                 //return catch
-                throw new Error('404');
+                if (resData?.error.statusCode === 403) throw new Error('Mật khẩu của bạn không đúng!');
+                if (resData?.error.statusCode === 402) throw new Error('Bạn chưa đăng ký tài khoản?');
             })
-            .catch((err) => {
-                throw new Error(err);
-            });
+            // .catch((err) => {
+            //     console.log(err);
+            //     throw new Error(err);
+            // });
     };
 
     const clickRegister = () => {
@@ -87,45 +104,52 @@ function LoginScreen({ navigation }) {
                 });
             })
             .catch((err) => {
-                console.log(`sign err: ${err}`);
+                console.log(err);
+                Alert.alert("Thông báo", err);  //Không chạy cái này
             });
     };
 
     return (
         <View style={GlobalStyle.container}>
-            <FirebaseRecaptchaVerifierModal
-                ref={recaptchaVerifier}
-                firebaseConfig={firebaseConfig}
-                title="Xác thực"
-                cancelLabel="Hủy"
-            />
-            {/* logo */}
-            <View style={LoginStyles.logo}>
-                <Image style={LoginStyles.img} source={require('../assets/mechat-logo.png')} />
-                <Text style={LoginStyles.title}>Đăng nhập</Text>
-                <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
-            </View>
-            {/* Login */}
-            <View style={LoginStyles.enterData}>
-                <TextInputPrimary
-                    ref={phoneNumberLoginRef}
-                    placeholder="Nhập số điện thoại"
-                    keyboardType="number-pad"
-                />
-                <TextInputPrimary ref={passLoginRef} placeholder="Mật khẩu" isPass />
-                <View style={styles.newData}>
-                    <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
-                    <Text style={styles.register} onPress={clickRegister}>
-                        Đăng ký
-                    </Text>
-                </View>
-
-                <ButtonPrimary title="Đăng nhập" onPress={_handleLogin} />
-            </View>
-            {Platform.OS === 'ios' ? (
-                <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={60} />
+            {isLoading ? (
+                <Text>Loading ....</Text>
             ) : (
-                <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={0} />
+                <>
+                    <FirebaseRecaptchaVerifierModal
+                        ref={recaptchaVerifier}
+                        firebaseConfig={firebaseConfig}
+                        title="Xác thực"
+                        cancelLabel="Hủy"
+                    />
+                    {/*  logo  */}
+                    <View style={LoginStyles.logo}>
+                        <Image style={LoginStyles.img} source={require('../assets/mechat-logo.png')} />
+                        <Text style={LoginStyles.title}>Đăng nhập</Text>
+                        <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
+                    </View>
+                    {/* Login */}
+                    <View style={LoginStyles.enterData}>
+                        <TextInputPrimary
+                            ref={phoneNumberLoginRef}
+                            placeholder="Nhập số điện thoại"
+                            keyboardType="number-pad"
+                        />
+                        <TextInputPrimary ref={passLoginRef} placeholder="Mật khẩu" isPass />
+                        <View style={styles.newData}>
+                            <Text style={styles.forgotPassword}>Quên mật khẩu?</Text>
+                            <Text style={styles.register} onPress={clickRegister}>
+                                Đăng ký
+                            </Text>
+                        </View>
+
+                        <ButtonPrimary title="Đăng nhập" onPress={_handleLogin} />
+                    </View>
+                    {Platform.OS === 'ios' ? (
+                        <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={40} />
+                    ) : (
+                        <KeyboardAvoidingView behavior="height" keyboardVerticalOffset={0} />
+                    )}
+                </>
             )}
         </View>
     );
