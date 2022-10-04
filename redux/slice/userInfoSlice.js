@@ -4,7 +4,7 @@ import jwtDecode from "jwt-decode";
 import config from "../../config";
 const userInfoSlice = createSlice({
     name: "info",
-    initialState: {data: {}},
+    initialState: {data: null},
     extraReducers: (builder) => {
         builder.addCase(fetchUserInfo.fulfilled, (state, action) => {
             state.data = action.payload;
