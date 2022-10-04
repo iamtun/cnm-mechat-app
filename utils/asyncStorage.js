@@ -12,7 +12,6 @@ export const setItem = (key, val) => {
 
 export const getItem = (key) => {
   return AsyncStorage.getItem(key).then((val) => {
-    console.log('getItem',val);
     return val;
   });
 };

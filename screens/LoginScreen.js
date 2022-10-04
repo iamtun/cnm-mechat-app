@@ -49,7 +49,7 @@ function LoginScreen({ navigation }) {
 
   const sign = () => {
     return fetch(
-      "https://back-end-me-chat-final.vercel.app/api/v1/users/login",
+      "https://me-chat.cyclic.app/api/v1/users/login",
       {
         method: "POST",
         headers: {
