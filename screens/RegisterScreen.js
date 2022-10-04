@@ -37,7 +37,7 @@ function RegisterScreen({ navigation }) {
 
   const _handleRegister = () => {
     if (passRegisterRef.current != passRegisterRefAgain.current) {
-      Alert.alert("Bạn đã đăng kí không thành công");
+      Alert.alert("Vui lòng nhập lại đúng mật khẩu");
     } else {
       register()
         .then((token) => {
