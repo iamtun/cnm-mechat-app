@@ -1,52 +1,24 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import config from '../../config';
 
 const userListSlice = createSlice({
     name: 'users',
-    initialState: {
-        data: [
-            {
-                _id: '6332c32e72aab6021264b315',
-                fullName: 'Nguyễn Đức Huy',
-                bio: 'Sông Lam',
-                gender: 0,
-                birthday: '2022-09-27T09:32:30.531Z',
-                status: true,
-                avatarLink: null,
-                backgroundLink: null,
-                accountID: '6332c32d72aab6021264b312',
-                friendID: null,
-                __v: 0,
-            },
+    initialState: {data: []},
+    extraReducers: (builder) => {
+        builder.addCase(fetchUsers.fulfilled, (state, action) => {
+            state.data = action.payload;
+        })
+    }
+});
 
-            {
-                _id: '6332c32e72aab6021264b319',
-                fullName: 'Nguyễn Đức Hùng',
-                bio: 'Sông Lam',
-                gender: 0,
-                birthday: '2022-09-27T09:32:30.718Z',
-                status: true,
-                avatarLink: null,
-                backgroundLink: null,
-                accountID: '6332c32e72aab6021264b317',
-                friendID: null,
-                __v: 0,
-            },
-
-            {
-                _id: '6332c32e72aab6021264b31d',
-                fullName: 'Thu Thảo',
-                bio: 'Sông Lam',
-                gender: 0,
-                birthday: '2022-09-27T09:32:30.896Z',
-                status: true,
-                avatarLink: null,
-                backgroundLink: null,
-                accountID: '6332c32e72aab6021264b31b',
-                friendID: null,
-                __v: 0,
-            },
-        ],
-    },
+export const fetchUsers = createAsyncThunk('users/fetchUsers', async() => {
+    try{
+        const res = await fetch(`${config.LINK_API}/users`);
+        const users = await res.json();
+        return users.data;
+    }catch(err) {
+        console.log(`err fetch users: ${err}`);
+    }
 });
 
 export default userListSlice;

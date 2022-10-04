@@ -1,5 +1,5 @@
-import { API_USERS } from '@env';
+import { LINK_API } from '@env';
 
 export default {
-    API_USERS,
+    LINK_API,
 };
