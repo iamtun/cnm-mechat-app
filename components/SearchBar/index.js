@@ -5,19 +5,7 @@ import Tooltip from 'react-native-walkthrough-tooltip';
 import { useDispatch } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
 import filterSlice from '../../redux/slice/filterSlice';
-import { KeyboardAvoidingView } from 'react-native';
-// const users = [
-//     {
-//         id: 'u1',
-//         name: 'Thanh Nho',
-//         avatar: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-//     },
-//     {
-//         id: 'u2',
-//         name: 'Le Tuan',
-//         avatar: 'https://zpsocial-f51-org.zadn.vn/2bb60175220bcc55951a.jpg',
-//     },
-// ];
+import {fetchUsers} from '../../redux/slice/usersSlice';
 
 const items = [
     {
@@ -52,7 +40,7 @@ function SearchBar() {
 
     const handleSearchInput = (value) => {
         setSearchInput(() => setSearchInput(value));
-
+        dispatch(fetchUsers())
         dispatch(filterSlice.actions.searchFilterChange(value));
     };
 

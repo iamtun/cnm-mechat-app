@@ -6,8 +6,6 @@ import SearchBar from '../../components/SearchBar';
 import ChatItem from '../../components/ChatItem';
 import Header from '../../components/Header';
 import SearchItem from '../../components/SearchBar/SearchItem';
-import { useEffect } from 'react';
-import {fetchUsers} from '../../redux/slice/usersSlice';
 
 const chats = [
     {
@@ -28,11 +26,6 @@ const chats = [
 
 function ChatListScreen({ navigation }) {
     const userSearching = useSelector(usersRemainingSelector);
-    //console.log(userSearching);
-    const dispatch = useDispatch();
-    useEffect(() => {
-        dispatch(fetchUsers())
-    }, [])
 
     return (
         <>
