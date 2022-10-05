@@ -2,6 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getItem } from "../../utils/asyncStorage";
 import jwtDecode from "jwt-decode";
 import config from "../../config";
+
 const userInfoSlice = createSlice({
     name: "info",
     initialState: {data: null},
@@ -12,8 +13,8 @@ const userInfoSlice = createSlice({
     }
 })
 
-export const fetchUserInfo = createAsyncThunk("info/fetchUserInfo", async() => {
-    const _token = await getItem("user_token");
+export const fetchUserInfo = createAsyncThunk("info/fetchUserInfo", async(token) => {
+    const _token = token;
     if(_token) {
         const info = jwtDecode(_token);
         const {_id} = info;
