@@ -1,11 +1,14 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
 import filterSlice from '../../redux/slice/filterSlice';
-import {fetchUsers} from '../../redux/slice/usersSlice';
+import { fetchUsers } from '../../redux/slice/usersSlice';
+import { fetchFriends } from '../../redux/slice/friendSlice';
+import {userInfoSelector} from "../../redux/selector"
+import useDebounce from '../../hooks/useDebounce';
 
 const items = [
     {
@@ -23,11 +26,27 @@ const items = [
 function SearchBar() {
     const [isVisible, setIsVisible] = useState(false);
     const [isSearch, setIsSearch] = useState(false);
-    const [searchInput, setSearchInput] = useState(null);
+    const [searchInput, setSearchInput] = useState("");
+    const debouncedValue = useDebounce(searchInput, 500);
+    const [count, setCount] = useState(0);
+
     const dispatch = useDispatch();
 
+    //selector
+    const _userInfoSelector = useSelector(userInfoSelector);
+    
+    useEffect(() => {
+        dispatch(filterSlice.actions.searchFilterChange(searchInput));
+    }, [debouncedValue])
+
+    //func handle
     const onOpenSearch = () => {
         setIsSearch(true);
+        const timer = setTimeout(() => {
+            dispatch(fetchUsers());
+            dispatch(fetchFriends(_userInfoSelector._id));
+        }, 1000);
+        return () => clearTimeout(timer);
     };
 
     const onHideSearch = () => {
@@ -40,10 +59,9 @@ function SearchBar() {
 
     const handleSearchInput = (value) => {
         setSearchInput(() => setSearchInput(value));
-        dispatch(fetchUsers())
-        dispatch(filterSlice.actions.searchFilterChange(value));
     };
 
+    //ui
     return (
         <View style={styles.searchBar}>
             {isSearch === true ? (
@@ -83,9 +101,7 @@ function SearchBar() {
             >
                 <Icon name="plus" size={30} color="#fff" onPress={onOpenMenu} />
             </Tooltip>
-
         </View>
-
     );
 }
 

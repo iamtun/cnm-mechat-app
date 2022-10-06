@@ -1,24 +1,32 @@
-import { View, Image, Text, StyleSheet } from 'react-native';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-function SearchItem({ image, name, phonNumber, isFriend }) {
-    //console.log(image);
+function SearchItem({ id, image, name, phonNumber, isFriend, isNull }) {
     return (
-        <View style={styles.container}>
-            <Image source={{ uri: image }} style={styles.image} />
-            <View style={styles.body}>
-                <View style={styles.info}>
-                    <Text style={styles.name}>{name}</Text>
-                    <Text style={styles.phonNumber}>{phonNumber}</Text>
-                </View>
-                <View>
-                    {isFriend ? (
-                        <Icon name="phone-in-talk" size={32} style={styles.icon} />
-                    ) : (
-                        <Icon name="account-plus" size={32} style={styles.icon} />
-                    )}
-                </View>
-            </View>
-        </View>
+        <TouchableOpacity
+            style={[styles.container, isNull ? styles.noSearchText : null]}
+            onPress={() => console.log(`[userId]: ${id}`)}
+        >
+            {isNull ? (
+                <Text> Không tìm thấy</Text>
+            ) : (
+                <>
+                    <Image source={{ uri: image }} style={styles.image} />
+                    <View style={styles.body}>
+                        <View style={styles.info}>
+                            <Text style={styles.name}>{name}</Text>
+                            {isFriend ? null : <Text style={styles.phonNumber}>{phonNumber}</Text>}
+                        </View>
+                        <View>
+                            {isFriend ? (
+                                <Icon name="phone-in-talk" size={24} style={styles.icon} />
+                            ) : (
+                                <Icon name="account-plus" size={24} style={styles.icon} />
+                            )}
+                        </View>
+                    </View>
+                </>
+            )}
+        </TouchableOpacity>
     );
 }
 
@@ -55,6 +63,9 @@ const styles = StyleSheet.create({
     icon: {
         color: '#3777F3',
         marginRight: 16,
+    },
+    noSearchText: {
+        justifyContent: 'center',
     },
 });
 
