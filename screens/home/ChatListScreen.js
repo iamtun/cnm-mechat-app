@@ -26,18 +26,28 @@ const chats = [
 
 function ChatListScreen({ navigation }) {
     const userSearching = useSelector(usersRemainingSelector);
-
     return (
         <>
             <Header />
             <SearchBar />
             {userSearching ? (
-                <FlatList
-                    data={userSearching}
-                    renderItem={({ item }) => (
-                        <SearchItem name={item.fullName} phonNumber={item.phoneNumber} image={item.avatar}/>
-                    )}
-                />
+                //no find
+                userSearching === 1 ? (
+                    <SearchItem isNull />
+                ) : (
+                    <FlatList
+                        data={userSearching}
+                        renderItem={({ item }) => (
+                            <SearchItem
+                                id={item._id}
+                                name={item.fullName}
+                                phonNumber={item.phoneNumber}
+                                image={item.avatar}
+                                isFriend={item.isFriend}
+                            />
+                        )}
+                    />
+                )
             ) : (
                 <FlatList
                     data={chats}
