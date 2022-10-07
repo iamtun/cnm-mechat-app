@@ -7,7 +7,7 @@ import { removeItem } from "../../utils/asyncStorage";
 
 function ProfileScreen({ navigation }) {
   LogBox.ignoreLogs(["EventEmitter.removeListener"]);
-
+  
   const remove = async () => {
     await removeItem("user_token");
   };
@@ -39,6 +39,10 @@ function ProfileScreen({ navigation }) {
       key: "iaT1Ex",
     },
   ];
+
+  const clickPersonalPage = ()=>{
+    navigation.navigate("PersonalPageScreen");
+  }
 
   const showConfirmDialog = () => {
     Alert.alert("ĐĂNG XUẤT", "Bạn có muốn đăng xuất?", [
@@ -88,7 +92,7 @@ function ProfileScreen({ navigation }) {
           renderItem={getUserItem}
         />
       </View>
-      <View style={styles.image}>
+      <TouchableOpacity style={styles.image} onPress={clickPersonalPage}>
         <Avatar
           rounded
           size="large"
@@ -96,7 +100,7 @@ function ProfileScreen({ navigation }) {
         />
         <Text style={styles.textName}>Võ Minh Phương</Text>
         <Text style={styles.textPhone}>+1234</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
