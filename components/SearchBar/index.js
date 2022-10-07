@@ -28,7 +28,6 @@ function SearchBar() {
     const [isSearch, setIsSearch] = useState(false);
     const [searchInput, setSearchInput] = useState("");
     const debouncedValue = useDebounce(searchInput, 500);
-    const [count, setCount] = useState(0);
 
     const dispatch = useDispatch();
 

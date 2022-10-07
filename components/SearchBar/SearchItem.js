@@ -1,10 +1,19 @@
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-function SearchItem({ id, image, name, phonNumber, isFriend, isNull }) {
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useDispatch } from 'react-redux';
+import userInfoSlice from '../../redux/slice/userInfoSlice';
+
+function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation }) {
+    const dispatch = useDispatch();
+
+    const handleClickSearchItem = () => {
+        dispatch(userInfoSlice.actions.clickSearchItem(id));
+        navigation.navigate("PersonalScreen");
+    }
     return (
         <TouchableOpacity
             style={[styles.container, isNull ? styles.noSearchText : null]}
-            onPress={() => console.log(`[userId]: ${id}`)}
+            onPress={handleClickSearchItem}
         >
             {isNull ? (
                 <Text> Không tìm thấy</Text>
@@ -18,9 +27,9 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull }) {
                         </View>
                         <View>
                             {isFriend ? (
-                                <Icon name="phone-in-talk" size={24} style={styles.icon} />
+                                <Icon name="ios-call-outline" size={24} style={styles.icon} />
                             ) : (
-                                <Icon name="account-plus" size={24} style={styles.icon} />
+                                <Icon name="person-add-outline" size={24} style={styles.icon} />
                             )}
                         </View>
                     </View>

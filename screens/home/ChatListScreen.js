@@ -44,6 +44,7 @@ function ChatListScreen({ navigation }) {
                                 phonNumber={item.phoneNumber}
                                 image={item.avatar}
                                 isFriend={item.isFriend}
+                                navigation={navigation}
                             />
                         )}
                     />

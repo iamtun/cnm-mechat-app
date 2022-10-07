@@ -5,7 +5,13 @@ import config from "../../config";
 
 const userInfoSlice = createSlice({
     name: "info",
-    initialState: {data: null},
+    initialState: {data: null, userId: null},
+    reducers: {
+        clickSearchItem: (state, action) => {
+            console.log(action.payload);
+            state.userId = action.payload;
+        }
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchUserInfo.fulfilled, (state, action) => {
             state.data = action.payload;
@@ -21,7 +27,7 @@ export const fetchUserInfo = createAsyncThunk("info/fetchUserInfo", async(token)
         try{
             const res = await fetch(`${config.LINK_API}/users/${_id}`);
             const userInfo = await res.json();
-            return userInfo.data._user;
+            return userInfo.data;
         }catch(err) {
             console.log(`[fetch userInfo]: ${err}`);
         }
