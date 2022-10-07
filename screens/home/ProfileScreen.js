@@ -1,13 +1,16 @@
 import { View, Text, StyleSheet, FlatList } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import { TouchableOpacity, Alert } from "react-native";
-import { LogBox } from "react-native";
 import Header from "../../components/Header";
 import { removeItem } from "../../utils/asyncStorage";
+import { useSelector } from "react-redux";
+import {userInfoSelector} from "../../redux/selector"
 
 function ProfileScreen({ navigation }) {
-  LogBox.ignoreLogs(["EventEmitter.removeListener"]);
-  
+  const _userInfoSelector = useSelector(userInfoSelector);
+  //console.log(_userInfoSelector);
+  const {fullName, phoneNumber, avatarLink} = _userInfoSelector;
+
   const remove = async () => {
     await removeItem("user_token");
   };
@@ -39,10 +42,6 @@ function ProfileScreen({ navigation }) {
       key: "iaT1Ex",
     },
   ];
-
-  const clickPersonalPage = ()=>{
-    navigation.navigate("PersonalPageScreen");
-  }
 
   const showConfirmDialog = () => {
     Alert.alert("ĐĂNG XUẤT", "Bạn có muốn đăng xuất?", [
@@ -92,14 +91,14 @@ function ProfileScreen({ navigation }) {
           renderItem={getUserItem}
         />
       </View>
-      <TouchableOpacity style={styles.image} onPress={clickPersonalPage}>
+      <TouchableOpacity style={styles.image} >
         <Avatar
           rounded
           size="large"
-          source={require("../../assets/hinh-anh-conan.jpg")}
+          source={{uri: avatarLink}}
         />
-        <Text style={styles.textName}>Võ Minh Phương</Text>
-        <Text style={styles.textPhone}>+1234</Text>
+        <Text style={styles.textName}>{fullName}</Text>
+        <Text style={styles.textPhone}>{phoneNumber}</Text>
       </TouchableOpacity>
     </View>
   );

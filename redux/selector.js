@@ -4,6 +4,7 @@ export const messageListSelector = (state) => state.messages.data;
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.info.data;
+export const userIdSelector = (state) => state.info.userId;
 export const friendListSelector = (state) => state.friends.data;
 
 //Load data success!
@@ -16,7 +17,7 @@ export const usersRemainingSelector = createSelector(
         if (search) {
             if (search.startsWith('0')) {
                 const usersFilter = users.filter(
-                    (_user) => _user.phoneNumber === search && _user.phoneNumber !== user.accountID.phoneNumber,
+                    (_user) => _user.phoneNumber === search && _user.phoneNumber !== user.phoneNumber,
                 );
 
                 //don't find
@@ -53,3 +54,8 @@ export const usersRemainingSelector = createSelector(
         return false;
     },
 );
+
+export const searchItemClickSelector = createSelector(userIdSelector, userListSelector, (id, users) => {
+    const userInfo = users.filter(user => user._id === id);
+    return userInfo[0];
+})
