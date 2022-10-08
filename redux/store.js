@@ -4,7 +4,7 @@ import filterSlice from './slice/filterSlice';
 import userListSlice from './slice/usersSlice';
 import userInfoSlice from './slice/userInfoSlice';
 import friendListByUserId from './slice/friendSlice';
-
+import conversationsListByUserId from './slice/conversationSlice';
 const store = configureStore({
     reducer: {
         messages: messageListSlice.reducer,
@@ -12,6 +12,7 @@ const store = configureStore({
         users: userListSlice.reducer,
         info: userInfoSlice.reducer,
         friends: friendListByUserId.reducer,
+        conversations: conversationsListByUserId.reducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

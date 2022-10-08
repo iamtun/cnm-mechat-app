@@ -13,7 +13,7 @@ function PersonalScreen({ navigation }) {
 
     const userInfo = useSelector(searchItemClickSelector);
     const {fullName, bio, gender, birthday, avatarLink, backgroundLink} = userInfo;
-
+    
     //handle go back set search -> null
 
     return (
@@ -40,7 +40,7 @@ function PersonalScreen({ navigation }) {
                 ) : null}
             </View>
             {isFriend ? (
-                <TouchableOpacity style={styles.buttonChat} onPress={goHomeScreen}>
+                <TouchableOpacity style={styles.buttonChat}>
                     <Icon
                         style={{ marginRight: 10 }}
                         name="ios-chatbubble-ellipses-outline"

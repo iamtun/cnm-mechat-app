@@ -1,3 +1,4 @@
+import { TouchableWithoutFeedback } from 'react-native';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch } from 'react-redux';
@@ -13,7 +14,7 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation 
     return (
         <TouchableOpacity
             style={[styles.container, isNull ? styles.noSearchText : null]}
-            onPress={handleClickSearchItem}
+            onPress={isNull ? null : handleClickSearchItem}
         >
             {isNull ? (
                 <Text> Không tìm thấy</Text>
