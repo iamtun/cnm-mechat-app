@@ -8,7 +8,6 @@ const userInfoSlice = createSlice({
     initialState: {data: null, userId: null},
     reducers: {
         clickSearchItem: (state, action) => {
-            console.log(action.payload);
             state.userId = action.payload;
         }
     },

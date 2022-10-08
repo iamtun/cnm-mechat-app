@@ -10,7 +10,7 @@ function ProfileScreen({ navigation }) {
   const _userInfoSelector = useSelector(userInfoSelector);
   //console.log(_userInfoSelector);
   const {fullName, phoneNumber, avatarLink} = _userInfoSelector;
-
+  console.log("---fulname", fullName)
   const remove = async () => {
     await removeItem("user_token");
   };

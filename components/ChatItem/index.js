@@ -40,7 +40,7 @@ function ChatItem({ name, image, message, time, navigation }) {
             </View>
             <View>
                 {/* Thời gian được tính theo thời gian gửi tin nhắn cuối cùng */}
-                <Text>{`${time} phút`}</Text>
+                <Text>{time}</Text>
             </View>
         </TouchableOpacity>
     );

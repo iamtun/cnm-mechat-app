@@ -32,7 +32,6 @@ function LoginScreen({ navigation }) {
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
   const isFocused = useIsFocused();
-  
 
   //actions
   useEffect(() => {
@@ -40,7 +39,9 @@ function LoginScreen({ navigation }) {
       if (token) {
         console.log("login");
         dispatch(fetchUserInfo(token));
-        navigation.navigate("HomeScreen", { screen: "HomeScreen" });
+        setTimeout(() => {
+          navigation.navigate("HomeScreen", { screen: "HomeScreen" });
+        }, 1000);
       }
       setIsLoading(false);
     });
