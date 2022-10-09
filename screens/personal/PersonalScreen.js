@@ -2,33 +2,41 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
-import { useSelector } from 'react-redux';
-import {searchItemClickSelector} from "../../redux/selector"
+import { useDispatch, useSelector } from 'react-redux';
+import { getConversationIdByIdFriendSelector, searchItemClickSelector } from '../../redux/selector';
+import friendListSlice from '../../redux/slice/friendSlice';
 
 import moment from 'moment';
 moment().format();
 
 function PersonalScreen({ navigation }) {
-    const isFriend = true;
-
     const userInfo = useSelector(searchItemClickSelector);
-    const {fullName, bio, gender, birthday, avatarLink, backgroundLink} = userInfo;
+    const { _id, fullName, bio, gender, birthday, avatarLink, backgroundLink, isFriend } = userInfo;
     
+    const conversationId = useSelector(getConversationIdByIdFriendSelector);
+
+    const dispatch = useDispatch();
     //handle go back set search -> null
+
+    const handleSendChat = () => {
+        dispatch(friendListSlice.actions.clickSendChat(_id));
+        console.log(`id conversation in Personal: ${conversationId}`);
+    };
+   
 
     return (
         <View>
             <View style={styles.background}>
-                <Image style={styles.backgroundImage} source={{uri: backgroundLink}} />
+                <Image style={styles.backgroundImage} source={{ uri: backgroundLink }} />
             </View>
             <View style={styles.bottomContainer}>
-                <Image style={styles.avatar} source={{uri: avatarLink}} />
+                <Image style={styles.avatar} source={{ uri: avatarLink }} />
                 <Text style={styles.name}>{fullName}</Text>
                 <Text style={styles.bio}>{bio}</Text>
                 <View style={styles.info}>
                     <Text style={styles.title}>Thông tin cá nhân</Text>
                     <View style={styles.infoDetail}>
-                        <Text>Giới tính: {gender === 0 ? "Nam" : "Nữ"}</Text>
+                        <Text>Giới tính: {gender === 0 ? 'Nam' : 'Nữ'}</Text>
                         <Text>Ngày sinh: {moment(birthday).format('MM/DD/YYYY')}</Text>
                     </View>
                 </View>
@@ -40,7 +48,7 @@ function PersonalScreen({ navigation }) {
                 ) : null}
             </View>
             {isFriend ? (
-                <TouchableOpacity style={styles.buttonChat}>
+                <TouchableOpacity style={styles.buttonChat} onPress={handleSendChat}>
                     <Icon
                         style={{ marginRight: 10 }}
                         name="ios-chatbubble-ellipses-outline"
@@ -85,22 +93,22 @@ const styles = StyleSheet.create({
         bottom: '8%',
     },
     bio: {
-      bottom: '7%',
+        bottom: '7%',
     },
     info: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        bottom: "4%",
+        bottom: '4%',
     },
     title: {
-      fontWeight: 'bold',
-      textAlign: "center"
+        fontWeight: 'bold',
+        textAlign: 'center',
     },
     infoDetail: {
         margin: 8,
         flexDirection: 'column',
-        justifyContent: "space-between",
-        alignItems: "center"
+        justifyContent: 'space-between',
+        alignItems: 'center',
     },
     buttonMakeFriend: {
         flexDirection: 'row',
