@@ -1,76 +1,71 @@
-import { FlatList } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import moment from "moment";
+import { FlatList } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import moment from 'moment';
 
-import {
-  usersRemainingSelector,
-  conversationsListSelector,
-  userInfoSelector,
-} from "../../redux/selector";
-import SearchBar from "../../components/SearchBar";
-import ChatItem from "../../components/ChatItem";
-import Header from "../../components/Header";
-import SearchItem from "../../components/SearchBar/SearchItem";
-import { fetchConversations } from "../../redux/slice/conversationSlice";
-
+import { usersRemainingSelector, conversationsListSelector, userInfoSelector } from '../../redux/selector';
+import SearchBar from '../../components/SearchBar';
+import ChatItem from '../../components/ChatItem';
+import Header from '../../components/Header';
+import SearchItem from '../../components/SearchBar/SearchItem';
+import { fetchConversations } from '../../redux/slice/conversationSlice';
 
 function ChatListScreen({ navigation }) {
-  const userSearching = useSelector(usersRemainingSelector);
-  const userInfo = useSelector(userInfoSelector)
+    const userSearching = useSelector(usersRemainingSelector);
+    const userInfo = useSelector(userInfoSelector);
+    const dispatch = useDispatch();
+   
+    const { _id } = userInfo;
 
-  const { _id } = userInfo;  
-  const dispatch = useDispatch();
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            dispatch(fetchConversations(_id));
+        }, 500);
+        return () => clearTimeout(timer);
+    }, []);
 
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      dispatch(fetchConversations(_id));
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
+    const conversations = useSelector(conversationsListSelector);
 
-  const conversations = useSelector(conversationsListSelector);
-
-  return (
-    <>
-      <Header />
-      <SearchBar />
-      {userSearching ? (
-        //no find
-        userSearching === 1 ? (
-          <SearchItem isNull />
-        ) : (
-          <FlatList
-            data={userSearching}
-            renderItem={({ item }) => (
-              <SearchItem
-                id={item._id}
-                name={item.fullName}
-                phonNumber={item.phoneNumber}
-                image={item.avatar}
-                isFriend={item.isFriend}
-                navigation={navigation}
-              />
+    return (
+        <>
+            <Header />
+            <SearchBar />
+            {userSearching ? (
+                //no find
+                userSearching === 1 ? (
+                    <SearchItem isNull />
+                ) : (
+                    <FlatList
+                        data={userSearching}
+                        renderItem={({ item }) => (
+                            <SearchItem
+                                id={item._id}
+                                name={item.fullName}
+                                phonNumber={item.phoneNumber}
+                                image={item.avatarLink}
+                                isFriend={item.isFriend}
+                                navigation={navigation}
+                            />
+                        )}
+                    />
+                )
+            ) : (
+                <FlatList
+                    data={conversations}
+                    renderItem={({ item }) => (
+                        <ChatItem
+                            name={item.name}
+                            image={item.imageLinkOfConver}
+                            message={item.content}
+                            time={moment(item.time).fromNow()}
+                            navigation={navigation}
+                            key={item.id}
+                        />
+                    )}
+                />
             )}
-          />
-        )
-      ) : (
-        <FlatList
-          data={conversations}
-          renderItem={({ item }) => (
-            <ChatItem
-              name={item.name}
-              image={item.imageLinkOfConver}
-              message={item.content}
-              time={moment(item.time).fromNow()}
-              navigation={navigation}
-              key={item.id}
-            />
-          )}
-        />
-      )}
-    </>
-  );
+        </>
+    );
 }
 
 export default ChatListScreen;
