@@ -70,8 +70,9 @@ export const getConversationIdByIdFriendSelector = createSelector(
             (_conversation) => _conversation.members.length === 2 && _conversation.members.includes(friendId),
         );
 
-        if(conversation)
-          return conversation[0].id;
+        if(conversation.length > 0){
+            return conversation[0].id;
+        }
         return 0;
     },
 );
