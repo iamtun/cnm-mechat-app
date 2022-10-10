@@ -11,10 +11,11 @@ import SearchItem from '../../components/SearchBar/SearchItem';
 import { fetchConversations } from '../../redux/slice/conversationSlice';
 
 function ChatListScreen({ navigation }) {
+
     const userSearching = useSelector(usersRemainingSelector);
     const userInfo = useSelector(userInfoSelector);
     const dispatch = useDispatch();
-   
+    console.log("--user info", userInfo);
     const { _id } = userInfo;
 
     useEffect(() => {
