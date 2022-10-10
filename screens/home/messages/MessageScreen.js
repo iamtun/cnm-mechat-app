@@ -5,13 +5,19 @@ import MessageInputBox from '../../../components/Messages/MessageInputBox';
 import MessageItem from '../../../components/Messages/MessageItem';
 import TopBar from '../../../components/Messages/TopBar/TopBar';
 
-import { useSelector } from 'react-redux';
-import { messageListSelector } from '../../../redux/selector';
+import { useDispatch, useSelector } from 'react-redux';
+import { getMessageByIdConversationSelector, messageListSelector } from '../../../redux/selector';
+import { useEffect } from 'react';
+import { fetchMessagesById } from '../../../redux/slice/messageSlice';
 
 function MessageScreen({ route, navigation }) {
-    const { name } = route.params;
+    const { id, name } = route.params;
+    const dispatch = useDispatch();
 
-    const messages = useSelector(messageListSelector);
+    const messages = useSelector(getMessageByIdConversationSelector);
+    useEffect(() => {
+        dispatch(fetchMessagesById(id));
+    }, []);
 
     return (
         <>

@@ -15,7 +15,7 @@ export const fetchConversations = createAsyncThunk("conversations/fetchConversat
     try{
         const res = await fetch(`${config.LINK_API_V2}/conversations/${id}`);
         const conversations = await res.json();
-       
+        //console.log(conversations.data);
         return conversations.data;
     }catch(err) {
         console.log(`[fetchConversations]: ${err}`);

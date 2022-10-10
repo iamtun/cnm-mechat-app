@@ -8,6 +8,7 @@ import { fetchUsers } from '../redux/slice/usersSlice';
 import { getFriendsByUserSelector } from '../redux/selector';
 import friendListSlice from '../redux/slice/friendSlice';
 import { useIsFocused } from '@react-navigation/native';
+
 function LoadingScreen({ navigation }) {
     const dispatch = useDispatch();
     const friends = useSelector(getFriendsByUserSelector);
@@ -17,19 +18,19 @@ function LoadingScreen({ navigation }) {
         getItem('user_token').then((token) => {
             if (token) {
                 console.log('have token');
-                dispatch(fetchUserInfo(token));
                 dispatch(fetchUsers());
-                if (!friends) return;
-                else {
-                    setTimeout(() => {
-                        dispatch(friendListSlice.actions.loadDataFriend(friends));
-                        navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
-                    }, 1000);
-                }
-            } else {
-                navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+                dispatch(fetchUserInfo(token));
+                setTimeout(() => {
+                    dispatch(friendListSlice.actions.loadDataFriend(friends));
+                    navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
+                }, 1000);
             }
+        }).catch(err => {
+            navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+            return err;
         });
+
+        //console.log('go');
     }, [isFocus]);
 
     return (
