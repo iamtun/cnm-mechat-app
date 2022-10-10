@@ -13,7 +13,7 @@ const conversationsListByUserId = createSlice({
 //Lấy thành công list conversations
 export const fetchConversations = createAsyncThunk("conversations/fetchConversations", async(id) => {
     try{
-        const res = await fetch(`${config.LINK_API}/conversations/${id}`);
+        const res = await fetch(`${config.LINK_API_V2}/conversations/${id}`);
         const conversations = await res.json();
        
         return conversations.data;

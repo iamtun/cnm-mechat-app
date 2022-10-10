@@ -1,34 +1,23 @@
 import { Text, View, FlatList } from "react-native";
 import { ListItem, Avatar } from "react-native-elements";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { AlphabetList } from "react-native-section-alphabet-list";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 
 import SearchBar from "../../components/SearchBar";
 import Header from "../../components/Header";
-import { friendListSelector, userInfoSelector } from "../../redux/selector";
-import { fetchFriends } from "../../redux/slice/friendSlice";
+import { getFriendsByUserSelector} from "../../redux/selector";
+
 
 // Screen PhoneBook
 function PhoneBook() {
   // data
   let friendInfo = [];
-  const userInfo = useSelector(userInfoSelector);
-  const { _id } = userInfo;
-  const dispatch = useDispatch();
-  
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      dispatch(fetchFriends(_id));
-    }, 1000);
-    return () => clearTimeout(timer);
-  }, []);
 
-  const friends = useSelector(friendListSelector);
+  const friends = useSelector(getFriendsByUserSelector);
+
   if (friends.length != 0) {
-    console.log(friends);
     for (let i = 0; i < friends.length; i++) {
       friendInfo.push({
         value: friends[i].fullName,

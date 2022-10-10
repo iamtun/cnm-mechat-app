@@ -9,7 +9,6 @@ import { StyleSheet, Platform } from "react-native";
 import { Alert } from "react-native";
 import { useEffect, useRef, useState } from "react";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import { useDispatch, useSelector } from "react-redux";
 import firebase from "firebase/compat/app";
 
 import GlobalStyle from "../styles/GlobalStyle";
@@ -18,34 +17,16 @@ import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
 import config from "../config";
 import { firebaseConfig } from "../utils/firebase";
-import { fetchUserInfo } from "../redux/slice/userInfoSlice";
-import { getItem, setItem } from "../utils/asyncStorage";
-import { useIsFocused } from "@react-navigation/native";
+import { setItem } from "../utils/asyncStorage";
 
 function LoginScreen({ navigation }) {
   //ui ref
   const phoneNumberLoginRef = useRef(null);
   const passLoginRef = useRef(null);
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
+
   //firebase
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
-  const isFocused = useIsFocused();
-
-  //actions
-  useEffect(() => {
-    getItem("user_token").then((token) => {
-      if (token) {
-        console.log("login");
-        dispatch(fetchUserInfo(token));
-        setTimeout(() => {
-          navigation.navigate("HomeScreen", { screen: "HomeScreen" });
-        }, 1000);
-      }
-      setIsLoading(false);
-    });
-  }, [isFocused]);
 
   // function
   const senOTP = async () => {
@@ -66,7 +47,7 @@ function LoginScreen({ navigation }) {
   };
 
   const sign = () => {
-    return fetch(`${config.LINK_API}/users/login`, {
+    return fetch(`${config.LINK_API_V2}/users/login`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -121,14 +102,12 @@ function LoginScreen({ navigation }) {
     if (phoneNumberLoginRef.current == null || passLoginRef.current == null) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
     } else {
-      setIsLoading(true);
       sign()
         .then((token) => {
           setItem("user_token", token);
-          navigation.navigate("HomeScreen");
+          navigation.navigate("LoadingScreen");
         })
         .catch((err) => {
-          setIsLoading(false);
           Alert.alert("Thông báo", err.message);
         });
     }
@@ -136,11 +115,7 @@ function LoginScreen({ navigation }) {
 
   return (
     <View style={GlobalStyle.container}>
-      {isLoading ? (
-        <ActivityIndicator size="large" color={GlobalStyle.primaryColor} />
-      ) : (
-        <>
-          <FirebaseRecaptchaVerifierModal
+      <FirebaseRecaptchaVerifierModal
             ref={recaptchaVerifier}
             firebaseConfig={firebaseConfig}
             title="Xác thực"
@@ -189,8 +164,6 @@ function LoginScreen({ navigation }) {
               keyboardVerticalOffset={0}
             />
           )}
-        </>
-      )}
     </View>
   );
 }

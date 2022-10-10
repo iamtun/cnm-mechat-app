@@ -1,12 +1,12 @@
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { View, StyleSheet } from 'react-native';
-import Header from '../../components/Header';
-import MessageInputBox from '../../components/Messages/MessageInputBox';
-import MessageItem from '../../components/Messages/MessageItem';
-import TopBar from '../../components/Messages/TopBar/TopBar';
+import Header from '../../../components/Header';
+import MessageInputBox from '../../../components/Messages/MessageInputBox';
+import MessageItem from '../../../components/Messages/MessageItem';
+import TopBar from '../../../components/Messages/TopBar/TopBar';
 
 import { useSelector } from 'react-redux';
-import { messageListSelector } from '../../redux/selector';
+import { messageListSelector } from '../../../redux/selector';
 
 function MessageScreen({ route, navigation }) {
     const { name } = route.params;
