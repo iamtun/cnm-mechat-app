@@ -12,23 +12,24 @@ function LoadingScreen({ navigation }) {
     const dispatch = useDispatch();
     const friends = useSelector(getFriendsByUserSelector);
     const isFocus = useIsFocused();
-    
+
     useEffect(() => {
-        getItem('user_token')
-            .then((token) => {
-                if (token) {
-                    console.log('have token');
-                    dispatch(fetchUserInfo(token));
-                    dispatch(fetchUsers());
+        getItem('user_token').then((token) => {
+            if (token) {
+                console.log('have token');
+                dispatch(fetchUserInfo(token));
+                dispatch(fetchUsers());
+                if (!friends) return;
+                else {
                     setTimeout(() => {
-                        dispatch(friendListSlice.actions.loadDataFriend(friends))
+                        dispatch(friendListSlice.actions.loadDataFriend(friends));
                         navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
                     }, 1000);
                 }
-                else {
-                    navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
-                }
-            })
+            } else {
+                navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+            }
+        });
     }, [isFocus]);
 
     return (
