@@ -11,9 +11,9 @@ const screenOptions = ({ route }) => ({
 
         if (route.name === 'Messages') {
             iconName = 'message-processing';
-        } else if (route.name === 'PhoneBook') {
+        } else if (route.name === 'PhoneBookScreen') {
             iconName = 'book-account';
-        } else if (route.name === 'Profile') {
+        } else if (route.name === 'ProfileScreen') {
             iconName = 'account';
         }
 
@@ -32,8 +32,8 @@ function HomeTabNavigator() {
                 component={ChatListScreen}
                 options={{ tabBarBadge: 3, tabBarLabel: 'Tin nhắn' }}
             />
-            <Tab.Screen name="PhoneBook" component={PhoneBookScreen} options={{ tabBarLabel: 'Danh bạ' }} />
-            <Tab.Screen name="Profile" component={ProfileScreen} options={{ tabBarLabel: 'Cá nhân' }} />
+            <Tab.Screen name="PhoneBookScreen" component={PhoneBookScreen} options={{ tabBarLabel: 'Danh bạ' }} />
+            <Tab.Screen name="ProfileScreen" component={ProfileScreen} options={{ tabBarLabel: 'Cá nhân' }} />
         </Tab.Navigator>
     );
 }
