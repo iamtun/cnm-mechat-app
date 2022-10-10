@@ -15,7 +15,7 @@ function RegisterScreen({ navigation }) {
 
   //function
   const register = () => {
-    return fetch(`${config.LINK_API}/users/signup`, {
+    return fetch(`${config.LINK_API_V2}/users/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",

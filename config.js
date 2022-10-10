@@ -1,4 +1,4 @@
-import { LINK_API } from '@env';
+import { LINK_API_V2 } from '@env';
 export default {
-    LINK_API,
+    LINK_API_V2,
 };

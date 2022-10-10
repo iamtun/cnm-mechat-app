@@ -24,7 +24,7 @@ export const fetchUserInfo = createAsyncThunk("info/fetchUserInfo", async(token)
         const info = jwtDecode(_token);
         const {_id} = info;
         try{
-            const res = await fetch(`${config.LINK_API}/users/${_id}`);
+            const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
             const userInfo = await res.json();
             return userInfo.data;
         }catch(err) {

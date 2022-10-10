@@ -3,10 +3,11 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import { getConversationIdByIdFriendSelector, searchItemClickSelector } from '../../redux/selector';
-import friendListSlice from '../../redux/slice/friendSlice';
+import { getConversationIdByIdFriendSelector, searchItemClickSelector } from '../../../redux/selector';
+import friendListSlice from '../../../redux/slice/friendSlice';
 
 import moment from 'moment';
+import { useEffect } from 'react';
 moment().format();
 
 function PersonalScreen({ navigation }) {
@@ -16,11 +17,16 @@ function PersonalScreen({ navigation }) {
     const conversationId = useSelector(getConversationIdByIdFriendSelector);
 
     const dispatch = useDispatch();
-    //handle go back set search -> null
+
+    useEffect(() => {
+        //first run
+        if(conversationId === 0)
+            return;
+        console.log(`id : ${conversationId}`);
+    }, [conversationId])
 
     const handleSendChat = () => {
         dispatch(friendListSlice.actions.clickSendChat(_id));
-        console.log(`id conversation in Personal: ${conversationId}`);
     };
    
 
@@ -37,7 +43,7 @@ function PersonalScreen({ navigation }) {
                     <Text style={styles.title}>Thông tin cá nhân</Text>
                     <View style={styles.infoDetail}>
                         <Text>Giới tính: {gender === 0 ? 'Nam' : 'Nữ'}</Text>
-                        <Text>Ngày sinh: {moment(birthday).format('MM/DD/YYYY')}</Text>
+                        <Text>Ngày sinh: {moment(birthday).format('DD/MM/YYYY')}</Text>
                     </View>
                 </View>
                 {!isFriend ? (
