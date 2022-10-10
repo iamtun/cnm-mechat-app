@@ -13,7 +13,7 @@ const userListSlice = createSlice({
 
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async() => {
     try{
-        const res = await fetch(`${config.LINK_API}/users`);
+        const res = await fetch(`${config.LINK_API_V2}/users`);
         const users = await res.json();
         return users.data;
     }catch(err) {

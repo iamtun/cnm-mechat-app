@@ -6,8 +6,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
 import filterSlice from '../../redux/slice/filterSlice';
 import { fetchUsers } from '../../redux/slice/usersSlice';
-import { fetchFriends } from '../../redux/slice/friendSlice';
-import {userInfoSelector} from "../../redux/selector"
+import friendListSlice, { fetchFriends } from '../../redux/slice/friendSlice';
+import {getFriendsByUserSelector} from "../../redux/selector"
 import useDebounce from '../../hooks/useDebounce';
 
 const items = [
@@ -32,7 +32,7 @@ function SearchBar() {
     const dispatch = useDispatch();
 
     //selector
-    const _userInfoSelector = useSelector(userInfoSelector);
+    
     
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchInput));
@@ -41,11 +41,6 @@ function SearchBar() {
     //func handle
     const onOpenSearch = () => {
         setIsSearch(true);
-        const timer = setTimeout(() => {
-            dispatch(fetchUsers());
-            dispatch(fetchFriends(_userInfoSelector._id));
-        }, 1000);
-        return () => clearTimeout(timer);
     };
 
     const onHideSearch = () => {

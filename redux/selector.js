@@ -1,4 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
 
 export const messageListSelector = (state) => state.messages.data;
 export const searchTextSelector = (state) => state.filters.search;
@@ -57,7 +58,6 @@ export const usersRemainingSelector = createSelector(
 );
 
 export const searchItemClickSelector = createSelector(userIdSelector, usersRemainingSelector, (id, users) => {
-    //console.log(users);
     const userInfo = users.filter((user) => user._id === id);
     return userInfo[0];
 });
@@ -76,3 +76,8 @@ export const getConversationIdByIdFriendSelector = createSelector(
         return 0;
     },
 );
+
+export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
+    const friends = users.filter((_user) => user.friends.includes(_user._id));
+    return friends;
+})
