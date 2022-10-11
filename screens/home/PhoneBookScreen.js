@@ -85,7 +85,22 @@ function GroupChat() {
         "https://cdn.pixabay.com/photo/2019/07/03/10/16/pug-4314106_960_720.jpg",
     },
   ];
-  
+
+  function getGroupItem({ item: user }) {
+    return (
+      <View styles={{ flex: 1 }}>
+        <ListItem key={user.id} bottomDivider>
+          <Avatar rounded size={70} source={{ uri: user.avatarUrl }} />
+          <ListItem.Content>
+            <ListItem.Title>{user.name}</ListItem.Title>
+            <ListItem.Subtitle>{user.lastMessage}</ListItem.Subtitle>
+          </ListItem.Content>
+          <Text style={{ bottom: "7%" }}>Time</Text>
+        </ListItem>
+      </View>
+    );
+  }
+
   return (
     <View>
       <FlatList
