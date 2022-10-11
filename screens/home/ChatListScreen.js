@@ -11,10 +11,11 @@ import SearchItem from '../../components/SearchBar/SearchItem';
 import { fetchConversations } from '../../redux/slice/conversationSlice';
 
 function ChatListScreen({ navigation }) {
+
     const userSearching = useSelector(usersRemainingSelector);
     const userInfo = useSelector(userInfoSelector);
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         if (!userInfo?._id) return;
         else dispatch(fetchConversations(userInfo._id));
@@ -25,7 +26,7 @@ function ChatListScreen({ navigation }) {
     return (
         <>
             <Header />
-            <SearchBar />
+            <SearchBar navigation={navigation}/>
             {userSearching ? (
                 //no find
                 userSearching === 1 ? (
