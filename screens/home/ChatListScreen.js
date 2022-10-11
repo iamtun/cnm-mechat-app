@@ -15,7 +15,6 @@ function ChatListScreen({ navigation }) {
     const userSearching = useSelector(usersRemainingSelector);
     const userInfo = useSelector(userInfoSelector);
     const dispatch = useDispatch();
-    const { _id } = userInfo;
 
     useEffect(() => {
         if (!userInfo?._id) return;
@@ -27,7 +26,7 @@ function ChatListScreen({ navigation }) {
     return (
         <>
             <Header />
-            <SearchBar />
+            <SearchBar navigation={navigation}/>
             {userSearching ? (
                 //no find
                 userSearching === 1 ? (

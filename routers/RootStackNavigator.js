@@ -6,8 +6,7 @@ import MessageScreen from '../screens/home/messages/MessageScreen';
 import PersonalScreen from '../screens/home/personal/PersonalScreen';
 import ProfileScreen from '../screens/home/ProfileScreen';
 import LoadingScreen from '../screens/LoadingScreen';
-import AddFriendScreen from '../screens/addFriends/AddFriendScreen';
-import SearchBar from '../components/SearchBar';
+import AddFriendScreen from '../screens/addFriends/AddFriendScreen'
 
 const Stack = createNativeStackNavigator();
 
@@ -29,8 +28,8 @@ function RootStackNavigator() {
                 <Stack.Screen name="MessageScreen" component={MessageScreen} />
                 <Stack.Screen name="PersonalScreen" component={PersonalScreen} />
                 <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
-                <Stack.Screen name='AddFriendScreen' component={AddFriendScreen}/>
-                <Stack.Screen name='SearchBar' component={SearchBar}/>
+                <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} />
+                
             </Stack.Navigator>
         </NavigationContainer>
     );

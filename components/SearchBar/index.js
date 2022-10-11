@@ -2,33 +2,29 @@ import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
 import filterSlice from '../../redux/slice/filterSlice';
-import { fetchUsers } from '../../redux/slice/usersSlice';
-import friendListSlice, { fetchFriends } from '../../redux/slice/friendSlice';
-import {getFriendsByUserSelector} from "../../redux/selector"
 import useDebounce from '../../hooks/useDebounce';
 
 const items = [
   {
     id: 1,
     icon: "account-multiple-plus-outline",
-    title: "Tạo nhóm",
+    title: "Tạo nhóm"
   },
   {
     id: 2,
     icon: "account-plus-outline",
-    title: "Thêm bạn",
+    title: "Thêm bạn"
   },
 ];
 
-function SearchBar() {
+function SearchBar({navigation}) {
   const [isVisible, setIsVisible] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const debouncedValue = useDebounce(searchInput, 500);
-
   const dispatch = useDispatch();
 
     //selector
@@ -90,19 +86,12 @@ function SearchBar() {
         content={
           <>
             {items.map((item) =>
-              item.id == 1 ? (
                 <MenuItem
                   icon={item.icon}
                   title={item.title}
                   key={item.id}
+                  onPress = {() => navigation.navigate("AddFriendScreen")}
                 />
-              ) : (
-                <MenuItem
-                  icon={item.icon}
-                  title={item.title}
-                  key={item.id}
-                />
-              )
             )}
           </>
         }

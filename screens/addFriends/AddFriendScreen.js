@@ -9,21 +9,21 @@ import React, { useState } from "react";
 import Header from "../../components/Header";
 import Icon from "react-native-vector-icons/Ionicons";
 
-function AddFriendsScreen() {
+function AddFriendScreen({ navigation }) {
   const [text, setText] = useState("");
   const clearText = () => {
-    setText('')
-  }
+    setText("");
+  };
   return (
     <>
       <Header />
       <View style={styles.viewTitle}>
-        <Icon
+        <TouchableOpacity onPress={() => navigation.goBack()}><Icon
           style={{ marginLeft: 10 }}
           name="arrow-back-outline"
           color="white"
           size={30}
-        />
+        /></TouchableOpacity>
         <Text style={styles.title}>Thêm bạn</Text>
       </View>
       <View style={styles.viewSubTitle}>
@@ -35,7 +35,7 @@ function AddFriendsScreen() {
           style={styles.input}
           placeholder="Nhập số điện thoại"
           onChangeText={(txt) => setText(txt)}
-          value = {text}
+          value={text}
         />
         {text.length <= 0 ? null : (
           <TouchableOpacity onPress={clearText}>
@@ -98,4 +98,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AddFriendsScreen;
+export default AddFriendScreen;
