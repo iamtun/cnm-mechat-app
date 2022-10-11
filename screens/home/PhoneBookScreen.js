@@ -7,8 +7,7 @@ import { createMaterialTopTabNavigator } from "@react-navigation/material-top-ta
 
 import SearchBar from "../../components/SearchBar";
 import Header from "../../components/Header";
-import { getFriendsByUserSelector} from "../../redux/selector";
-
+import { getFriendsByUserSelector } from "../../redux/selector";
 
 // Screen PhoneBook
 function PhoneBook() {
@@ -32,7 +31,7 @@ function PhoneBook() {
     return (
       <View styles={{ flex: 1 }}>
         <ListItem key={item.key} bottomDivider>
-          <Avatar rounded size="large" source={{ uri: item.avatar }} />
+          <Avatar rounded size={70} source={{ uri: item.avatar }} />
           <ListItem.Content>
             <ListItem.Subtitle>{item.value}</ListItem.Subtitle>
             <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
@@ -86,22 +85,7 @@ function GroupChat() {
         "https://cdn.pixabay.com/photo/2019/07/03/10/16/pug-4314106_960_720.jpg",
     },
   ];
-
-  function getGroupItem({ item: user }) {
-    return (
-      <View styles={{ flex: 1 }}>
-        <ListItem key={user.id} bottomDivider>
-          <Avatar rounded size="large" source={{ uri: user.avatarUrl }} />
-          <ListItem.Content>
-            <ListItem.Title>{user.name}</ListItem.Title>
-            <ListItem.Subtitle>{user.lastMessage}</ListItem.Subtitle>
-          </ListItem.Content>
-          <Text style ={{bottom: "7%"}}>Time</Text>
-        </ListItem>
-      </View>
-    );
-  }
-
+  
   return (
     <View>
       <FlatList
@@ -113,6 +97,14 @@ function GroupChat() {
   );
 }
 
+// Screen new friend
+function NewFriend(){
+  return(
+    <View>
+      <Text>New Friend</Text>
+    </View>
+  )
+}
 const Tab = createMaterialTopTabNavigator();
 
 function PhoneBookScreen() {
@@ -131,6 +123,12 @@ function PhoneBookScreen() {
           name="GroupChat"
           component={GroupChat}
           options={{ tabBarLabel: "Nhóm" }}
+        />
+
+        <Tab.Screen
+          name="NewFriend"
+          component={NewFriend}
+          options={{ tabBarLabel: "Lời mời kết bạn" }}
         />
       </Tab.Navigator>
     </>

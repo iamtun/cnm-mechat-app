@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from 'react-native';
 
 function ImageMessage({ imageURI, content }) {
     return (
-        <View>
+        <View style={styles.body}>
             <Image source={{ uri: imageURI }} style={styles.imageMessage} />
             {content && <Text style={[styles.message]}>{content}</Text>}
         </View>

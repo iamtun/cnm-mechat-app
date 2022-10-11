@@ -22,10 +22,8 @@ export const fetchUserInfo = createAsyncThunk(
   "info/fetchUserInfo",
   async (token) => {
     const _token = token;
-    console.log("--Token",_token);
     if (_token) {
       const info = jwtDecode(_token);
-      console.log("---Info", info);
       const { _id } = info;
 
       try {

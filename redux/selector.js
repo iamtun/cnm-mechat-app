@@ -1,5 +1,5 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 export const messageListSelector = (state) => state.messages.data;
 export const searchTextSelector = (state) => state.filters.search;
@@ -70,7 +70,7 @@ export const getConversationIdByIdFriendSelector = createSelector(
             (_conversation) => _conversation.members.length === 2 && _conversation.members.includes(friendId),
         );
 
-        if(conversation.length > 0){
+        if (conversation.length > 0) {
             return conversation[0].id;
         }
         return 0;
@@ -78,6 +78,42 @@ export const getConversationIdByIdFriendSelector = createSelector(
 );
 
 export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
-    const friends = users.filter((_user) => user.friends.includes(_user._id));
-    return friends;
-})
+    if (users) {
+        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        return friends;
+    }
+    return null;
+});
+
+export const getMessageByIdConversationSelector = createSelector(
+    userListSelector,
+    messageListSelector,
+    (users, messages) => {
+        const _messages = messages.map((message) => {
+            let otherUser = null;
+            let user = null;
+            if (message.action) {
+                otherUser = users.filter((_user) => _user._id === message.action[0].userID);
+                //console.log(`otherUser ${otherUser}`);
+            } else {
+                user = users.filter((_user) => _user._id === message.senderID)[0];
+            }
+            return {
+                id: message.id,
+                action: message.action ? `Bạn và ${otherUser[0].fullName} đã là bạn bè` : null,
+                content: message.action ? null : message.content,
+                imageLink: message.imageLink,
+                createdAt: message.action
+                    ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
+                    : moment(message.createdAt).format('hh:mm'),
+                user: {
+                    id: message.action ? otherUser._id : user._id,
+                    name: message.action ? null : user.fullName,
+                    avatar: message.action ? null : user.avatarLink,
+                },
+            };
+        });
+
+        return _messages;
+    },
+);

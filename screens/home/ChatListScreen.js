@@ -15,15 +15,12 @@ function ChatListScreen({ navigation }) {
     const userSearching = useSelector(usersRemainingSelector);
     const userInfo = useSelector(userInfoSelector);
     const dispatch = useDispatch();
-    console.log("--user info", userInfo);
     const { _id } = userInfo;
 
     useEffect(() => {
-        const timer = setTimeout(() => {
-            dispatch(fetchConversations(_id));
-        }, 500);
-        return () => clearTimeout(timer);
-    }, []);
+        if (!userInfo?._id) return;
+        else dispatch(fetchConversations(userInfo._id));
+    }, [userInfo]);
 
     const conversations = useSelector(conversationsListSelector);
 
@@ -55,6 +52,7 @@ function ChatListScreen({ navigation }) {
                     data={conversations}
                     renderItem={({ item }) => (
                         <ChatItem
+                            id={item.id}
                             name={item.name}
                             image={item.imageLinkOfConver}
                             message={item.content}

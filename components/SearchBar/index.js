@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import { useDispatch, useSelector } from 'react-redux';
@@ -33,7 +33,6 @@ function SearchBar() {
 
     //selector
     
-    
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchInput));
     }, [debouncedValue])
@@ -55,9 +54,7 @@ function SearchBar() {
     setSearchInput(() => setSearchInput(value));
   };
 
-  const openAdd = () => {
-    Alert.alert("Hé luu");
-  };
+
   //ui
   return (
     <View style={styles.searchBar}>
@@ -104,7 +101,6 @@ function SearchBar() {
                   icon={item.icon}
                   title={item.title}
                   key={item.id}
-                  onPress={openAdd}
                 />
               )
             )}

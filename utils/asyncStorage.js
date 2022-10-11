@@ -12,7 +12,10 @@ export const setItem = (key, val) => {
 
 export const getItem = (key) => {
     return AsyncStorage.getItem(key).then((val) => {
-        return val;
+        if(!val)
+            throw new Error("404 token");
+        else
+            return val;
     });
 };
 

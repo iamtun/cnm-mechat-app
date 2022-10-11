@@ -13,22 +13,20 @@ moment().format();
 function PersonalScreen({ navigation }) {
     const userInfo = useSelector(searchItemClickSelector);
     const { _id, fullName, bio, gender, birthday, avatarLink, backgroundLink, isFriend } = userInfo;
-    
+
     const conversationId = useSelector(getConversationIdByIdFriendSelector);
 
     const dispatch = useDispatch();
 
     useEffect(() => {
         //first run
-        if(conversationId === 0)
-            return;
-        console.log(`id : ${conversationId}`);
-    }, [conversationId])
+        if (conversationId === 0) return;
+        else navigation.navigate('MessageScreen', { id: conversationId, name: fullName });
+    }, [conversationId]);
 
     const handleSendChat = () => {
         dispatch(friendListSlice.actions.clickSendChat(_id));
     };
-   
 
     return (
         <View>
