@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getItem } from "../../utils/asyncStorage";
 import jwtDecode from "jwt-decode";
 import config from "../../config";
 

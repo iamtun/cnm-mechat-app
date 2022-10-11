@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useLayoutEffect } from 'react';
 import { Text, View, ActivityIndicator } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,26 +11,20 @@ import { useIsFocused } from '@react-navigation/native';
 
 function LoadingScreen({ navigation }) {
     const dispatch = useDispatch();
-    const friends = useSelector(getFriendsByUserSelector);
     const isFocus = useIsFocused();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         getItem('user_token').then((token) => {
             if (token) {
                 console.log('have token');
                 dispatch(fetchUsers());
                 dispatch(fetchUserInfo(token));
-                setTimeout(() => {
-                    dispatch(friendListSlice.actions.loadDataFriend(friends));
-                    navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
-                }, 1000);
+                navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
             }
         }).catch(err => {
             navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
             return err;
         });
-
-        //console.log('go');
     }, [isFocus]);
 
     return (

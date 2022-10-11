@@ -10,10 +10,19 @@ export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 export const conversationsListSelector = (state) => state.conversations.data;
 
+
+export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
+    if (users) {
+        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        return friends;
+    }
+    return null;
+});
+
 //Load data success!
 export const usersRemainingSelector = createSelector(
     userListSelector,
-    friendListSelector,
+    getFriendsByUserSelector,
     userInfoSelector,
     searchTextSelector,
     (users, friends, user, search) => {
@@ -76,14 +85,6 @@ export const getConversationIdByIdFriendSelector = createSelector(
         return 0;
     },
 );
-
-export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
-    if (users) {
-        const friends = users.filter((_user) => user.friends.includes(_user._id));
-        return friends;
-    }
-    return null;
-});
 
 export const getMessageByIdConversationSelector = createSelector(
     userListSelector,
