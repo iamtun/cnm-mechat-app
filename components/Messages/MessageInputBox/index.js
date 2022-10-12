@@ -3,12 +3,15 @@ import { Platform } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-import { useDispatch } from 'react-redux';
-import messageListSlice from '../../../redux/slice/messageSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { userInfoSelector } from '../../../redux/selector';
+import messageListSlice, { sendMessage } from '../../../redux/slice/messageSlice';
 
-function MessageInputBox() {
+function MessageInputBox({ conversationId }) {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
+
+    const userInfo = useSelector(userInfoSelector);
 
     const dispatch = useDispatch();
 
@@ -23,15 +26,10 @@ function MessageInputBox() {
 
     const handleSendMessage = () => {
         dispatch(
-            messageListSlice.actions.sendMessage({
-                id: 'm10',
+            sendMessage({
                 content: message,
-                user: {
-                    id: 'u1',
-                    name: 'Le Tuan',
-                    avatar: 'https://cnm-s3-demo-9922.s3.ap-southeast-1.amazonaws.com/avatar.jpg',
-                },
-                createAt: {createAt : new Date()}.createAt.toLocaleString(),
+                senderID: userInfo._id,
+                conversationID: conversationId,
             }),
         );
         setMessage('');

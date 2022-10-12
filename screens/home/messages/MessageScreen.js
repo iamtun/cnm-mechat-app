@@ -15,9 +15,12 @@ function MessageScreen({ route, navigation }) {
     const dispatch = useDispatch();
 
     const messages = useSelector(getMessageByIdConversationSelector);
+
     useEffect(() => {
         dispatch(fetchMessagesById(id));
     }, []);
+
+    const renderItem = ({ item }) => <MessageItem message={item} />;
 
     return (
         <>
@@ -31,13 +34,14 @@ function MessageScreen({ route, navigation }) {
                     <TopBar name={name} navigation={navigation} />
                     <FlatList
                         data={messages}
-                        renderItem={({ item }) => <MessageItem message={item} />}
-                        keyExtractor={(item) => item.id}
+                        renderItem={renderItem}
+                        initialNumToRender={20}
                         inverted
+                        keyExtractor={(item, index) => item._id || index.toString()}
                         contentContainerStyle={{ flexDirection: 'column-reverse' }}
                     />
                 </View>
-                <MessageInputBox />
+                <MessageInputBox conversationId={id} />
             </KeyboardAvoidingView>
         </>
     );

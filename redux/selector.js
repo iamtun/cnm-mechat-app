@@ -43,11 +43,12 @@ export const usersRemainingSelector = createSelector(
                 //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
             } else if (search.match('^[A-Z]')) {
                 const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
+                
+                //don't find
                 if (!friendFilter.length) {
                     return 1;
                 }
 
-                //don't find
                 return friendFilter.map((user) => ({
                     _id: user._id,
                     fullName: user.fullName,
@@ -100,7 +101,7 @@ export const getMessageByIdConversationSelector = createSelector(
                 user = users.filter((_user) => _user._id === message.senderID)[0];
             }
             return {
-                id: message.id,
+                _id: message.id,
                 action: message.action ? `Bạn và ${otherUser[0].fullName} đã là bạn bè` : null,
                 content: message.action ? null : message.content,
                 imageLink: message.imageLink,
@@ -115,6 +116,6 @@ export const getMessageByIdConversationSelector = createSelector(
             };
         });
 
-        return _messages;
+        return _messages.slice(-10);
     },
 );
