@@ -4,26 +4,78 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  FlatList,
 } from "react-native";
-import React, { useState } from "react";
-import Header from "../../components/Header";
+import React, { useState,useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Icon from "react-native-vector-icons/Ionicons";
 
+import Header from "../../components/Header";
+import filterSlice from "../../redux/slice/filterSlice";
+import useDebounce from "../../hooks/useDebounce";
+import { getUserByPhoneNumber } from "../../redux/selector";
+import SearchItem from "../../components/SearchBar/SearchItem";
+import { userInfoSelector } from '../../redux/selector';
+import { fetchFriendsRequest } from "../../redux/slice/friendRequestSlice";
+
 function AddFriendScreen({ navigation }) {
+  const debouncedValue = useDebounce(text, 500);
+  const dispatch = useDispatch();
+  const [isRequest, setIsRequest] = useState(false)
+  //Set phone number when change text
   const [text, setText] = useState("");
+ 
+  //Get user by phone number
+  const usersByPhone = useSelector(getUserByPhoneNumber);
+  //Get info me
+  const _userInfoSelector = useSelector(userInfoSelector);
+
+  useEffect(() => {
+    search
+   clearText
+  }, [debouncedValue]);
+  
+  //dispatch actions
+  const search = () => {
+    dispatch(filterSlice.actions.searchFilterChange(text));
+  };
+  //click button remove
   const clearText = () => {
     setText("");
+    dispatch(filterSlice.actions.searchFilterChange(null));
   };
+  
+  //click button search 
+  const _handleClick = () => {
+    search()
+    usersByPhone;
+  };
+
+  // request make friend
+  const _handleRequest = () =>{
+    //Set data for send require make friend
+    const data = {senderID: _userInfoSelector._id, reciverID: usersByPhone[0]._id}
+    setIsRequest(true)
+    dispatch(fetchFriendsRequest(data))
+  }
+
+  //Close request make friend
+  const _handleCloseRequest = () =>{
+    setIsRequest(false)
+  }
+  
   return (
     <>
       <Header />
       <View style={styles.viewTitle}>
-        <TouchableOpacity onPress={() => navigation.goBack()}><Icon
-          style={{ marginLeft: 10 }}
-          name="arrow-back-outline"
-          color="white"
-          size={30}
-        /></TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon
+            style={{ marginLeft: 10 }}
+            name="arrow-back-outline"
+            color="white"
+            size={30}
+          />
+        </TouchableOpacity>
         <Text style={styles.title}>Thêm bạn</Text>
       </View>
       <View style={styles.viewSubTitle}>
@@ -42,10 +94,32 @@ function AddFriendScreen({ navigation }) {
             <Icon name="close" color="#111" size={25} />
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.viewSearch}>
+        <TouchableOpacity style={styles.viewSearch} onPress={_handleClick}>
           <Text style={styles.textSearch}>TÌM</Text>
         </TouchableOpacity>
       </View>
+
+      {usersByPhone === 1 ? (
+        <View style={{ marginTop: 5 }}>
+          <SearchItem isNull />
+        </View>
+      ) : (
+        <FlatList
+          style={{ marginTop: 5 }}
+          data={usersByPhone}
+          renderItem={({ item }) => (
+            <SearchItem
+              id={item._id}
+              name={item.fullName}
+              phonNumber={item.phoneNumber}
+              image={item.avatarLink}
+              isFriend={item.isFriend}
+              onPress = { isRequest ?_handleCloseRequest : _handleRequest}
+              isRequest = {isRequest}
+            />
+          )}
+        />
+      )}
     </>
   );
 }

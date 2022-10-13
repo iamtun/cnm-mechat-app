@@ -5,11 +5,14 @@ import userListSlice from './slice/usersSlice';
 import userInfoSlice from './slice/userInfoSlice';
 import friendListSlice from './slice/friendSlice';
 import conversationsListByUserId from './slice/conversationSlice';
+import userInfoByPhoneSlice from './slice/userInfoByPhoneSlice'
+
 const store = configureStore({
     reducer: {
         messages: messageListSlice.reducer,
         filters: filterSlice.reducer,
         users: userListSlice.reducer,
+        usersByPhone: userInfoByPhoneSlice.reducer,
         info: userInfoSlice.reducer,
         friends: friendListSlice.reducer,
         conversations: conversationsListByUserId.reducer

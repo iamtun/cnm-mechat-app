@@ -19,9 +19,6 @@ function ProfileScreen({ navigation }) {
         navigation.navigate('LoginScreen');
     };
 
-    const addFriendScreen = () => {
-        navigation.navigate('AddFriendScreen');
-    };
     const settings = [
         {
             name: 'Dashboard',
@@ -65,9 +62,6 @@ function ProfileScreen({ navigation }) {
                 onPress={() => {
                     if (settings.name == 'Logout') {
                         showConfirmDialog();
-                    }
-                    if(settings.name == 'Dashboard'){
-                        addFriendScreen();
                     }
                 }}
             >
