@@ -17,6 +17,9 @@ const userInfoSlice = createSlice({
   },
 });
 
+/**
+ * get user info by id
+ */
 export const fetchUserInfo = createAsyncThunk(
   "info/fetchUserInfo",
   async (token) => {

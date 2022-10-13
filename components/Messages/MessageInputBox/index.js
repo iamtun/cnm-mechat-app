@@ -1,11 +1,11 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
-import messageListSlice, { sendMessage } from '../../../redux/slice/messageSlice';
+import { sendMessage } from '../../../redux/slice/messageSlice';
 
 function MessageInputBox({ conversationId }) {
     const [isWrite, setIsWrite] = useState(false);
@@ -25,13 +25,8 @@ function MessageInputBox({ conversationId }) {
     };
 
     const handleSendMessage = () => {
-        dispatch(
-            sendMessage({
-                content: message,
-                senderID: userInfo._id,
-                conversationID: conversationId,
-            }),
-        );
+        const data = { content: message, senderID: userInfo._id, conversationID: conversationId };
+        dispatch(sendMessage(data));
         setMessage('');
     };
 

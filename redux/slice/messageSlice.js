@@ -1,11 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import config from '../../config';
-import io from 'socket.io-client/dist/socket.io';
-
-//Chưa kết nối được với socket server
-const socket = io('https://cnm-iuh-web-socket.herokuapp.com', {
-    transports: ['websocket']
-});
+import config, { socket } from '../../config';
 
 const messageListSlice = createSlice({
     name: 'messages',
@@ -18,14 +12,17 @@ const messageListSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
-                socket.emit('addUser', action.payload.senderID);
-                socket.emit('sendMessage', action.payload);
-                console.log(socket);
+                const { senderID, conversationID, content } = action.payload;
                 state.data.push(action.payload);
+                //send success socket
+                socket.emit('sendMessage', { senderID, receiverID: conversationID, content });
             });
     },
 });
 
+/**
+ * get all messages by user id
+ */
 export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', async (id) => {
     if (id) {
         try {
@@ -38,10 +35,13 @@ export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', 
     }
 });
 
+/**
+ * send message to server by conversation id
+ * body: {conversation_id}
+ * return message send success
+ */
 export const sendMessage = createAsyncThunk('messages/add', async (message) => {
     if (message) {
-        const { conversationID } = message;
-        console.log(conversationID);
         const res = await fetch(`${config.LINK_API_V2}/messages`, {
             method: 'POST',
             headers: {
@@ -51,8 +51,8 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
         });
 
         const _message = await res.json();
-        //console.log(`receiver messages: ${JSON.stringify(_message)}`);
         return _message;
     }
 });
+
 export default messageListSlice;

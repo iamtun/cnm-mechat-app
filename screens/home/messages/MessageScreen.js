@@ -9,12 +9,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMessageByIdConversationSelector, messageListSelector } from '../../../redux/selector';
 import { useEffect } from 'react';
 import { fetchMessagesById } from '../../../redux/slice/messageSlice';
-
+import { socket } from '../../../config';
 function MessageScreen({ route, navigation }) {
     const { id, name } = route.params;
     const dispatch = useDispatch();
 
     const messages = useSelector(getMessageByIdConversationSelector);
+
+    //Chưa nhận được dữ liệu từ socket
+    socket.on('getMessage', (data) => {
+        console.log(data.receiverID);
+    });
 
     useEffect(() => {
         dispatch(fetchMessagesById(id));

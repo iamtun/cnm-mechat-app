@@ -12,21 +12,21 @@ import { fetchConversations } from '../../redux/slice/conversationSlice';
 import { useIsFocused } from '@react-navigation/native';
 
 function ChatListScreen({ navigation }) {
-    const userSearching = useSelector(usersRemainingSelector);
-    const userInfo = useSelector(userInfoSelector);
     const dispatch = useDispatch();
+    const userSearching = useSelector(usersRemainingSelector);
+    // const userInfo = useSelector(userInfoSelector);
     const conversations = useSelector(conversationsListSelector);
     const isFocus = useIsFocused();
-    
+    // console.log(conversations, userInfo);
+
     useEffect(() => {
-        if (!userInfo?._id) return;
-        else dispatch(fetchConversations(userInfo._id));
+        dispatch(fetchConversations());
     }, [isFocus]);
 
     return (
         <>
             <Header />
-            <SearchBar navigation={navigation}/>
+            <SearchBar navigation={navigation} />
             {userSearching ? (
                 //no find
                 userSearching === 1 ? (
