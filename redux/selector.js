@@ -10,16 +10,20 @@ export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 export const conversationsListSelector = (state) => state.conversations.data;
 
-
+/**
+ * get friend list then user info changed
+ */
 export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
-    if (users) {
+    if (users && user?.friends) {
         const friends = users.filter((_user) => user.friends.includes(_user._id));
         return friends;
     }
     return null;
 });
 
-//Load data success!
+/**
+ * user searching to get friend list
+ */
 export const usersRemainingSelector = createSelector(
     userListSelector,
     getFriendsByUserSelector,
@@ -43,11 +47,12 @@ export const usersRemainingSelector = createSelector(
                 //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
             } else if (search.match('^[A-Z]')) {
                 const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
+                
+                //don't find
                 if (!friendFilter.length) {
                     return 1;
                 }
 
-                //don't find
                 return friendFilter.map((user) => ({
                     _id: user._id,
                     fullName: user.fullName,
@@ -66,11 +71,17 @@ export const usersRemainingSelector = createSelector(
     },
 );
 
+/**
+ * get user info then click item search your friend
+ */
 export const searchItemClickSelector = createSelector(userIdSelector, usersRemainingSelector, (id, users) => {
     const userInfo = users.filter((user) => user._id === id);
     return userInfo[0];
 });
 
+/**
+ * get conversation by id
+ */
 export const getConversationIdByIdFriendSelector = createSelector(
     friendIdSelector,
     conversationsListSelector,
@@ -94,13 +105,14 @@ export const getMessageByIdConversationSelector = createSelector(
             let otherUser = null;
             let user = null;
             if (message.action) {
-                otherUser = users.filter((_user) => _user._id === message.action[0].userID);
-                //console.log(`otherUser ${otherUser}`);
+                otherUser = users.filter((_user) => _user._id === message.action[0].receiverID);
+                console.log(`otherUser ${otherUser}`);
             } else {
                 user = users.filter((_user) => _user._id === message.senderID)[0];
             }
+
             return {
-                id: message.id,
+                _id: message.id,
                 action: message.action ? `Bạn và ${otherUser[0].fullName} đã là bạn bè` : null,
                 content: message.action ? null : message.content,
                 imageLink: message.imageLink,
@@ -115,6 +127,6 @@ export const getMessageByIdConversationSelector = createSelector(
             };
         });
 
-        return _messages;
+        return _messages.slice(-10);
     },
 );

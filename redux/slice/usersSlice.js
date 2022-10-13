@@ -11,6 +11,9 @@ const userListSlice = createSlice({
     }
 });
 
+/**
+ * get all users from server
+ */
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async() => {
     try{
         const res = await fetch(`${config.LINK_API_V2}/users`);
