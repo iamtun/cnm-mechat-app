@@ -5,6 +5,7 @@ import MenuItem from '../SearchBar/Menu/MenuItem';
 
 function ChatItem({ id, name, image, message, time, navigation }) {
     const [isVisible, setIsVisible] = useState(false);
+
     return (
         <TouchableOpacity
             style={styles.body}

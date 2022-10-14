@@ -6,23 +6,33 @@ import MessageItem from '../../../components/Messages/MessageItem';
 import TopBar from '../../../components/Messages/TopBar/TopBar';
 
 import { useDispatch, useSelector } from 'react-redux';
-import { getMessageByIdConversationSelector, messageListSelector } from '../../../redux/selector';
+import {
+    conversationsListSelector,
+    getMessageByIdConversationSelector,
+    messageListSelector,
+    userInfoSelector,
+} from '../../../redux/selector';
 import { useEffect } from 'react';
-import { fetchMessagesById } from '../../../redux/slice/messageSlice';
+import messageListSlice, { fetchMessagesById } from '../../../redux/slice/messageSlice';
 import { socket } from '../../../config';
 function MessageScreen({ route, navigation }) {
     const { id, name } = route.params;
     const dispatch = useDispatch();
 
     const messages = useSelector(getMessageByIdConversationSelector);
+    const conversations = useSelector(conversationsListSelector);
+    const myConversation = conversations.filter((conversation) => conversation.id === id);
+    const userInfo = useSelector(userInfoSelector);
+    const receiverId = myConversation[0].members.find((member) => member !== userInfo._id);
 
     //Chưa nhận được dữ liệu từ socket
-    socket.on('getMessage', (data) => {
-        console.log(data.receiverID);
-    });
 
     useEffect(() => {
         dispatch(fetchMessagesById(id));
+        dispatch(messageListSlice.actions.setReceiverId(receiverId));
+        socket.on('getMessage', ({ message }) => {
+            dispatch(messageListSlice.actions.addMessageFromSocket(message));
+        });
     }, []);
 
     const renderItem = ({ item }) => <MessageItem message={item} />;

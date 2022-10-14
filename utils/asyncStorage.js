@@ -1,13 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const setItem = (key, val) => {
-    AsyncStorage.setItem(key, JSON.stringify(val))
-        .then(() => {
-            console.log(`save ${key} success!`);
-        })
-        .catch((err) => {
-            console.log(`save ${key} err!`, err);
-        });
+    return AsyncStorage.setItem(key, JSON.stringify(val))
+    .then(() => {
+        //console.log(`save ${key} success!`);
+        return key;
+    })
 };
 
 export const getItem = (key) => {
@@ -18,5 +16,6 @@ export const getItem = (key) => {
 };
 
 export const removeItem = (key) => {
+    console.log("logout!");
     return AsyncStorage.removeItem(key);
 };

@@ -13,19 +13,22 @@ function LoadingScreen({ navigation }) {
     //removeItem("user_token");
 
     useEffect(() => {
-        getItem('user_token')
-            .then((token) => {
-                if (token) {
-                    console.log('have token');
-                    dispatch(fetchUsers());
-                    dispatch(fetchUserInfo(token));
-                    navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
-                }
-            })
-            .catch((err) => {
-                navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
-                return err;
-            });
+        if (!isFocus) return;
+        else {
+            getItem('user_token')
+                .then((token) => {
+                    if (token) {
+                        console.log('have token');
+                        dispatch(fetchUsers());
+                        dispatch(fetchUserInfo(token));
+                        navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
+                    }
+                })
+                .catch((err) => {
+                    navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+                    return err;
+                });
+        }
     }, [isFocus]);
 
     return (

@@ -106,14 +106,13 @@ export const getMessageByIdConversationSelector = createSelector(
             let user = null;
             if (message.action) {
                 otherUser = users.filter((_user) => _user._id === message.action[0].receiverID);
-                console.log(`otherUser ${otherUser}`);
             } else {
                 user = users.filter((_user) => _user._id === message.senderID)[0];
             }
 
             return {
-                _id: message.id,
-                action: message.action ? `Bạn và ${otherUser[0].fullName} đã là bạn bè` : null,
+                _id: message._id,
+                action: message.action ? `Bạn và ${otherUser[0]?.fullName} đã là bạn bè` : null,
                 content: message.action ? null : message.content,
                 imageLink: message.imageLink,
                 createdAt: message.action

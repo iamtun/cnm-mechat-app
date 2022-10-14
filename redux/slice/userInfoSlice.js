@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
-import config from "../../config";
+import config, {socket} from "../../config";
 
 const userInfoSlice = createSlice({
   name: "info",
@@ -27,6 +27,9 @@ export const fetchUserInfo = createAsyncThunk(
     if (_token) {
       const info = jwtDecode(_token);
       const { _id } = info;
+      
+      //call socket
+      socket.emit("addUser", (_id));
 
       try {
         const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
