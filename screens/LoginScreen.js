@@ -93,8 +93,14 @@ function LoginScreen({ navigation }) {
         } else {
             sign()
                 .then((token) => {
-                    setItem('user_token', token);
-                    navigation.navigate('LoadingScreen');
+                    setItem('user_token', token)
+                        .then((key) => {
+                            console.log(`save ${key} success!`);
+                            navigation.navigate("LoadingScreen");
+                        })
+                        .catch((err) => {
+                            console.log(`save ${key} err!`, err);
+                        });
                 })
                 .catch((err) => {
                     Alert.alert('Thông báo', err.message);
