@@ -8,8 +8,8 @@ import { userInfoSelector } from '../../redux/selector';
 
 function ProfileScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
-    //console.log(_userInfoSelector);
     const { fullName, phoneNumber, avatarLink } = _userInfoSelector;
+
     const remove = async () => {
         await removeItem('user_token');
     };
@@ -62,6 +62,9 @@ function ProfileScreen({ navigation }) {
                 onPress={() => {
                     if (settings.name == 'Logout') {
                         showConfirmDialog();
+                    }
+                    if (settings.name == 'Dashboard') {
+                        addFriendScreen();
                     }
                 }}
             >

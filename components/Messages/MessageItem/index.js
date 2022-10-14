@@ -5,14 +5,14 @@ import { userInfoSelector } from '../../../redux/selector';
 import ActionMessage from './ActionMessage';
 import ImageMessage from './ImageMessage';
 
-function MessageItem({ message }) {
+function MessageItem({ message}) {
     const { _id } = useSelector(userInfoSelector);
     const isMe = message.user.id === _id;
 
     return (
         <>
             {message.action ? (
-                <ActionMessage createAt={message.createdAt} message={message.action} />
+                <ActionMessage createAt={message.createdAt} message={message.action}/>
             ) : (
                 <View
                     style={[styles.container, { justifyContent: isMe ? 'flex-end' : null, marginRight: isMe ? 8 : 0 }]}

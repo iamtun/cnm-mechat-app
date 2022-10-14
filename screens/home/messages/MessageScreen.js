@@ -9,15 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getMessageByIdConversationSelector, messageListSelector } from '../../../redux/selector';
 import { useEffect } from 'react';
 import { fetchMessagesById } from '../../../redux/slice/messageSlice';
-
+import { socket } from '../../../config';
 function MessageScreen({ route, navigation }) {
     const { id, name } = route.params;
     const dispatch = useDispatch();
 
     const messages = useSelector(getMessageByIdConversationSelector);
+
+    //Chưa nhận được dữ liệu từ socket
+    socket.on('getMessage', (data) => {
+        console.log(data.receiverID);
+    });
+
     useEffect(() => {
         dispatch(fetchMessagesById(id));
     }, []);
+
+    const renderItem = ({ item }) => <MessageItem message={item} />;
 
     return (
         <>
@@ -31,13 +39,14 @@ function MessageScreen({ route, navigation }) {
                     <TopBar name={name} navigation={navigation} />
                     <FlatList
                         data={messages}
-                        renderItem={({ item }) => <MessageItem message={item} />}
-                        keyExtractor={(item) => item.id}
+                        renderItem={renderItem}
+                        initialNumToRender={20}
                         inverted
+                        keyExtractor={(item, index) => item._id || index.toString()}
                         contentContainerStyle={{ flexDirection: 'column-reverse' }}
                     />
                 </View>
-                <MessageInputBox />
+                <MessageInputBox conversationId={id} />
             </KeyboardAvoidingView>
         </>
     );

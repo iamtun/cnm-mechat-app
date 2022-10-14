@@ -1,14 +1,8 @@
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-} from "react-native";
-import React, { useState,useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import Icon from "react-native-vector-icons/Ionicons";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity ,FlatList,
+} from 'react-native';
+import React, { useState,useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 import Header from "../../components/Header";
 import filterSlice from "../../redux/slice/filterSlice";
@@ -125,51 +119,51 @@ function AddFriendScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  viewTitle: {
-    alignItems: "center",
-    flexDirection: "row",
-    height: 50,
-    width: "100%",
-    backgroundColor: "#33B0E0",
-  },
-  title: {
-    color: "white",
-    fontSize: 16,
-    marginLeft: 10,
-  },
-  viewSubTitle: {
-    height: 30,
-    width: "100%",
-    backgroundColor: "#E1E2E3",
-  },
-  subTitle: {
-    fontSize: 13,
-    marginLeft: 20,
-    marginTop: 5,
-  },
-  viewInput: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: 50,
-    width: "100%",
-    backgroundColor: "white",
-  },
-  input: {
-    width: "70%",
-  },
-  viewSearch: {
-    margin: 10,
-    justifyContent: "center",
-    alignItems: "center",
-    width: 70,
-    height: 30,
-    backgroundColor: "#1E99CA",
-    borderRadius: 15,
-  },
-  textSearch: {
-    color: "white",
-  },
+    viewTitle: {
+        alignItems: 'center',
+        flexDirection: 'row',
+        height: 50,
+        width: '100%',
+        backgroundColor: '#33B0E0',
+    },
+    title: {
+        color: 'white',
+        fontSize: 16,
+        marginLeft: 10,
+    },
+    viewSubTitle: {
+        height: 30,
+        width: '100%',
+        backgroundColor: '#E1E2E3',
+    },
+    subTitle: {
+        fontSize: 13,
+        marginLeft: 20,
+        marginTop: 5,
+    },
+    viewInput: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        height: 50,
+        width: '100%',
+        backgroundColor: 'white',
+    },
+    input: {
+        width: '70%',
+    },
+    viewSearch: {
+        margin: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 70,
+        height: 30,
+        backgroundColor: '#1E99CA',
+        borderRadius: 15,
+    },
+    textSearch: {
+        color: 'white',
+    },
 });
 
 export default AddFriendScreen;
