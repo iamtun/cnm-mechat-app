@@ -14,8 +14,8 @@ const styles = StyleSheet.create({
         paddingTop: 8,
     },
     imageMessage: {
-        width: 260,
-        height: 300,
+        width: 270,
+        height: 350,
     },
 });
 export default ImageMessage;

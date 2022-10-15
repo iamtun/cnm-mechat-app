@@ -2,15 +2,15 @@ import { useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
+import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
-import { sendMessage } from '../../../redux/slice/messageSlice';
+import messageListSlice, { sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
+import { useEffect } from 'react';
 
 function MessageInputBox({ conversationId }) {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
-
     const userInfo = useSelector(userInfoSelector);
 
     const dispatch = useDispatch();
@@ -28,6 +28,21 @@ function MessageInputBox({ conversationId }) {
         const data = { content: message, senderID: userInfo._id, conversationID: conversationId };
         dispatch(sendMessage(data));
         setMessage('');
+        setIsWrite(false);
+    };
+
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: false,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            const data = { imageLink: result.uri, senderID: userInfo._id, conversationID: conversationId };
+            dispatch(sendImageMessage(data));
+        }
     };
 
     return (
@@ -53,7 +68,7 @@ function MessageInputBox({ conversationId }) {
                 ) : (
                     <>
                         <Icon name="microphone" size={32} style={styles.icon} />
-                        <Icon name="image-multiple-outline" size={32} />
+                        <Icon name="image-multiple-outline" size={32} onPress={pickImage} />
                     </>
                 )}
             </View>
