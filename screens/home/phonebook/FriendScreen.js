@@ -4,12 +4,15 @@ import { AlphabetList } from 'react-native-section-alphabet-list';
 import { Text, View } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getFriendsByUserSelector } from '../../../redux/selector';
+import { useEffect } from 'react';
 
 function FriendScreen() {
     // data
     let friendInfo = [];
 
     const friends = useSelector(getFriendsByUserSelector);
+
+    
 
     if (friends) {
         if (friends.length != 0) {
@@ -24,6 +27,10 @@ function FriendScreen() {
         }
     }
 
+    useEffect(()=>{
+        getUserItem
+    },[])
+    
     function getUserItem(item) {
         return (
             <View styles={{ flex: 1 }}>
@@ -44,6 +51,7 @@ function FriendScreen() {
         <>
             <AlphabetList
                 data={friendInfo}
+                key = {friendInfo.key}
                 letterItemStyle={{ height: 90 }}
                 renderCustomItem={(item) => getUserItem(item)}
                 renderCustomSectionHeader={(section) => <Text>{section.title}</Text>}

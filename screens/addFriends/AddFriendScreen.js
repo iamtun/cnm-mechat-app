@@ -10,7 +10,8 @@ import useDebounce from "../../hooks/useDebounce";
 import { getUserByPhoneNumber } from "../../redux/selector";
 import SearchItem from "../../components/SearchBar/SearchItem";
 import { userInfoSelector } from '../../redux/selector';
-import { fetchFriendsRequest } from "../../redux/slice/friendRequestSlice";
+import { fetchFriendsRequest,fetchBackFriendRequest } from '../../redux/slice/friendSlice';
+
 
 function AddFriendScreen({ navigation }) {
   const debouncedValue = useDebounce(text, 500);
@@ -26,14 +27,15 @@ function AddFriendScreen({ navigation }) {
 
   useEffect(() => {
     search
-   clearText
+    clearText
   }, [debouncedValue]);
   
-  //dispatch actions
+  //dispatch actions search
   const search = () => {
     dispatch(filterSlice.actions.searchFilterChange(text));
   };
-  //click button remove
+
+  //click button remove text
   const clearText = () => {
     setText("");
     dispatch(filterSlice.actions.searchFilterChange(null));
@@ -48,7 +50,7 @@ function AddFriendScreen({ navigation }) {
   // request make friend
   const _handleRequest = () =>{
     //Set data for send require make friend
-    const data = {senderID: _userInfoSelector._id, reciverID: usersByPhone[0]._id}
+    const data = {senderID: _userInfoSelector._id, receiverID: usersByPhone[0]._id}
     setIsRequest(true)
     dispatch(fetchFriendsRequest(data))
   }
@@ -56,6 +58,9 @@ function AddFriendScreen({ navigation }) {
   //Close request make friend
   const _handleCloseRequest = () =>{
     setIsRequest(false)
+    const data = {friendRequestID: usersByPhone[0]._id, status: isRequest, senderID: _userInfoSelector._id}
+    console.log("data", data);
+    dispatch(fetchBackFriendRequest(data))
   }
   
   return (

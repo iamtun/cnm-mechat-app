@@ -5,6 +5,15 @@ const messageListSlice = createSlice({
     name: 'messages',
     initialState: {
         data: [],
+        receiverId: null,
+    },
+    reducers: {
+        setReceiverId: (state, action) => {
+            state.receiverId = action.payload;
+        },
+        addMessageFromSocket: (state, action) => {
+            state.data.push(action.payload);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -12,10 +21,9 @@ const messageListSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(sendMessage.fulfilled, (state, action) => {
-                const { senderID, conversationID, content } = action.payload;
                 state.data.push(action.payload);
                 //send success socket
-                socket.emit('sendMessage', { senderID, receiverID: conversationID, content });
+                socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId});
             });
     },
 });
@@ -51,6 +59,7 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
         });
 
         const _message = await res.json();
+        console.log(_message);
         return _message;
     }
 });
