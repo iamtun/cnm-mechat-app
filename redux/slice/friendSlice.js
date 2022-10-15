@@ -31,7 +31,6 @@ export const fetchFriendsRequest = createAsyncThunk(
         },
         body: JSON.stringify(data),
       });
-
       const friendRequest = await res.json();
       return friendRequest;
     } catch (err) {
