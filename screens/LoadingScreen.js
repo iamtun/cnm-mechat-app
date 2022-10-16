@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { View, ActivityIndicator } from 'react-native';
 import GlobalStyle from '../styles/GlobalStyle';
 import { useDispatch } from 'react-redux';
-import { getItem } from '../utils/asyncStorage';
+import { getItem, removeItem } from '../utils/asyncStorage';
 import { fetchUserInfo } from '../redux/slice/userInfoSlice';
 import { fetchUsers } from '../redux/slice/usersSlice';
 import { useIsFocused } from '@react-navigation/native';
