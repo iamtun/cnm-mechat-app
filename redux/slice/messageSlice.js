@@ -1,8 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { Platform } from 'react-native';
 import config, { socket } from '../../config';
-
-
 
 const messageListSlice = createSlice({
     name: 'messages',
@@ -17,6 +14,12 @@ const messageListSlice = createSlice({
         addMessageFromSocket: (state, action) => {
             state.data.push(action.payload);
         },
+        sendVideo: (state, action) => {
+            const { imageLink, senderID } = action.payload;
+            const temp = { _id: '1212121v', imageLink, senderID, createAt: Date.now() };
+
+            state.data.push(temp);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -29,7 +32,7 @@ const messageListSlice = createSlice({
                 socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId });
             })
             .addCase(sendImageMessage.fulfilled, (state, action) => {
-                //console.log(action.payload);
+                socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId });
                 state.data.push(action.payload);
             })
             .addCase(sendImageMessage.rejected, (state, action) => {
@@ -76,24 +79,24 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
 
 const createFormData = (imageMessage) => {
     let uriParts = imageMessage.imageLink.split('.');
-    let fileType = uriParts[uriParts.length - 1];
     const path = imageMessage.imageLink.split('/');
+    let fileType = uriParts[uriParts.length - 1];
     let nameFile = path[path.length - 1];
     //console.log(fileType, nameFile);
-
+    const imagePath = ['png', 'jpg', 'jpeg'];
     const { imageLink, senderID, conversationID } = imageMessage;
-    //console.log(imageLink, senderID, conversationID);
+    console.log(imageLink, senderID, conversationID);
     const image = {
-        uri: Platform.OS === 'android' ? imageLink : imageLink.replace('file://', ''),
-        type: `image/${fileType}`,
+        uri: imageLink,
+        type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
         name: nameFile,
     };
-    
+
     let formData = new FormData();
     //console.log(image);
     formData.append('imageLink', image);
-    formData.append("senderID", senderID);
-    formData.append("conversationID", conversationID);
+    formData.append('senderID', senderID);
+    formData.append('conversationID', conversationID);
 
     return formData;
 };
@@ -109,7 +112,7 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
                 Accept: 'application/json',
                 'Content-Type': 'multipart/form-data',
             },
-        })
+        });
 
         const _message = await res.json();
         //console.log(_message);

@@ -6,7 +6,7 @@ export default {
     LINK_API_V2,
 };
 
-export const socket = io('https://c498-113-22-34-182.ap.ngrok.io', {
+export const socket = io('https://cb77-113-161-93-203.ap.ngrok.io', {
     transports: ['websocket'],
     reconnection: true,
 });
