@@ -34,6 +34,7 @@ function MessageInputBox({ conversationId }) {
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
+            videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
             allowsEditing: false,
             aspect: [4, 3],
             quality: 1,
