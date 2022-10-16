@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import { Alert } from 'react-native';
 import config, { socket } from '../../config';
 
 const messageListSlice = createSlice({
@@ -32,11 +33,16 @@ const messageListSlice = createSlice({
                 socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId });
             })
             .addCase(sendImageMessage.fulfilled, (state, action) => {
-                socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId });
-                state.data.push(action.payload);
+                if(action.payload) {
+                    socket.emit('sendMessage', { message: action.payload, receiverID: state.receiverId });
+                    state.data.push(action.payload);
+                }else {
+                    Alert.alert("Thông báo", "Tệp đa phương tiện này không gửi được");
+                }
             })
             .addCase(sendImageMessage.rejected, (state, action) => {
-                console.log('err send message!');
+                console.log('err send message');
+                Alert.alert('Thông báo', "Hình ảnh này không gửi được");
             });
     },
 });
@@ -89,7 +95,7 @@ const createFormData = (imageMessage) => {
     const image = {
         uri: imageLink,
         type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
-        name: nameFile,
+        name: imagePath.includes(fileType) ? nameFile : nameFile.replace(".mov", ".mp4"),
     };
 
     let formData = new FormData();
@@ -115,8 +121,11 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
         });
 
         const _message = await res.json();
-        //console.log(_message);
-        return _message;
+        if(_message?._id) {
+            return _message;
+        }else {
+            return null;
+        }
     }
 });
 
