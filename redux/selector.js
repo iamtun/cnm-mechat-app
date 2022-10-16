@@ -5,6 +5,7 @@ export const messageListSelector = (state) => state.messages.data;
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.info.data;
+export const userInfoByPhoneSelector = (state) => state.userInfoByPhone;
 export const userIdSelector = (state) => state.info.userId;
 export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
@@ -129,3 +130,38 @@ export const getMessageByIdConversationSelector = createSelector(
         return _messages.slice(-10);
     },
 );
+
+export const getUserByPhoneNumber = createSelector(
+    userListSelector,
+    searchTextSelector,
+    (users, search) => {
+        if (search) {
+            
+            if (search.startsWith('0')) {
+                const usersFilter = users.filter(
+                    (_user) => _user.phoneNumber === search
+                );
+    
+                //don't find
+                if (!usersFilter.length) {
+                    return 1;
+                }
+              
+                return usersFilter.map((user) => ({
+                    _id: user._id,
+                    fullName: user.fullName,
+                    avatarLink: user.avatarLink,
+                    backgroundLink: user.backgroundLink,
+                    phoneNumber: user.phoneNumber,
+                    gender: user.gender,
+                    isFriend: false,
+                }));
+                //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
+            } else {
+                return 1;
+            }
+        }
+        return false;
+    },
+);
+

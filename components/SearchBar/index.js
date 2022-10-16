@@ -11,12 +11,14 @@ const items = [
   {
     id: 1,
     icon: "account-multiple-plus-outline",
-    title: "Tạo nhóm"
+    title: "Tạo nhóm",
+    isFriends: false
   },
   {
     id: 2,
     icon: "account-plus-outline",
-    title: "Thêm bạn"
+    title: "Thêm bạn",
+    isFriends: true
   },
 ];
 
@@ -50,6 +52,9 @@ function SearchBar({navigation}) {
     setSearchInput(() => setSearchInput(value));
   };
 
+  const openAddNewFriend = () => {
+    navigation.navigate("AddFriendScreen")
+  }
 
   //ui
   return (
@@ -90,7 +95,7 @@ function SearchBar({navigation}) {
                   icon={item.icon}
                   title={item.title}
                   key={item.id}
-                  onPress = {() => navigation.navigate("AddFriendScreen")}
+                  onPress = { item.isFriends ? openAddNewFriend : null}
                 />
             )}
           </>

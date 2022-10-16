@@ -11,6 +11,7 @@ const store = configureStore({
         messages: messageListSlice.reducer,
         filters: filterSlice.reducer,
         users: userListSlice.reducer,
+        usersByPhone: userListSlice.reducer,
         info: userInfoSlice.reducer,
         friends: friendListSlice.reducer,
         conversations: conversationsListByUserId.reducer

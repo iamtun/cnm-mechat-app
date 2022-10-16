@@ -19,9 +19,6 @@ function ProfileScreen({ navigation }) {
         navigation.navigate('LoginScreen');
     };
 
-    const addFriendScreen = () => {
-        navigation.navigate('AddFriendScreen');
-    };
     const settings = [
         {
             name: 'Dashboard',
