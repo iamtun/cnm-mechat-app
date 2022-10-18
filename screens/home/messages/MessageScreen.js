@@ -34,6 +34,9 @@ function MessageScreen({ route, navigation }) {
   );
 
   //Chưa nhận được dữ liệu từ socket
+  useEffect(() => {
+    socket.emit("join_room", id);
+  });
 
   useEffect(() => {
     if (!isFocus) return;
@@ -41,7 +44,7 @@ function MessageScreen({ route, navigation }) {
       dispatch(fetchMessagesById(id));
       dispatch(messageListSlice.actions.setReceiverId(receiverId));
     }
-    socket.on("getMessage", ({ message }) => {
+    socket.on("receiver_message", (message) => {
       dispatch(messageListSlice.actions.addMessageFromSocket(message));
     });
   }, [isFocus]);
