@@ -1,18 +1,15 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import React, { useState } from "react";
 import Icon from "react-native-vector-icons/Ionicons";
-import { TextInput } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
-import { Platform } from "react-native";
+import { TextInput, Platform } from "react-native";
+import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import RadioForm from "react-native-simple-radio-button";
+import Header from "../../../components/Header";
 
 export default function InfoSelf({ navigation }) {
-  const [date, setDate] = useState(new Date());
-  const [mode, setMode] = useState("date");
-  const [show, setShow] = useState(false);
-  const [textDate, setTextDate] = useState("Ngày");
-  const [textName, setTextName] = useState("Tên")
-  const [textBio, setTextBio] = useState("Sở thích")
+  const [selectedDate, setSelectedDate] = useState("2022/10/18");
+  const [textName, setTextName] = useState(null);
+  const [textBio, setTextBio] = useState(null);
   const [chosenOption, setChosenOption] = useState("Nam");
 
   const options = [
@@ -20,91 +17,73 @@ export default function InfoSelf({ navigation }) {
     { label: "Nữ", value: "Nữ" },
   ];
 
-  const onChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShow(Platform.OS === "ios");
-    setDate(currentDate);
-
-    let tempDate = new Date(currentDate);
-    let fDate =
-      tempDate.getDate() +
-      "/" +
-      (tempDate.getMonth() + 1) +
-      "/" +
-      tempDate.getFullYear();
-      setTextDate(fDate);
-  };
-
-  const showMode = (currentDate) => {
-    setShow(true);
-    setMode(currentDate);
-  };
+  console.log(selectedDate);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon
-            style={{ marginLeft: 10 }}
-            name="arrow-back-outline"
-            color="white"
-            size={20}
-          />
-        </TouchableOpacity>
-        <Text style={{ color: "white", fontSize: 15, marginLeft: 10 }}>
-          Chỉnh sửa thông tin
-        </Text>
-      </View>
-      <View style={styles.updateSelf}>
-        <View style={styles.infoSelf}>
-          <TextInput
-            underlineColorAndroid={"#E1E2E3"}
-            value={textName}
-            style={styles.input}
-            onChange = {(value) => setTextName(value)}
-          ></TextInput>
-           <TextInput
-            underlineColorAndroid={"#E1E2E3"}
-            value={textBio}
-            style={styles.input}
-            onChange = {(value) => setTextBio(value)}
-          ></TextInput>
-          <TouchableOpacity
-            onPress={() => showMode("date")}
-            style={{ width: "100%" }}
-          >
-            <TextInput
-              value={textDate}
-              editable={false}
-              color="black"
-              underlineColorAndroid={"#E1E2E3"}
-              style={{ padding: 10}}
+    <>
+      <Header />
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon
+              style={{ marginLeft: 10 }}
+              name="arrow-back-outline"
+              color="white"
+              size={20}
             />
           </TouchableOpacity>
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={mode}
-              display="default"
-              onChange={onChange}
-            />
-          )}
+          <Text style={{ color: "white", fontSize: 15, marginLeft: 10 }}>
+            Chỉnh sửa thông tin
+          </Text>
         </View>
-        {/* không được xóa để dành xài <Text> {chosenOption}</Text> */}
-        <RadioForm
-          style={{ marginTop: 10 }}
-          radio_props={options}
-          initial={0}
-          onPress={(value) => {
-            setChosenOption(value);
-          }}
-        />
-        <TouchableOpacity style={styles.buttonSave}>
-          <Text style={{ color: "white", fontSize: 16 }}>Lưu</Text>
-        </TouchableOpacity>
+        <View style={styles.updateSelf}>
+          <View style={styles.infoSelf}>
+            <TextInput
+              value={textName}
+              placeholder="Họ và tên"
+              style={styles.input}
+              onChange={(value) => setTextName(value)}
+            ></TextInput>
+
+            <TextInput
+              value={textBio}
+              style={styles.input}
+              placeholder="Sở thích"
+              onChange={(value) => setTextBio(value)}
+            ></TextInput>
+
+            <View style={styles.input}>
+              <View style={styles.inputDate}>
+                <Text>Ngày sinh:</Text>
+                <Text style={styles.date}>{selectedDate}</Text>
+              </View>
+              <DatePicker
+                mode="calendar"
+                selected={getFormatedDate(new Date(), "YYYY/MM/DD")}
+                selectorStartingYear={2000}
+                onSelectedChange={(date) => setSelectedDate(date)}
+                locale="vie"
+              />
+            </View>
+
+            {/* không được xóa để dành xài <Text> {chosenOption}</Text> */}
+            <View style={styles.input}>
+              <RadioForm
+                radio_props={options}
+                initial={0}
+                onPress={(value) => {
+                  setChosenOption(value);
+                }}
+              />
+            </View>
+          </View>
+
+          <TouchableOpacity style={styles.buttonSave}>
+            <Text style={{ color: "white", fontSize: 16 }}>Lưu</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -116,21 +95,34 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 25,
     width: "100%",
     height: 50,
     backgroundColor: "#3475F5",
   },
   updateSelf: {
-    width: "70%",
+    width: "90%",
+    margin: 16,
   },
   infoSelf: {
     width: "100%",
     alignItems: "center",
   },
   input: {
-    padding: 10,
+    padding: 8,
+    margin: 4,
     width: "100%",
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  inputDate: {
+    padding: 10,
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  date: {
+    fontSize: 18,
+    marginLeft: 8,
+    fontWeight: "700",
   },
   buttonSave: {
     marginTop: 15,
@@ -138,6 +130,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 15,
     backgroundColor: "#33B0E0",
-    height: 45,
+    height: 40,
   },
 });

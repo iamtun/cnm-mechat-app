@@ -13,13 +13,13 @@ function SearchItem({
   isNull,
   navigation,
   onPress,
-  isRequest
+  isRequest,
 }) {
   const dispatch = useDispatch();
 
   const handleClickSearchItem = () => {
     dispatch(userInfoSlice.actions.clickSearchItem(id));
-    navigation.navigate("PersonalScreen", {isMe: false});
+    navigation.navigate("PersonalScreen", { isMe: false });
   };
   return (
     <View style={[styles.container, isNull ? styles.noSearchText : null]}>
@@ -47,8 +47,14 @@ function SearchItem({
               </TouchableOpacity>
             ) : (
               <TouchableOpacity onPress={onPress} style={styles.buttonAdd}>
-                <Icon color="#3777F3" name = {isRequest ? "close" : "person-add-outline"}size={20}/> 
-                <Text style={{marginLeft: 5, color: "#59AFC4"}}>{isRequest ? "Hủy" : "Kết bạn"}</Text>
+                <Icon
+                  color="#3777F3"
+                  name={isRequest ? "close" : "person-add-outline"}
+                  size={20}
+                />
+                <Text style={{ marginLeft: 5, color: "#59AFC4" }}>
+                  {isRequest ? "Hủy" : "Kết bạn"}
+                </Text>
               </TouchableOpacity>
             )}
           </View>
@@ -65,14 +71,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-around",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
   },
   body: {
     width: "75%",
     height: "100%",
     flexDirection: "row",
     alignItems: "center",
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
   },
   image: {
     width: 60,
@@ -87,22 +94,23 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "600",
   },
-//   icon: {
-//     color: "#3777F3",
-//     marginRight: 16,
-//   },
+  icon: {
+    color: "#3777F3",
+    marginRight: 24,
+  },
   noSearchText: {
     justifyContent: "center",
   },
   buttonAdd: {
-    flexDirection:'row',
+    flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: 100,
-    height: 40,
+    width: 80,
+    height: 35,
     borderRadius: 15,
     borderWidth: 2,
-    borderColor: "#33B0E0"
+    borderColor: "#33B0E0",
+    marginRight: 8,
   },
 });
 
