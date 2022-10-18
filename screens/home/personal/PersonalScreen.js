@@ -11,6 +11,7 @@ import friendListSlice from "../../../redux/slice/friendSlice";
 
 import moment from "moment";
 import { useEffect } from "react";
+import Header from "../../../components/Header";
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
@@ -54,66 +55,72 @@ function PersonalScreen({ route, navigation }) {
   };
 
   const _handleUpdateInfo = () => {
-    navigation.navigate("InfoSelf")
-  }
+    navigation.navigate("InfoSelf");
+  };
 
   return (
-    <View>
-      <View style={styles.background}>
-        <Image
-          style={styles.backgroundImage}
-          source={{ uri: backgroundLink }}
-        />
-      </View>
-      <View style={styles.bottomContainer}>
-        <Image style={styles.avatar} source={{ uri: avatarLink }} />
-        <Text style={styles.name}>{fullName}</Text>
-        <Text style={styles.bio}>{bio}</Text>
-        <View style={styles.info}>
-          <Text style={styles.title}>Thông tin cá nhân</Text>
-          <View style={styles.infoDetail}>
-            <Text>Giới tính: {gender === 0 ? "Nam" : "Nữ"}</Text>
-            <Text>Ngày sinh: {moment(birthday).format("DD/MM/YYYY")}</Text>
-          </View>
+    <>
+      <Header />
+      <View>
+        <View style={styles.background}>
+          <Image
+            style={styles.backgroundImage}
+            source={{ uri: backgroundLink }}
+          />
         </View>
-        {!isMe ? (
-          !isFriend ? (
-            <TouchableOpacity style={styles.buttonMakeFriend}>
-              <Icon
-                style={{ marginRight: 10 }}
-                name="person-add-outline"
-                color="#4ACFED"
-                size={20}
-              />
-              <Text>Kết bạn</Text>
-            </TouchableOpacity>
+        <View style={styles.bottomContainer}>
+          <Image style={styles.avatar} source={{ uri: avatarLink }} />
+          <Text style={styles.name}>{fullName}</Text>
+          <Text style={styles.bio}>{bio}</Text>
+          <View style={styles.info}>
+            <Text style={styles.title}>Thông tin cá nhân</Text>
+            <View style={styles.infoDetail}>
+              <Text>Giới tính: {gender === 0 ? "Nam" : "Nữ"}</Text>
+              <Text>Ngày sinh: {moment(birthday).format("DD/MM/YYYY")}</Text>
+            </View>
+          </View>
+          {!isMe ? (
+            !isFriend ? (
+              <TouchableOpacity style={styles.buttonMakeFriend}>
+                <Icon
+                  style={{ marginRight: 10 }}
+                  name="person-add-outline"
+                  color="#4ACFED"
+                  size={20}
+                />
+                <Text>Kết bạn</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={styles.buttonChat}
+                onPress={handleSendChat}
+              >
+                <Icon
+                  style={{ marginRight: 10 }}
+                  name="ios-chatbubble-ellipses-outline"
+                  color="#4F8ADC"
+                  size={25}
+                />
+                <Text style={{ fontSize: 13 }}>Nhắn tin</Text>
+              </TouchableOpacity>
+            )
           ) : (
             <TouchableOpacity
-              style={styles.buttonChat}
-              onPress={handleSendChat}
+              style={styles.editInfo}
+              onPress={_handleUpdateInfo}
             >
               <Icon
                 style={{ marginRight: 10 }}
-                name="ios-chatbubble-ellipses-outline"
-                color="#4F8ADC"
-                size={25}
+                name="md-pencil"
+                color="white"
+                size={20}
               />
-              <Text style={{ fontSize: 13 }}>Nhắn tin</Text>
+              <Text style={{ color: "white" }}>Cập nhật thông tin</Text>
             </TouchableOpacity>
-          )
-        ) : (
-          <TouchableOpacity style={styles.editInfo} onPress = {_handleUpdateInfo}>
-            <Icon
-              style={{ marginRight: 10 }}
-              name="md-pencil"
-              color="white"
-              size={20}
-            />
-            <Text style={{ color: "white" }}>Cập nhật thông tin</Text>
-          </TouchableOpacity>
-        )}
+          )}
+        </View>
       </View>
-    </View>
+    </>
   );
 }
 
@@ -201,7 +208,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.44,
     shadowRadius: 10.32,
     elevation: 20,
-    top: "110%",
+    top: "40%",
     marginStart: "70%",
   },
 });
