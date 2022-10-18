@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function TopBar({ name, memberGroup, navigation }) {
@@ -27,7 +27,7 @@ function TopBar({ name, memberGroup, navigation }) {
                         <Icon name="video-outline" size={24} style={styles.icon} />
                     </>
                 )}
-                <Icon name="format-list-bulleted" size={24} style={styles.icon} />
+               <TouchableOpacity onPress={()=> navigation.navigate("DetailChat")}><Icon name="format-list-bulleted" size={24} style={styles.icon} /></TouchableOpacity> 
             </View>
         </View>
     );

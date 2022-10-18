@@ -32,6 +32,7 @@ export const fetchFriendsRequest = createAsyncThunk(
         body: JSON.stringify(data),
       });
       const friendRequest = await res.json();
+      console.log("---friend", friendRequest);
       return friendRequest;
     } catch (err) {
       console.log(`err fetch users: ${err}`);
@@ -81,8 +82,7 @@ export const fetchBackFriendRequest = createAsyncThunk(
   "friends/fetchBackFriendRequest",
   async (data) => {
     try {
-      const {friendRequestID} = data;
-     
+      const {friendRequestID} = data; 
       const {status, senderID} = data;
       
       const res = await fetch(`${config.LINK_API_V2}/friendRequests/${friendRequestID}`, {

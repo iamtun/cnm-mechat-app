@@ -19,7 +19,7 @@ function SearchItem({
 
   const handleClickSearchItem = () => {
     dispatch(userInfoSlice.actions.clickSearchItem(id));
-    navigation.navigate("PersonalScreen");
+    navigation.navigate("PersonalScreen", {isMe: false});
   };
   return (
     <View style={[styles.container, isNull ? styles.noSearchText : null]}>

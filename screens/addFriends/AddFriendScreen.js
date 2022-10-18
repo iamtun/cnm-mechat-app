@@ -9,9 +9,8 @@ import filterSlice from "../../redux/slice/filterSlice";
 import useDebounce from "../../hooks/useDebounce";
 import { getUserByPhoneNumber } from "../../redux/selector";
 import SearchItem from "../../components/SearchBar/SearchItem";
-import { userInfoSelector } from '../../redux/selector';
+import { userInfoSelector,friendListSelector } from '../../redux/selector';
 import { fetchFriendsRequest,fetchBackFriendRequest } from '../../redux/slice/friendSlice';
-
 
 function AddFriendScreen({ navigation }) {
   const debouncedValue = useDebounce(text, 500);
@@ -19,7 +18,8 @@ function AddFriendScreen({ navigation }) {
   const [isRequest, setIsRequest] = useState(false)
   //Set phone number when change text
   const [text, setText] = useState("");
- 
+  let idFriendRequest;
+
   //Get user by phone number
   const usersByPhone = useSelector(getUserByPhoneNumber);
   //Get info me
@@ -56,10 +56,13 @@ function AddFriendScreen({ navigation }) {
   }
 
   //Close request make friend
+  const allFriendsRequest = useSelector(friendListSelector);
+  console.log("Arr", allFriendsRequest);
+  idFriendRequest = allFriendsRequest.receiver.id;
+  console.log("---iddđ", idFriendRequest);
   const _handleCloseRequest = () =>{
     setIsRequest(false)
-    const data = {friendRequestID: usersByPhone[0]._id, status: isRequest, senderID: _userInfoSelector._id}
-    console.log("data", data);
+    const data = {friendRequestID: idFriendRequest, status: isRequest, senderID: _userInfoSelector._id}
     dispatch(fetchBackFriendRequest(data))
   }
   
@@ -155,6 +158,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
     },
     input: {
+      padding:10,
         width: '70%',
     },
     viewSearch: {
