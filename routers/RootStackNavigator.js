@@ -7,6 +7,8 @@ import PersonalScreen from '../screens/home/personal/PersonalScreen';
 import ProfileScreen from '../screens/home/ProfileScreen';
 import LoadingScreen from '../screens/LoadingScreen';
 import AddFriendScreen from '../screens/addFriends/AddFriendScreen'
+import DetailChat from '../screens/home/detailChat/DetailChat';
+import InfoSelf from '../screens/home/infoSelf/InfoSelf';
 
 const Stack = createNativeStackNavigator();
 
@@ -29,7 +31,8 @@ function RootStackNavigator() {
                 <Stack.Screen name="PersonalScreen" component={PersonalScreen} />
                 <Stack.Screen name="ProfileScreen" component={ProfileScreen} />
                 <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} />
-                
+                <Stack.Screen name="DetailChat" component={DetailChat} />
+                <Stack.Screen name="InfoSelf" component={InfoSelf} />
             </Stack.Navigator>
         </NavigationContainer>
     );

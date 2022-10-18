@@ -8,7 +8,7 @@ function ImageMessage({ imageURI, content }) {
 
     return (
         <View style={styles.body}>
-            {imageURI.split('.')[imageURI.split('.').length - 1] === 'mov' ? (
+            {imageURI.split('.')[imageURI.split('.').length - 1] === 'mp4' ? (
                 <Video
                     style={styles.imageMessage}
                     source={{ uri: imageURI }}
