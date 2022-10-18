@@ -55,7 +55,6 @@ function ProfileScreen({ navigation }) {
       },
     ]);
   };
-
   function getUserItem({ item: settings }) {
     return (
       <TouchableOpacity
