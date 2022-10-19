@@ -10,30 +10,6 @@ import {
 } from "../../../redux/selector";
 import { fetchConversations } from "../../../redux/slice/conversationSlice";
 function GroupChatScreen() {
-  const data = [
-    {
-      id: 1,
-      name: "CNM_2022",
-      lastMessage: "Ok nè",
-      avatarUrl:
-        "https://cdn.pixabay.com/photo/2019/05/27/19/08/puppy-4233378_960_720.jpg",
-    },
-    {
-      id: 2,
-      name: "PT JAVA",
-      lastMessage: "Ok nè",
-      avatarUrl:
-        "https://cdn.pixabay.com/photo/2015/05/05/08/36/pets-753464_960_720.jpg",
-    },
-    {
-      id: 3,
-      name: "TTDT",
-      lastMessage: "Ok nè",
-      avatarUrl:
-        "https://cdn.pixabay.com/photo/2019/07/03/10/16/pug-4314106_960_720.jpg",
-    },
-  ];
-
   let listGroupChat = [];
   const _userInfoSelector = useSelector(userInfoSelector);
   const dispatch = useDispatch();
@@ -62,7 +38,7 @@ function GroupChatScreen() {
     return (
       <View styles={{ flex: 1 }}>
         <ListItem key={group.id} bottomDivider>
-          <Avatar rounded size={70} source={{ uri: group.imageLinkOfConver }} />
+          <Avatar rounded size={70} source={{ uri: group.imageLinkOfConver}} />
           <ListItem.Content>
             <ListItem.Title>{group.name}</ListItem.Title>
             <ListItem.Subtitle>{group.content}</ListItem.Subtitle>
