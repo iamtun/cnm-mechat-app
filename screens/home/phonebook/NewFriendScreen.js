@@ -35,7 +35,6 @@ function NewFriendScreen() {
 
   // get all request friends
   const allFriendsRequest = useSelector(friendListSelector);
-  console.log("Arr", allFriendsRequest);
 
   //handle request friends
   const _handleRequestFriend = (idRequest, idSender, isAccept) => {
