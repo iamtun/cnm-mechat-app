@@ -5,8 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import * as ImagePicker from 'expo-image-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
-import messageListSlice, { sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
-import { useEffect } from 'react';
+import { sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
 
 function MessageInputBox({ conversationId }) {
     const [isWrite, setIsWrite] = useState(false);
@@ -25,10 +24,15 @@ function MessageInputBox({ conversationId }) {
     };
 
     const handleSendMessage = () => {
-        const data = { content: message, senderID: userInfo._id, conversationID: conversationId };
-        dispatch(sendMessage(data));
-        setMessage('');
-        setIsWrite(false);
+        if(message.trim()) {
+            const data = { content: message, senderID: userInfo._id, conversationID: conversationId };
+            dispatch(sendMessage(data));
+            setMessage('');
+            setIsWrite(false);
+        }else {
+            //send white space
+            setIsWrite(false);
+        }
     };
 
     const pickImage = async () => {

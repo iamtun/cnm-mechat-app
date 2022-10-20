@@ -6,12 +6,9 @@ const messageListSlice = createSlice({
   name: "messages",
   initialState: {
     data: [],
-    receiverId: null,
+    loading: true,
   },
   reducers: {
-    setReceiverId: (state, action) => {
-      state.receiverId = action.payload;
-    },
     addMessageFromSocket: (state, action) => {
       const messageExist = state.data.find(
         (message) => message._id === action.payload._id
@@ -38,6 +35,9 @@ const messageListSlice = createSlice({
     builder
       .addCase(fetchMessagesById.fulfilled, (state, action) => {
         state.data = action.payload;
+        state.loading = true;
+      }).addCase(fetchMessagesById.pending, (state, action) => {
+        state.loading = false;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
         state.data.push(action.payload);
