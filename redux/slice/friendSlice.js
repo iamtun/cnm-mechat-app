@@ -32,7 +32,7 @@ export const fetchFriendsRequest = createAsyncThunk(
         body: JSON.stringify(data),
       });
       const friendRequest = await res.json();
-      console.log("---friend", friendRequest);
+      //console.log("---friend", friendRequest);
       return friendRequest;
     } catch (err) {
       console.log(`err fetch users: ${err}`);
