@@ -57,9 +57,9 @@ function AddFriendScreen({ navigation }) {
 
   //Close request make friend
   const allFriendsRequest = useSelector(friendListSelector);
-  console.log("Arr", allFriendsRequest);
+  //console.log("Arr", allFriendsRequest);
   idFriendRequest = allFriendsRequest.receiver.id;
-  console.log("---iddđ", idFriendRequest);
+  //console.log("---iddđ", idFriendRequest);
   const _handleCloseRequest = () =>{
     setIsRequest(false)
     const data = {friendRequestID: idFriendRequest, status: isRequest, senderID: _userInfoSelector._id}

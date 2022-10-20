@@ -129,6 +129,7 @@ export const getMessageByIdConversationSelector = createSelector(
             });
     
             return _messages.slice(-10);
+            //return _messages;
         }catch(err) {
             console.log(err);
         } 

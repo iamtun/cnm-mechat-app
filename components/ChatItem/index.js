@@ -75,7 +75,6 @@ const styles = StyleSheet.create({
   },
   messageText: {
     fontSize: 14,
-    marginLeft: 5
   },
 });
 export default ChatItem;

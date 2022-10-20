@@ -106,7 +106,7 @@ const createFormData = (imageMessage) => {
   //console.log(fileType, nameFile);
   const imagePath = ["png", "jpg", "jpeg"];
   const { imageLink, senderID, conversationID } = imageMessage;
-  console.log(imageLink, senderID, conversationID);
+  //console.log(imageLink, senderID, conversationID);
   const image = {
     uri: imageLink,
     type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
