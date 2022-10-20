@@ -2,6 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import moment from 'moment';
 
 export const messageListSelector = (state) => state.messages.data;
+export const messageLoadingSelector = (state) => state.messages.loading;
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.info.data;
