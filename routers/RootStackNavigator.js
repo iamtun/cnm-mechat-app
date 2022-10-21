@@ -9,6 +9,8 @@ import LoadingScreen from "../screens/LoadingScreen";
 import AddFriendScreen from "../screens/addFriends/AddFriendScreen";
 import DetailChat from "../screens/home/detailChat/DetailChat";
 import InfoSelf from "../screens/home/infoSelf/InfoSelf";
+import SearchScreen from "../screens/home/search/SearchScreen";
+import ChatListScreen from "../screens/home/ChatListScreen";
 import SyncPhoneBook from "../screens/home/phonebook/SyncPhoneBook";
 const Stack = createNativeStackNavigator();
 
@@ -39,6 +41,8 @@ function RootStackNavigator() {
         <Stack.Screen name="AddFriendScreen" component={AddFriendScreen} />
         <Stack.Screen name="DetailChat" component={DetailChat} />
         <Stack.Screen name="InfoSelf" component={InfoSelf} />
+        <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
+        <Stack.Screen name="SearchScreen" component={SearchScreen}></Stack.Screen>
         <Stack.Screen name="SyncPhoneBook" component={SyncPhoneBook}/>
       </Stack.Navigator>
     </NavigationContainer>

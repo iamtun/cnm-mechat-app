@@ -165,7 +165,6 @@ export const getUserByPhoneNumber = createSelector(
                     gender: user.gender,
                     isFriend: false,
                 }));
-                //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
             } else {
                 return 1;
             }

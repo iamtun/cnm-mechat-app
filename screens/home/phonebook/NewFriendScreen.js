@@ -18,8 +18,6 @@ import {
 function NewFriendScreen({ navigation }) {
   const userInfo = useSelector(userInfoSelector);
   const { _id } = userInfo;
-  let senderId;
-  let idFriendRequest;
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -38,15 +36,12 @@ function NewFriendScreen({ navigation }) {
 
   // get all request friends
   const allFriendsRequest = useSelector(friendListSelector);
-
   //handle request friends
   const _handleRequestFriend = (idRequest, idSender, isAccept) => {
-    senderId = idSender;
-    idFriendRequest = idRequest;
     const data = {
-      idFriendRequest: idFriendRequest,
+      idFriendRequest: idRequest,
       status: isAccept,
-      senderID: senderId,
+      senderID: idSender,
       receiverID: _id,
     };
     dispatch(fetchHandleFriendsRequest(data));
