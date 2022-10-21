@@ -3,13 +3,16 @@ import moment from 'moment';
 
 export const messageListSelector = (state) => state.messages.data;
 export const messageLoadingSelector = (state) => state.messages.loading;
+
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
 export const userInfoSelector = (state) => state.info.data;
 export const userInfoByPhoneSelector = (state) => state.userInfoByPhone;
 export const userIdSelector = (state) => state.info.userId;
+
 export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
+
 export const conversationsListSelector = (state) => state.conversations.data;
 
 /**
@@ -115,7 +118,7 @@ export const getMessageByIdConversationSelector = createSelector(
     
                 return {
                     _id: message._id,
-                    action: message.action ? `Bạn và ${otherUser[0]?.fullName} đã là bạn bè` : null,
+                    action: message.action ? message.action : null,
                     content: message.action ? null : message.content,
                     imageLink: message.imageLink,
                     createdAt: message.action

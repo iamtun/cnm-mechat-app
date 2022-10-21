@@ -1,16 +1,17 @@
 import { useEffect } from "react";
 import { View, ActivityIndicator, Text } from "react-native";
-import GlobalStyle from "../styles/GlobalStyle";
 import { useDispatch } from "react-redux";
+import { useIsFocused } from "@react-navigation/native";
+
+import GlobalStyle from "../styles/GlobalStyle";
 import { getItem, removeItem } from "../utils/asyncStorage";
 import { fetchUserInfo } from "../redux/slice/userInfoSlice";
 import { fetchUsers } from "../redux/slice/usersSlice";
-import { useIsFocused } from "@react-navigation/native";
 
 function LoadingScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
-  //removeItem("user_token");
+  // removeItem("user_token");
 
   useEffect(() => {
     if (!isFocus) return;

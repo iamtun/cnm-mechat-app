@@ -17,7 +17,7 @@ export default function InfoSelf({ navigation }) {
     { label: "Nữ", value: "Nữ" },
   ];
 
-  console.log(selectedDate);
+  //console.log(selectedDate);
 
   return (
     <>

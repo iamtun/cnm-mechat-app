@@ -15,19 +15,22 @@ import {
   fetchLoadFriendsRequest,
 } from "../../../redux/slice/friendSlice";
 
-function NewFriendScreen() {
+function NewFriendScreen({ navigation }) {
   const userInfo = useSelector(userInfoSelector);
   const { _id } = userInfo;
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsLoading] = useState(false);
 
+  const handleClickSyncButton = () => {
+    navigation.navigate("SyncPhoneBook");
+  };
   // load all request make friends
   const getListFriendRequest = () => {
     dispatch(fetchLoadFriendsRequest(_id));
   };
-   
+
   useEffect(() => {
-    allFriendsRequest
+    allFriendsRequest;
     getListFriendRequest();
   }, []);
 
@@ -46,28 +49,43 @@ function NewFriendScreen() {
 
   function getNewFriends({ item: user }) {
     return (
-      <View styles={styles.container}>
-        <ListItem key={user.senderId} bottomDivider>
-          <Avatar rounded size={70} source={{ uri: user.imageLink }} />
-          <ListItem.Content>
-            <ListItem.Title>{user.fullName}</ListItem.Title>
-            <ListItem.Subtitle>{user.content}</ListItem.Subtitle>
-          </ListItem.Content>
-          <TouchableOpacity style={styles.buttonRemove}  onPress={() => {
-              _handleRequestFriend(user.idFriendRequest, user.senderId, false);
-            }}>
-            <Text>Hủy</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.buttonAdd}
-            onPress={() => {
-              _handleRequestFriend(user.idFriendRequest, user.senderId, true);
-            }}
-          >
-            <Text style={{ color: "white" }}>Đồng ý</Text>
-          </TouchableOpacity>
-        </ListItem>
-      </View>
+      <>
+        <TouchableOpacity
+          style={styles.syncButton}
+          onPress={handleClickSyncButton}
+        >
+          <Text style={styles.syncText}>Đồng bộ danh bạ</Text>
+        </TouchableOpacity>
+        <View styles={styles.container}>
+          <ListItem key={user.senderId} bottomDivider>
+            <Avatar rounded size={70} source={{ uri: user.imageLink }} />
+            <ListItem.Content>
+              <ListItem.Title>{user.fullName}</ListItem.Title>
+              <ListItem.Subtitle>{user.content}</ListItem.Subtitle>
+            </ListItem.Content>
+            <TouchableOpacity
+              style={styles.buttonRemove}
+              onPress={() => {
+                _handleRequestFriend(
+                  user.idFriendRequest,
+                  user.senderId,
+                  false
+                );
+              }}
+            >
+              <Text>Hủy</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonAdd}
+              onPress={() => {
+                _handleRequestFriend(user.idFriendRequest, user.senderId, true);
+              }}
+            >
+              <Text style={{ color: "white" }}>Đồng ý</Text>
+            </TouchableOpacity>
+          </ListItem>
+        </View>
+      </>
     );
   }
   return (
@@ -82,6 +100,13 @@ function NewFriendScreen() {
 }
 
 const styles = StyleSheet.create({
+  syncButton: {
+    width: "100%",
+    padding: 16,
+  },
+  syncText: {
+    textAlign: "center",
+  },
   container: {
     flexDirection: "row",
   },

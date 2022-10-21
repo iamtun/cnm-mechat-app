@@ -22,10 +22,11 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
         padding: 8,
         borderRadius: 50,
+        flexDirection: "row"
     },
     createAt: {
         textAlign: "center",
-        marginTop: 4,
+        marginLeft: 8,
         color: "#abf"
     }
 });
