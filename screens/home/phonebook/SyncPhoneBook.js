@@ -47,6 +47,8 @@ function SyncPhoneBook({ navigation }) {
             buttonPositive: "OK",
           }
         );
+        console.log(granted);
+
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
           const { data } = await Contacts.getContactsAsync({
             fields: [Contacts.Fields.PhoneNumbers],
