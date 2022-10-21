@@ -17,6 +17,10 @@ const friendListSlice = createSlice({
       .addCase(fetchLoadFriendsRequest.fulfilled, (state, action) => {
         state.data = action.payload;
       })
+      .addCase(fetchListFriendRequestSent.fulfilled, (state, action) => {
+        state.data = action.payload;
+      })
+      
   },
 });
 
@@ -100,4 +104,19 @@ export const fetchBackFriendRequest = createAsyncThunk(
     }
   }
 );
+
+export const fetchListFriendRequestSent = createAsyncThunk("friends/fetchListFriendRequestSent",
+async (id) => {
+  if (id) {
+    try {
+      const res = await fetch(
+        `${config.LINK_API_V2}/friendRequests/get-of-me/${id}`
+      );
+      const allFriendRequestSent = await res.json();
+      return allFriendRequestSent.data;
+    } catch (err) {
+      console.log(`[fetch messages]: ${err}`);
+    }
+  }
+})
 export default friendListSlice;
