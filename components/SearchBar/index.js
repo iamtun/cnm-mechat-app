@@ -1,44 +1,45 @@
-import { useEffect, useState } from 'react';
-import { View, Text, StyleSheet, TextInput, Alert } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Tooltip from 'react-native-walkthrough-tooltip';
-import { useDispatch } from 'react-redux';
-import MenuItem from './Menu/MenuItem';
-import filterSlice from '../../redux/slice/filterSlice';
-import useDebounce from '../../hooks/useDebounce';
-
+import { useEffect, useState } from "react";
+import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
+import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import Tooltip from "react-native-walkthrough-tooltip";
+import { useDispatch, useSelector } from "react-redux";
+import MenuItem from "./Menu/MenuItem";
+import filterSlice from "../../redux/slice/filterSlice";
+import useDebounce from "../../hooks/useDebounce";
+import { usersRemainingSelector } from "../../redux/selector";
 const items = [
   {
     id: 1,
     icon: "account-multiple-plus-outline",
     title: "Tạo nhóm",
-    isFriends: false
+    isFriends: false,
   },
   {
     id: 2,
     icon: "account-plus-outline",
     title: "Thêm bạn",
-    isFriends: true
+    isFriends: true,
   },
 ];
 
-function SearchBar({navigation}) {
+function SearchBar({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
   const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const debouncedValue = useDebounce(searchInput, 500);
   const dispatch = useDispatch();
 
-    //selector
-    
-    useEffect(() => {
-        dispatch(filterSlice.actions.searchFilterChange(searchInput));
-    }, [debouncedValue])
+  //selector
+  const userSearching = useSelector(usersRemainingSelector);
 
-    //func handle
-    const onOpenSearch = () => {
-        setIsSearch(true);
-    };
+  useEffect(() => {
+    dispatch(filterSlice.actions.searchFilterChange(searchInput));
+  }, [debouncedValue]);
+
+  //func handle
+  const onOpenSearch = () => {
+    navigation.navigate("SearchScreen");
+  };
 
   const onHideSearch = () => {
     setIsSearch(false);
@@ -53,51 +54,31 @@ function SearchBar({navigation}) {
   };
 
   const openAddNewFriend = () => {
-    navigation.navigate("AddFriendScreen")
-  }
+    navigation.navigate("AddFriendScreen");
+  };
 
   //ui
   return (
     <View style={styles.searchBar}>
-      {isSearch === true ? (
-        <>
-          <Icon
-            name="arrow-left"
-            size={30}
-            color="#fff"
-            onPress={onHideSearch}
-          />
-          <View style={styles.inputSearch}>
-            <TextInput
-              placeholder="Tìm kiếm"
-              value={searchInput}
-              onChangeText={handleSearchInput}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <Icon name="magnify" size={30} color="#fff" />
-          <View style={styles.textSearch}>
-            <Text style={styles.textSearch} onPress={onOpenSearch}>
-              Tìm Kiếm
-            </Text>
-          </View>
-        </>
-      )}
+      <Icon name="magnify" size={30} color="#fff" />
+      <View style={styles.textSearch}>
+        <Text style={styles.textSearch} onPress={onOpenSearch}>
+          Tìm Kiếm
+        </Text>
+      </View>
 
       <Tooltip
         isVisible={isVisible}
         content={
           <>
-            {items.map((item) =>
-                <MenuItem
-                  icon={item.icon}
-                  title={item.title}
-                  key={item.id}
-                  onPress = { item.isFriends ? openAddNewFriend : null}
-                />
-            )}
+            {items.map((item) => (
+              <MenuItem
+                icon={item.icon}
+                title={item.title}
+                key={item.id}
+                onPress={item.isFriends ? openAddNewFriend : null}
+              />
+            ))}
           </>
         }
         //style tool tips
