@@ -3,7 +3,7 @@ import config from "../../config";
 
 const friendListSlice = createSlice({
   name: "friends",
-  initialState: { data: [], friendId: null, userId: null},
+  initialState: { data: [], friendId: null, userId: null, phoneNumbers: []},
   reducers: {
     clickSendChat: (state, action) => {
       state.friendId = action.payload;

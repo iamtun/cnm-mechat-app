@@ -5,7 +5,6 @@ import Header from "../../components/Header";
 import FriendScreen from "./phonebook/FriendScreen";
 import GroupChatScreen from "./phonebook/GroupChatScreen";
 import NewFriendScreen from "./phonebook/NewFriendScreen";
-import { TouchableOpacity } from "react-native";
 
 const Tab = createMaterialTopTabNavigator();
 function PhoneBookScreen({ navigation }) {
@@ -15,7 +14,6 @@ function PhoneBookScreen({ navigation }) {
       <SearchBar navigation={navigation} />
       <Tab.Navigator>
         <Tab.Screen
-          
           name="Friend"
           component={FriendScreen}
           options={{ tabBarLabel: "Bạn bè" }}
@@ -26,11 +24,11 @@ function PhoneBookScreen({ navigation }) {
           component={GroupChatScreen}
           options={{ tabBarLabel: "Nhóm" }}
         />
-          <Tab.Screen
-            name="NewFriend"
-            component={NewFriendScreen}
-            options={{ tabBarLabel: "Lời mời" }}
-          />
+        <Tab.Screen
+          name="NewFriend"
+          component={NewFriendScreen}
+          options={{ tabBarLabel: "Lời mời" }}
+        />
       </Tab.Navigator>
     </>
   );

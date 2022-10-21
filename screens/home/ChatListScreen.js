@@ -54,7 +54,7 @@ function ChatListScreen({ navigation }) {
                             id={item.id}
                             name={item.name}
                             image={item.imageLinkOfConver}
-                            message={item.content}
+                            message={item.content ? item.content : item.lastMessage}
                             time={moment(item.time).fromNow()}
                             navigation={navigation}
                             key={item.id}
