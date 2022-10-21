@@ -177,16 +177,6 @@ export const getUserByPhoneNumber = createSelector(
                 if (!usersFilter.length) {
                     return 1;
                 }
-              
-                // return usersFilter.map((user) => ({
-                //     _id: user._id,
-                //     fullName: user.fullName,
-                //     avatarLink: user.avatarLink,
-                //     backgroundLink: user.backgroundLink,
-                //     phoneNumber: user.phoneNumber,
-                //     gender: user.gender,
-                //     isFriend: false,
-                // }));
             } else {
                 return 1;
             }
