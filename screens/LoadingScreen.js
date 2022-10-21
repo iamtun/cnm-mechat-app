@@ -11,7 +11,7 @@ import { fetchUsers } from "../redux/slice/usersSlice";
 function LoadingScreen({ navigation }) {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
-  // removeItem("user_token");
+   //removeItem("user_token");
 
   useEffect(() => {
     if (!isFocus) return;
