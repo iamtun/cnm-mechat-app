@@ -15,7 +15,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 function ChatListScreen({ navigation }) {
   const dispatch = useDispatch();
-  const userSearching = useSelector(usersRemainingSelector);
+  // const userSearching = useSelector(usersRemainingSelector);
   //console.log("----userSearching", userSearching);
   // const userInfo = useSelector(userInfoSelector);
   const conversations = useSelector(conversationsListSelector);

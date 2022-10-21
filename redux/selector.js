@@ -35,24 +35,33 @@ export const usersRemainingSelector = createSelector(
     userInfoSelector,
     searchTextSelector,
     (users, friends, user, search) => {
-        if (search) {
+        if (search != null) {
             if (search.startsWith('0')) {
                 const usersFilter = users.filter(
                     (_user) => _user.phoneNumber === search && _user.phoneNumber !== user.phoneNumber,
                 );
 
+                const friendFilter = friends.filter((friend) => friend.phoneNumber === search);
+
+                if(friendFilter.length > 0){
+                    return friendFilter.map((friend) => ({
+                        ...friend,
+                        isFriend: true
+                    }))
+                } else if(usersFilter.length > 0){
+                    return usersFilter.map((user) => ({
+                        ...user,
+                        isFriend: false,
+                    }));
+                }
                 //don't find
                 if (!usersFilter.length) {
                     return 1;
                 }
-                return usersFilter.map((user) => ({
-                    ...user,
-                    isFriend: false,
-                }));
+                
                 //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
             } else if (search.match('^[A-Z]')) {
                 const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
-                
                 //don't find
                 if (!friendFilter.length) {
                     return 1;
@@ -142,29 +151,42 @@ export const getMessageByIdConversationSelector = createSelector(
 
 export const getUserByPhoneNumber = createSelector(
     userListSelector,
+    getFriendsByUserSelector,
     searchTextSelector,
-    (users, search) => {
+    (users, friends, search) => {
         if (search) {
-            
             if (search.startsWith('0')) {
                 const usersFilter = users.filter(
                     (_user) => _user.phoneNumber === search
                 );
     
+                const friendFilter = friends.filter((friend) => friend.phoneNumber === search);
+
+                if(friendFilter.length > 0){
+                    return friendFilter.map((friend) => ({
+                        ...friend,
+                        isFriend: true
+                    }))
+                } else if(usersFilter.length > 0){
+                    return usersFilter.map((user) => ({
+                        ...user,
+                        isFriend: false,
+                    }));
+                }
                 //don't find
                 if (!usersFilter.length) {
                     return 1;
                 }
               
-                return usersFilter.map((user) => ({
-                    _id: user._id,
-                    fullName: user.fullName,
-                    avatarLink: user.avatarLink,
-                    backgroundLink: user.backgroundLink,
-                    phoneNumber: user.phoneNumber,
-                    gender: user.gender,
-                    isFriend: false,
-                }));
+                // return usersFilter.map((user) => ({
+                //     _id: user._id,
+                //     fullName: user.fullName,
+                //     avatarLink: user.avatarLink,
+                //     backgroundLink: user.backgroundLink,
+                //     phoneNumber: user.phoneNumber,
+                //     gender: user.gender,
+                //     isFriend: false,
+                // }));
             } else {
                 return 1;
             }

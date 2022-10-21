@@ -24,13 +24,9 @@ const items = [
 
 function SearchBar({ navigation }) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isSearch, setIsSearch] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const debouncedValue = useDebounce(searchInput, 500);
   const dispatch = useDispatch();
-
-  //selector
-  const userSearching = useSelector(usersRemainingSelector);
 
   useEffect(() => {
     dispatch(filterSlice.actions.searchFilterChange(searchInput));
@@ -41,17 +37,8 @@ function SearchBar({ navigation }) {
     navigation.navigate("SearchScreen");
   };
 
-  const onHideSearch = () => {
-    setIsSearch(false);
-    setSearchInput(null);
-    dispatch(filterSlice.actions.searchFilterChange(null));
-  };
 
   const onOpenMenu = () => setIsVisible(true);
-
-  const handleSearchInput = (value) => {
-    setSearchInput(() => setSearchInput(value));
-  };
 
   const openAddNewFriend = () => {
     navigation.navigate("AddFriendScreen");
@@ -66,7 +53,6 @@ function SearchBar({ navigation }) {
           Tìm Kiếm
         </Text>
       </View>
-
       <Tooltip
         isVisible={isVisible}
         content={

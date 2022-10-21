@@ -1,21 +1,29 @@
 import { useState } from "react";
 import React from "react";
-import Header from '../../../components/Header';
-import { View, Text, StyleSheet, TextInput, Alert } from "react-native";
+import { useDispatch, useSelector } from "react-redux";
+import { View, StyleSheet, TextInput, FlatList } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import SearchItem from "../../../components/SearchBar/SearchItem";
 
-export default function SearchScreen({ route, navigation }) {
-  //   const userSearching = route.params.userSearching;
-  const [searchInput, setSearchInput] = useState("");
-  const handleSearchInput = (value) => {
-    setSearchInput(() => setSearchInput(value));
-  };
+import Header from "../../../components/Header";
+import { usersRemainingSelector } from "../../../redux/selector";
+import filterSlice from "../../../redux/slice/filterSlice";
+import { useEffect } from "react";
+export default function SearchScreen({ navigation }) {
+  const dispatch = useDispatch();
+  const [searchInput, setSearchInput] = useState(null);
+
+  useEffect(() =>{
+    dispatch(filterSlice.actions.searchFilterChange(searchInput));
+  })
+  const userSearching = useSelector(usersRemainingSelector);
+
   return (
     <>
       <Header />
       <View style={styles.searchBar}>
         <Icon
-        style ={{marginLeft:10}}
+          style={{ marginLeft: 10 }}
           name="arrow-left"
           size={30}
           color="#fff"
@@ -25,11 +33,14 @@ export default function SearchScreen({ route, navigation }) {
           <TextInput
             placeholder="Tìm kiếm"
             value={searchInput}
-            onChangeText={handleSearchInput}
+            onChangeText={(value) =>{
+              setSearchInput(value)
+            }}
           />
         </View>
-        {/* {userSearching === 1 ? (
-        <SearchItem isNull />
+      </View>
+      {userSearching === 1 ? (
+        <SearchItem isNull= {true} />
       ) : (
         <FlatList
           data={userSearching}
@@ -44,8 +55,7 @@ export default function SearchScreen({ route, navigation }) {
             />
           )}
         />
-      )} */}
-      </View>
+      )}
     </>
   );
 }
@@ -56,7 +66,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#3777F3",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
   },
   inputSearch: {
     marginLeft: 20,

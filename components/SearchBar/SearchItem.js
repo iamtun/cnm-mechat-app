@@ -1,9 +1,18 @@
-import { TouchableWithoutFeedback } from "react-native";
+import React, { useState, useEffect } from "react";
 import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
-import { useDispatch } from "react-redux";
-import userInfoSlice from "../../redux/slice/userInfoSlice";
+import { useDispatch, useSelector } from "react-redux";
 
+import userInfoSlice from "../../redux/slice/userInfoSlice";
+import {
+  getUserByPhoneNumber,
+  userInfoSelector,
+  friendListSelector,
+} from "../../redux/selector";
+import {
+  fetchFriendsRequest,
+  fetchBackFriendRequest,
+} from "../../redux/slice/friendSlice";
 function SearchItem({
   id,
   image,
@@ -12,15 +21,41 @@ function SearchItem({
   isFriend,
   isNull,
   navigation,
-  onPress,
-  isRequest,
 }) {
   const dispatch = useDispatch();
+  const [isRequest, setIsRequest] = useState(false);
+
+  const usersByPhone = useSelector(getUserByPhoneNumber);
+  const _userInfoSelector = useSelector(userInfoSelector);
+  const allFriendsRequest = useSelector(friendListSelector);
+
+  // request make friend
+  const _handleSendRequest = () => {
+    //Set data for send require make friend
+    const data = {
+      senderID: _userInfoSelector._id,
+      receiverID: usersByPhone[0]._id,
+    };
+    setIsRequest(true);
+    dispatch(fetchFriendsRequest(data));
+  };
+
+  //Close request make friend
+  const _handleCloseRequest = () => {
+    setIsRequest(false);
+    const data = {
+      friendRequestID: allFriendsRequest.receiver.id,
+      status: isRequest,
+      senderID: _userInfoSelector._id,
+    };
+    dispatch(fetchBackFriendRequest(data));
+  };
 
   const handleClickSearchItem = () => {
     dispatch(userInfoSlice.actions.clickSearchItem(id));
     navigation.navigate("PersonalScreen", { isMe: false });
   };
+
   return (
     <View style={[styles.container, isNull ? styles.noSearchText : null]}>
       {isNull ? (
@@ -42,11 +77,21 @@ function SearchItem({
 
           <View>
             {isFriend ? (
-              <TouchableOpacity>
-                <Icon name="ios-call-outline" size={24} style={styles.icon} />
-              </TouchableOpacity>
+              <View style = {styles.call}>
+                <TouchableOpacity>
+                  <Icon name="ios-call-outline" size={24} style={styles.icon} />
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Icon name="md-videocam-outline" size={24} style={styles.icon} />
+                </TouchableOpacity>
+              </View>
             ) : (
-              <TouchableOpacity onPress={onPress} style={styles.buttonAdd}>
+              <TouchableOpacity
+                onPress={() =>
+                  isRequest ? _handleCloseRequest() : _handleSendRequest()
+                }
+                style={styles.buttonAdd}
+              >
                 <Icon
                   color="#3777F3"
                   name={isRequest ? "close" : "person-add-outline"}
@@ -67,12 +112,11 @@ function SearchItem({
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    height: 70,
+    height: 80,
     backgroundColor: "#fff",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: "#ccc",
   },
   body: {
@@ -81,11 +125,15 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
   },
+  call: {
+    width:"100%",
+    flexDirection:"row"
+  },
   image: {
     width: 60,
     height: 60,
     borderRadius: 50,
-    marginHorizontal: 8,
+    marginLeft: 20
   },
   info: {
     marginLeft: 8,
@@ -105,8 +153,8 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    width: 80,
-    height: 35,
+    width: 90,
+    height: 40,
     borderRadius: 15,
     borderWidth: 2,
     borderColor: "#33B0E0",
