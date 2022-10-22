@@ -1,7 +1,7 @@
-import { View, Image, Text, KeyboardAvoidingView, ActivityIndicator } from 'react-native';
+import { View, Image, Text, KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, Platform } from 'react-native';
 import { Alert } from 'react-native';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from 'firebase/compat/app';
 
