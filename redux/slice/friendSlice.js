@@ -97,7 +97,6 @@ export const fetchBackFriendRequest = createAsyncThunk(
         body: JSON.stringify({status, senderID}),
       });
       const dataBackFriendsRequest = res.json()
-      console.log("Data back", dataBackFriendsRequest);
       return dataBackFriendsRequest.data;
     } catch (err) {
       console.log(`err fetch users: ${err}`);

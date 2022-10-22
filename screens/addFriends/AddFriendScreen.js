@@ -12,39 +12,26 @@ import Icon from "react-native-vector-icons/Ionicons";
 
 import Header from "../../components/Header";
 import filterSlice from "../../redux/slice/filterSlice";
-import useDebounce from "../../hooks/useDebounce";
 import { getUserByPhoneNumber } from "../../redux/selector";
 import SearchItem from "../../components/SearchBar/SearchItem";
-import { userInfoSelector, friendListSelector } from "../../redux/selector";
-import {
-  fetchFriendsRequest,
-  fetchBackFriendRequest,
-  fetchListFriendRequestSent,
-} from "../../redux/slice/friendSlice";
 
 function AddFriendScreen({ navigation }) {
   const dispatch = useDispatch();
-  const [isRequest, setIsRequest] = useState(false);
-
-  const allFriendsRequest = useSelector(friendListSelector);
 
   //Set phone number when change text
-  const [text, setText] = useState("");
+  const [text, setText] = useState(null);
   //Get user by phone number
   const usersByPhone = useSelector(getUserByPhoneNumber);
-  //Get info me
-  const _userInfoSelector = useSelector(userInfoSelector);
-  //Get all friend request sent
+  
   useEffect(() => {
-    search;
-    clearText;
-    _handleClick;
-    allFriendsRequest;
-  }, []);
+    if (text == null) {
+      dispatch(filterSlice.actions.searchFilterChange(text));
+    }
+  });
 
   //click button remove text
   const clearText = () => {
-    setText("");
+    setText(null);
     dispatch(filterSlice.actions.searchFilterChange(null));
   };
 
@@ -52,34 +39,11 @@ function AddFriendScreen({ navigation }) {
   const search = () => {
     dispatch(filterSlice.actions.searchFilterChange(text));
   };
-  
+
   //click button search
-  const _handleClick = () => {
+  const _handleClickSearch = () => {
     search();
     usersByPhone;
-  };
- 
-  // request make friend
-  const _handleRequest = () => {
-    //Set data for send require make friend
-    const data = {
-      senderID: _userInfoSelector._id,
-      receiverID: usersByPhone[0]._id,
-    };
-    setIsRequest(true);
-    dispatch(fetchFriendsRequest(data));
-  };
-
-  //Close request make friend
-
-  const _handleCloseRequest = () => {
-    setIsRequest(false);
-    const data = {
-      friendRequestID: allFriendsRequest.receiver.id,
-      status: isRequest,
-      senderID: _userInfoSelector._id,
-    };
-    dispatch(fetchBackFriendRequest(data));
   };
 
   return (
@@ -107,12 +71,13 @@ function AddFriendScreen({ navigation }) {
           onChangeText={(txt) => setText(txt)}
           value={text}
         />
-        {text.length <= 0 ? null : (
+
+        {text == null ? null : (
           <TouchableOpacity onPress={clearText}>
             <Icon name="close" color="#111" size={25} />
           </TouchableOpacity>
         )}
-        <TouchableOpacity style={styles.viewSearch} onPress={_handleClick}>
+        <TouchableOpacity style={styles.viewSearch} onPress={() => _handleClickSearch()}>
           <Text style={styles.textSearch}>TÌM</Text>
         </TouchableOpacity>
       </View>
@@ -132,8 +97,7 @@ function AddFriendScreen({ navigation }) {
               phonNumber={item.phoneNumber}
               image={item.avatarLink}
               isFriend={item.isFriend}
-              onPress={isRequest ? _handleCloseRequest : _handleRequest}
-              isRequest={isRequest}
+              navigation = {navigation}
             />
           )}
         />

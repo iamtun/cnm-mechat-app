@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 import { userInfoSelector, userListSelector } from "../../../redux/selector";
 import Header from "../../../components/Header";
 import { useState } from "react";
-import { FlatList } from "react-native";
+import { Alert, FlatList, PermissionsAndroid, Platform } from "react-native";
 import SearchItem from "../../../components/SearchBar/SearchItem";
 import { View } from "react-native";
 
@@ -16,32 +16,71 @@ function SyncPhoneBook({ navigation }) {
   //get my number phone
   useEffect(() => {
     const getPhoneNumbersByDevice = async () => {
-      const { status } = await Contacts.requestPermissionsAsync();
       const phones = [];
-      if (status === "granted") {
-        const { data } = await Contacts.getContactsAsync({
-          fields: [Contacts.Fields.PhoneNumbers],
-        });
+      if (Platform.OS === "ios") {
+        const { status } = await Contacts.requestPermissionsAsync();
+        if (status === "granted") {
+          const { data } = await Contacts.getContactsAsync({
+            fields: [Contacts.Fields.PhoneNumbers],
+          });
 
-        if (data.length > 0) {
-          data.forEach((d) =>
-            d.phoneNumbers != undefined
-              ? phones.push(d.phoneNumbers[0].digits)
-              : null
-          );
+          if (data.length > 0) {
+            data.forEach((d) =>
+              d.phoneNumbers != undefined
+                ? phones.push(d.phoneNumbers[0].digits)
+                : null
+            );
+          }
+
+          return phones;
         }
+      }
 
-        return phones;
+      if (Platform.OS === "android") {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
+          {
+            title: "Yêu cầu cấp quyền",
+            message: "Vui lòng cho phép để truy cập danh bạ của bạn!",
+            buttonNeutral: "Ask Me Later",
+            buttonNegative: "Cancel",
+            buttonPositive: "OK",
+          }
+        );
+        console.log(granted);
+
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          const { data } = await Contacts.getContactsAsync({
+            fields: [Contacts.Fields.PhoneNumbers],
+          });
+
+          if (data.length > 0) {
+            data.forEach((d) =>
+              d.phoneNumbers != undefined
+                ? phones.push(d.phoneNumbers[0].number)
+                : null
+            );
+          }
+
+          return phones;
+        } else {
+          console.log("Contacts permission denied");
+        }
       }
     };
 
     const syncPhoneBook = async () => {
-      const phones = await getPhoneNumbersByDevice();
-      const _friends = users.filter(
-        (user) =>
-          phones.includes(user.phoneNumber) && !me.friends.includes(user._id)
-      );
-      setFriends(_friends);
+      try {
+        const phones = await getPhoneNumbersByDevice();
+        const _friends = users.filter(
+          (user) =>
+            phones.includes(user.phoneNumber) && !me.friends.includes(user._id)
+        );
+        console.log(_friends);
+        setFriends(_friends);
+      } catch (error) {
+        Alert.alert("Lỗi đồng bộ", error.message);
+      }
     };
     syncPhoneBook();
   }, []);

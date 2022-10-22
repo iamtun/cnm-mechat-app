@@ -49,53 +49,50 @@ function NewFriendScreen({ navigation }) {
 
   function getNewFriends({ item: user }) {
     return (
-      <>
-        <TouchableOpacity
-          style={styles.syncButton}
-          onPress={handleClickSyncButton}
-        >
-          <Text style={styles.syncText}>Đồng bộ danh bạ</Text>
-        </TouchableOpacity>
-        <View styles={styles.container}>
-          <ListItem key={user.senderId} bottomDivider>
-            <Avatar rounded size={70} source={{ uri: user.imageLink }} />
-            <ListItem.Content>
-              <ListItem.Title>{user.fullName}</ListItem.Title>
-              <ListItem.Subtitle>{user.content}</ListItem.Subtitle>
-            </ListItem.Content>
-            <TouchableOpacity
-              style={styles.buttonRemove}
-              onPress={() => {
-                _handleRequestFriend(
-                  user.idFriendRequest,
-                  user.senderId,
-                  false
-                );
-              }}
-            >
-              <Text>Hủy</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonAdd}
-              onPress={() => {
-                _handleRequestFriend(user.idFriendRequest, user.senderId, true);
-              }}
-            >
-              <Text style={{ color: "white" }}>Đồng ý</Text>
-            </TouchableOpacity>
-          </ListItem>
-        </View>
-      </>
+      <View styles={styles.container}>
+        <ListItem key={user.senderId} bottomDivider>
+          <Avatar rounded size={70} source={{ uri: user.imageLink }} />
+          <ListItem.Content>
+            <ListItem.Title>{user.fullName}</ListItem.Title>
+            <ListItem.Subtitle>{user.content}</ListItem.Subtitle>
+          </ListItem.Content>
+          <TouchableOpacity
+            style={styles.buttonRemove}
+            onPress={() => {
+              _handleRequestFriend(user.idFriendRequest, user.senderId, false);
+            }}
+          >
+            <Text>Hủy</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.buttonAdd}
+            onPress={() => {
+              _handleRequestFriend(user.idFriendRequest, user.senderId, true);
+            }}
+          >
+            <Text style={{ color: "white" }}>Đồng ý</Text>
+          </TouchableOpacity>
+        </ListItem>
+      </View>
     );
   }
   return (
-    <View>
-      <FlatList
-        data={allFriendsRequest}
-        keyExtractor={(user) => user.senderId.toString()}
-        renderItem={getNewFriends}
-      />
-    </View>
+    <>
+      <TouchableOpacity
+        style={styles.syncButton}
+        onPress={handleClickSyncButton}
+      >
+        <Text style={styles.syncText}>Đồng bộ danh bạ</Text>
+      </TouchableOpacity>
+
+      <View>
+        <FlatList
+          data={allFriendsRequest}
+          keyExtractor={(user) => user.senderId.toString()}
+          renderItem={getNewFriends}
+        />
+      </View>
+    </>
   );
 }
 
