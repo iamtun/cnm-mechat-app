@@ -22,13 +22,13 @@ import GlobalStyle from "../../../styles/GlobalStyle";
 function MessageScreen({ route, navigation }) {
   const { id, name } = route.params;
   const dispatch = useDispatch();
-  const isFocus = useIsFocused();
+  // const isFocus = useIsFocused();
 
   const messages = useSelector(getMessageByIdConversationSelector);
   const isLoading = useSelector(messageLoadingSelector);
 
   useEffect(() => {
-    if (!isFocus) {
+    if (messages.length < 0) {
       socket.emit("join_room", id);
     } else {
       dispatch(fetchMessagesById(id));
@@ -36,7 +36,7 @@ function MessageScreen({ route, navigation }) {
     socket.on("receiver_message", (message) => {
       dispatch(messageListSlice.actions.addMessageFromSocket(message));
     });
-  }, [isFocus]);
+  }, []);
 
   const renderItem = ({ item }) => <MessageItem message={item} />;
 

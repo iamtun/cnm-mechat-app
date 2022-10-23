@@ -36,7 +36,8 @@ const messageListSlice = createSlice({
       .addCase(fetchMessagesById.fulfilled, (state, action) => {
         state.data = action.payload;
         state.loading = true;
-      }).addCase(fetchMessagesById.pending, (state, action) => {
+      })
+      .addCase(fetchMessagesById.pending, (state, action) => {
         state.loading = false;
       })
       .addCase(sendMessage.fulfilled, (state, action) => {
@@ -55,6 +56,13 @@ const messageListSlice = createSlice({
       .addCase(sendImageMessage.rejected, (state, action) => {
         console.log("err send message");
         Alert.alert("Thông báo", "Hình ảnh này không gửi được");
+      })
+      .addCase(recallMessage.fulfilled, (state, action) => {
+        const message = action.payload;
+        const messageList = state.data.map((_message) =>
+          _message._id === message._id ? message : _message
+        );
+        state.data = messageList;
       });
   },
 });
@@ -143,10 +151,27 @@ export const sendImageMessage = createAsyncThunk(
       if (_message?._id) {
         return _message;
       } else {
+        console.log(_message);
         return null;
       }
     }
   }
 );
+
+export const recallMessage = createAsyncThunk("message/recall", async (id) => {
+  if (id) {
+    try {
+      const res = await fetch(`${config.LINK_API_V2}/messages/recall/${id}`);
+      const messages = await res.json();
+      return messages;
+    } catch (err) {
+      console.log(`[fetch messages]: ${err}`);
+    }
+  }
+});
+
+export const deleteMessage = createAsyncThunk("message/recall", async (id) => {
+  console.log(`delete ${id}`);
+});
 
 export default messageListSlice;

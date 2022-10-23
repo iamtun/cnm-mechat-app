@@ -12,9 +12,11 @@ function MenuItem({ icon, title, color, onPress}) {
 const styles = StyleSheet.create({
   body: {
     flexDirection: "row",
-    justifyContent: "flex-start",
+    justifyContent: "center",
     alignItems: "center",
     borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+    width: "100%"
   },
   title: {
     fontSize: 14,
