@@ -10,7 +10,7 @@ import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
 function RegisterScreen({ navigation }) {
-  
+
   //ui ref
   const phoneNumberRegisterRef = useRef(null);
   const passRegisterRef = useRef(null);
@@ -52,7 +52,7 @@ function RegisterScreen({ navigation }) {
         if (resData?.status == 500) return false;
       });
   };
-
+  
   const _handleRegister = async () => {
     const userPhone = await getUserByPhoneNumber();
 
