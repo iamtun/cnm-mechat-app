@@ -128,43 +128,35 @@ export const getConversationIdByIdFriendSelector = createSelector(
 );
 
 export const getMessageByIdConversationSelector = createSelector(
-  userListSelector,
-  messageListSelector,
-  (users, messages) => {
-    try {
-      const _messages = messages.map((message) => {
-        let otherUser = null;
-        let user = null;
-        if (message.action) {
-          otherUser = users.filter(
-            (_user) => _user._id === message.action[0].receiverID
-          );
-        } else {
-          user = users.filter((_user) => _user._id === message.senderID)[0];
-        }
-
-        return {
-          _id: message._id,
-          action: message.action ? message.action : null,
-          content: message.action ? null : message.content,
-          imageLink: message.imageLink,
-          createdAt: message.action
-            ? moment(message.createdAt).format("DD/MM/YYYY hh:mm")
-            : moment(message.createdAt).format("hh:mm"),
-          user: {
-            id: message.action ? otherUser._id : user._id,
-            name: message.action ? null : user.fullName,
-            avatar: message.action ? null : user.avatarLink,
-          },
-        };
-      });
-
-      return _messages.slice(-10);
-      //return _messages;
-    } catch (err) {
-      console.log(err);
-    }
-  }
+    userListSelector,
+    messageListSelector,
+    (users, messages) => {
+        try{
+            const _messages = messages.map((message) => {
+                const user = users.filter((_user) => _user._id === message.senderID)[0];
+    
+                return {
+                    _id: message._id,
+                    action: message.action ? message.action : null,
+                    content: message.action ? null : message.content,
+                    imageLink: message.imageLink,
+                    createdAt: message.action
+                        ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
+                        : moment(message.createdAt).format('hh:mm'),
+                    user: {
+                        id: user._id,
+                        name: message.action ? null : user.fullName,
+                        avatar: message.action ? null : user.avatarLink,
+                    },
+                };
+            });
+    
+            return _messages.slice(-10);
+            //return _messages;
+        }catch(err) {
+            console.log('get message ', err);
+        } 
+    },
 );
 
 export const getUserByPhoneNumber = createSelector(
