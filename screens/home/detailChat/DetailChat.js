@@ -4,9 +4,12 @@ import { Avatar } from "react-native-elements";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/Ionicons";
 import DetailFeature from "../../../components/DetailFeature/DetailFeature";
+import Header from "../../../components/Header";
 
 export default function DetailChat({navigation}) {
   return (
+    <>
+    <Header/>
     <View style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -56,6 +59,7 @@ export default function DetailChat({navigation}) {
         <Text style ={{marginLeft:10}}>Ảnh,file,link đã gửi</Text>
       </TouchableOpacity>
     </View>
+    </>
   );
 }
 
@@ -66,7 +70,6 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
     alignItems: "center",
-    marginTop: 25,
     width: "100%",
     height: 50,
     backgroundColor: "#3475F5",
