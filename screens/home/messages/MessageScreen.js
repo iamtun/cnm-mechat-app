@@ -1,4 +1,9 @@
-import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { View, StyleSheet, Text } from "react-native";
 import { useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
@@ -28,17 +33,14 @@ function MessageScreen({ route, navigation }) {
   const isLoading = useSelector(messageLoadingSelector);
 
   useEffect(() => {
-    if (!isLoading) {
-      socket.emit("join_room", id);
-    } else {
-      dispatch(fetchMessagesById(id));
-    }
+    socket.emit("join_room", id);
+    dispatch(fetchMessagesById(id));
     socket.on("receiver_message", (message) => {
       dispatch(messageListSlice.actions.addMessageFromSocket(message));
     });
   }, []);
 
-  const renderItem = ({ item }) => <MessageItem message={item} id={id}/>;
+  const renderItem = ({ item }) => <MessageItem message={item} id={id} />;
 
   return (
     <>
@@ -61,7 +63,10 @@ function MessageScreen({ route, navigation }) {
             />
           ) : (
             <View style={styles.isLoading}>
-              <ActivityIndicator size="large" color={GlobalStyle.primaryColor} />
+              <ActivityIndicator
+                size="large"
+                color={GlobalStyle.primaryColor}
+              />
               <Text>Loading...</Text>
             </View>
           )}

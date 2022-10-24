@@ -8,6 +8,7 @@ import {
   searchItemClickSelector,
 } from "../../../redux/selector";
 import friendListSlice from "../../../redux/slice/friendSlice";
+import * as ImagePicker from "expo-image-picker";
 
 import moment from "moment";
 import { useEffect } from "react";
@@ -55,7 +56,29 @@ function PersonalScreen({ route, navigation }) {
   };
 
   const _handleUpdateInfo = () => {
-    navigation.navigate("InfoSelf");
+    navigation.navigate("InfoSelf", {fullName: fullName,
+      bio: bio,
+      gender: gender,
+      birthday: birthday,});
+  };
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
+      allowsEditing: false,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    // if (!result.cancelled) {
+    //   const data = {
+    //     imageLink: result.uri,
+    //     senderID: userInfo._id,
+    //     conversationID: conversationId,
+    //   };
+    //   dispatch(sendImageMessage(data));
+    // }
   };
 
   return (
@@ -69,7 +92,7 @@ function PersonalScreen({ route, navigation }) {
           />
         </View>
         <View style={styles.bottomContainer}>
-          <Image style={styles.avatar} source={{ uri: avatarLink }} />
+          <Image style={styles.avatar} source={{ uri: avatarLink }} onPress={pickImage}/>
           <Text style={styles.name}>{fullName}</Text>
           <Text style={styles.bio}>{bio}</Text>
           <View style={styles.info}>
