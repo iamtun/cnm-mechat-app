@@ -2,10 +2,13 @@ import { useRef, useState } from "react";
 import { Platform } from "react-native";
 import { View, StyleSheet, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import MICon from "react-native-vector-icons/MaterialIcons";
 import * as ImagePicker from "expo-image-picker";
+import * as DocumentPicker from "expo-document-picker";
 import { useDispatch, useSelector } from "react-redux";
 import { userInfoSelector } from "../../../redux/selector";
 import {
+  sendFile,
   sendImageMessage,
   sendMessage,
 } from "../../../redux/slice/messageSlice";
@@ -14,7 +17,7 @@ function MessageInputBox({ conversationId }) {
   const [isWrite, setIsWrite] = useState(false);
   const [message, setMessage] = useState("");
   const userInfo = useSelector(userInfoSelector);
-  
+
   const dispatch = useDispatch();
 
   const handleWriteText = (value) => {
@@ -61,6 +64,32 @@ function MessageInputBox({ conversationId }) {
     }
   };
 
+  const pickerFile = async () => {
+    const result = await DocumentPicker.getDocumentAsync({
+      type: "*/*",
+      copyToCacheDirectory: true,
+    });
+    if (result.type === "success") {
+      const { name, size, uri } = result;
+      let nameParts = name.split(".");
+      const fileType = nameParts[nameParts.length - 1];
+      const fileToUpload = {
+        name,
+        size,
+        uri,
+        type: "application/" + fileType,
+      };
+
+      const message = {
+        senderID: userInfo._id,
+        conversationID: conversationId,
+        fileToUpload
+      };
+
+      dispatch(sendFile(message));
+    }
+  };
+
   return (
     <View style={[styles.body, styles.row]}>
       <Icon name="sticker-emoji" size={32} style={styles.icon} />
@@ -89,7 +118,12 @@ function MessageInputBox({ conversationId }) {
           />
         ) : (
           <>
-            <Icon name="microphone" size={32} style={styles.icon} />
+            <MICon
+              name="attach-file"
+              size={32}
+              style={styles.icon}
+              onPress={pickerFile}
+            />
             <Icon name="image-multiple-outline" size={32} onPress={pickImage} />
           </>
         )}

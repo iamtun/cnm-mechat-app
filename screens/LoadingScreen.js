@@ -19,7 +19,6 @@ function LoadingScreen({ navigation }) {
       getItem("user_token")
         .then((token) => {
           if (token) {
-            console.log("have token");
             dispatch(fetchUsers());
             dispatch(fetchUserInfo(token));
             setTimeout(() => {
