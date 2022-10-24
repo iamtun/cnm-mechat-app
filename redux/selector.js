@@ -208,7 +208,9 @@ export const getUserByPhoneNumber = createSelector(
 export const getUserRegister = createSelector(
   userListSelector,
   searchTextSelector,
-  (users, search) => {
+   (users, search) => {
+    console.log("search", search);
+
     if (search) {
       if (search.startsWith("0")) {
         const usersFilter = users.filter(
@@ -220,9 +222,7 @@ export const getUserRegister = createSelector(
           return 1;
         }
 
-        return usersFilter.map((user) => ({
-          ...user
-        }));
+        return usersFilter;
       } else {
         return 1;
       }

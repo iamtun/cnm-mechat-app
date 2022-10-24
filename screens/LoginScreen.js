@@ -2,7 +2,6 @@ import { View, Image, Text, KeyboardAvoidingView } from 'react-native';
 import { StyleSheet, Platform } from 'react-native';
 import { Alert } from 'react-native';
 import { useRef, useState } from 'react';
-import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 import firebase from 'firebase/compat/app';
 
 import GlobalStyle from '../styles/GlobalStyle';
@@ -10,7 +9,6 @@ import LoginStyles from '../styles/LoginStyles';
 import ButtonPrimary from '../components/Buttons/ButtonPrimary';
 import TextInputPrimary from '../components/Inputs/TextInputPrimary';
 import config from '../config';
-import { firebaseConfig } from '../utils/firebase';
 import { setItem } from '../utils/asyncStorage';
 
 function LoginScreen({ navigation }) {
@@ -19,23 +17,9 @@ function LoginScreen({ navigation }) {
     const passLoginRef = useRef(null);
 
     //firebase
-    const recaptchaVerifier = useRef(null);
     const [verificationId, setVerificationId] = useState(null);
 
     // function
-    const senOTP = async () => {
-        let _phoneNumber = '+84' + phoneNumberLoginRef.current.slice(1);
-
-        try {
-            const phoneProvider = new firebase.auth.PhoneAuthProvider();
-            const verificationId = await phoneProvider.verifyPhoneNumber(_phoneNumber, recaptchaVerifier.current);
-            if (verificationId) {
-                return verificationId;
-            }
-        } catch (err) {
-            throw new Error(err);
-        }
-    };
 
     const sign = () => {
         return fetch(`${config.LINK_API_V2}/users/login`, {
@@ -110,12 +94,6 @@ function LoginScreen({ navigation }) {
 
     return (
         <View style={GlobalStyle.container}>
-            <FirebaseRecaptchaVerifierModal
-                ref={recaptchaVerifier}
-                firebaseConfig={firebaseConfig}
-                title="Xác thực"
-                cancelLabel="Hủy"
-            />
             {/*  logo  */}
             <View style={LoginStyles.logo}>
                 <Image style={LoginStyles.img} source={require('../assets/mechat-logo.png')} />
