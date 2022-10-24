@@ -55,7 +55,7 @@ const messageListSlice = createSlice({
       })
       .addCase(sendImageMessage.rejected, (state, action) => {
         console.log("err send message");
-        Alert.alert("Thông báo", "Hình ảnh này không gửi được");
+        Alert.alert("Thông báo", "Tệp đa phương tiện này quá nặng!");
       })
       .addCase(recallMessage.fulfilled, (state, action) => {
         const message = action.payload;
@@ -63,6 +63,11 @@ const messageListSlice = createSlice({
           _message._id === message._id ? message : _message
         );
         state.data = messageList;
+      })
+      .addCase(deleteMessage.fulfilled, (state, action) => {
+        const { id } = action.payload;
+        const index = state.data.findIndex((_message) => _message._id === id);
+        state.data.splice(index, 1);
       });
   },
 });
@@ -162,16 +167,36 @@ export const recallMessage = createAsyncThunk("message/recall", async (id) => {
   if (id) {
     try {
       const res = await fetch(`${config.LINK_API_V2}/messages/recall/${id}`);
-      const messages = await res.json();
-      return messages;
+      const message = await res.json();
+      return message;
     } catch (err) {
       console.log(`[fetch messages]: ${err}`);
     }
   }
 });
 
-export const deleteMessage = createAsyncThunk("message/recall", async (id) => {
-  console.log(`delete ${id}`);
-});
+export const deleteMessage = createAsyncThunk(
+  "message/delete",
+  async (data) => {
+    if (data) {
+      try {
+        const res = await fetch(
+          `${config.LINK_API_V2}/messages/${data.messageId}`,
+          {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ conversationID: data.conversationId }),
+          }
+        );
+        const id = await res.json();
+        return id;
+      } catch (err) {
+        console.log(`[fetch delete message]: ${err}`);
+      }
+    }
+  }
+);
 
 export default messageListSlice;

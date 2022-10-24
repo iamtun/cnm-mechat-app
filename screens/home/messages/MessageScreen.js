@@ -28,7 +28,7 @@ function MessageScreen({ route, navigation }) {
   const isLoading = useSelector(messageLoadingSelector);
 
   useEffect(() => {
-    if (messages.length < 0) {
+    if (!isLoading) {
       socket.emit("join_room", id);
     } else {
       dispatch(fetchMessagesById(id));
@@ -38,7 +38,7 @@ function MessageScreen({ route, navigation }) {
     });
   }, []);
 
-  const renderItem = ({ item }) => <MessageItem message={item} />;
+  const renderItem = ({ item }) => <MessageItem message={item} id={id}/>;
 
   return (
     <>

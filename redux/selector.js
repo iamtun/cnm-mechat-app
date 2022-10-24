@@ -117,13 +117,7 @@ export const getMessageByIdConversationSelector = createSelector(
     (users, messages) => {
         try{
             const _messages = messages.map((message) => {
-                let otherUser = null;
-                let user = null;
-                if (message.action) {
-                    otherUser = users.filter((_user) => _user._id === message.action[0].receiverID);
-                } else {
-                    user = users.filter((_user) => _user._id === message.senderID)[0];
-                }
+                const user = users.filter((_user) => _user._id === message.senderID)[0];
     
                 return {
                     _id: message._id,
@@ -134,7 +128,7 @@ export const getMessageByIdConversationSelector = createSelector(
                         ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
                         : moment(message.createdAt).format('hh:mm'),
                     user: {
-                        id: message.action ? otherUser._id : user._id,
+                        id: user._id,
                         name: message.action ? null : user.fullName,
                         avatar: message.action ? null : user.avatarLink,
                     },
@@ -144,7 +138,7 @@ export const getMessageByIdConversationSelector = createSelector(
             return _messages.slice(-10);
             //return _messages;
         }catch(err) {
-            console.log(err);
+            console.log('get message ', err);
         } 
     },
 );

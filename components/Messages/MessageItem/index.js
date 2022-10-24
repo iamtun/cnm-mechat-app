@@ -3,13 +3,16 @@ import { View, Text, StyleSheet, Image } from "react-native";
 import { Tooltip } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
 import { userInfoSelector } from "../../../redux/selector";
-import { deleteMessage, recallMessage } from "../../../redux/slice/messageSlice";
+import {
+  deleteMessage,
+  recallMessage,
+} from "../../../redux/slice/messageSlice";
 import MenuItem from "../../SearchBar/Menu/MenuItem";
 import ToolTipCustom from "../../SearchBar/Menu/TooltipCustom";
 import ActionMessage from "./ActionMessage";
 import ImageMessage from "./ImageMessage";
 
-function MessageItem({ message }) {
+function MessageItem({ message, id }) {
   const { _id } = useSelector(userInfoSelector);
   const isMe = message.user.id === _id;
   const dispatch = useDispatch();
@@ -21,7 +24,10 @@ function MessageItem({ message }) {
     },
     {
       title: "Xóa",
-      onPress: () => dispatch(deleteMessage(123)),
+      onPress: () => {
+        const data = { messageId: message._id, conversationId: id };
+        dispatch(deleteMessage(data))
+      },
     },
   ];
 
