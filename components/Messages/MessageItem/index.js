@@ -1,4 +1,5 @@
 import { PointPropType } from "deprecated-react-native-prop-types";
+import { useState } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
 import { Tooltip } from "react-native-elements";
 import { useDispatch, useSelector } from "react-redux";
@@ -10,6 +11,7 @@ import {
 import MenuItem from "../../SearchBar/Menu/MenuItem";
 import ToolTipCustom from "../../SearchBar/Menu/TooltipCustom";
 import ActionMessage from "./ActionMessage";
+import FileMessage from "./FileMessage";
 import ImageMessage from "./ImageMessage";
 
 function MessageItem({ message, id }) {
@@ -20,13 +22,15 @@ function MessageItem({ message, id }) {
   const items = [
     {
       title: "Thu hồi",
-      onPress: () => dispatch(recallMessage(message._id)),
+      onPress: () => {
+        dispatch(recallMessage(message._id));
+      },
     },
     {
       title: "Xóa",
       onPress: () => {
         const data = { messageId: message._id, conversationId: id };
-        dispatch(deleteMessage(data))
+        dispatch(deleteMessage(data));
       },
     },
   ];
@@ -76,6 +80,8 @@ function MessageItem({ message, id }) {
                       imageURI={message.imageLink}
                       content={message.content}
                     />
+                  ) : message.fileLink ? (
+                    <FileMessage fileUri={message.fileLink} />
                   ) : (
                     <Text style={[styles.message]}>{message.content}</Text>
                   )}
@@ -88,6 +94,8 @@ function MessageItem({ message, id }) {
                       imageURI={message.imageLink}
                       content={message.content}
                     />
+                  ) : message.fileLink ? (
+                    <FileMessage fileUri={message.fileLink} />
                   ) : (
                     <Text style={[styles.message]}>{message.content}</Text>
                   )}

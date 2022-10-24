@@ -52,6 +52,13 @@ const messageListSlice = createSlice({
         } else {
           Alert.alert("Thông báo", "Tệp đa phương tiện này không gửi được");
         }
+      }).addCase(sendFile.fulfilled, (state, action) => {
+        if (action.payload) {
+          socket.emit("send_message", { message: action.payload });
+          state.data.push(action.payload);
+        } else {
+          Alert.alert("Thông báo", "File này không gửi được");
+        }
       })
       .addCase(sendImageMessage.rejected, (state, action) => {
         console.log("err send message");
@@ -163,6 +170,35 @@ export const sendImageMessage = createAsyncThunk(
   }
 );
 
+export const sendFile = createAsyncThunk(
+  "message/sendFile",
+  async (message) => {
+    if (message) {
+      const {senderID, conversationID, fileToUpload} = message;
+      const formData = new FormData();
+      formData.append("senderID", senderID);
+      formData.append("conversationID", conversationID);
+      formData.append("fileLink", fileToUpload)
+      const res = await fetch(`${config.LINK_API_V2}/messages`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      const _message = await res.json();
+      console.log(_message);
+      if (_message?._id) {
+        return _message;
+      } else {
+        console.log(_message);
+        return null;
+      }
+    }
+  }
+);
 export const recallMessage = createAsyncThunk("message/recall", async (id) => {
   if (id) {
     try {

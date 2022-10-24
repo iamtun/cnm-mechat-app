@@ -16,6 +16,7 @@ const userInfoSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchUserInfo.fulfilled, (state, action) => {
+        console.log('get info user success!');
         state.data = action.payload;
       })
       .addCase(fetchUserByPhone.fulfilled, (state, action) => {
