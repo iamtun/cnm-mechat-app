@@ -76,7 +76,6 @@ function PersonalScreen({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      
       if(isAvatar){
         const data = {
           userID: infoSelf._id,
