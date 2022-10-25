@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getConversationIdByIdFriendSelector,
   searchItemClickSelector,
+  userInfoSelector,
 } from "../../../redux/selector";
 import friendListSlice from "../../../redux/slice/friendSlice";
 import * as ImagePicker from "expo-image-picker";
@@ -13,19 +14,25 @@ import * as ImagePicker from "expo-image-picker";
 import moment from "moment";
 import { useEffect } from "react";
 import Header from "../../../components/Header";
+import { fetchUpdateAvatarUsers, fetchUpdateBackgroundUsers, fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
+import { useState } from "react";
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
-  const isMe = route.params.isMe;
-  const infoSelf = route.params._userInfoSelector;
+  const [isMe,setIsMe] =useState(route.params.isMe);
+  const infoSelf = useSelector(userInfoSelector);
 
+  console.log("isMe", isMe);
+  console.log("---infoSelf", infoSelf);
   let userInfo;
   if (isMe) {
+    // dispatch(fetchUserByPhone(phoneNumber))
     userInfo = infoSelf;
   } else {
     userInfo = useSelector(searchItemClickSelector);
   }
 
+  console.log("----userInfo",userInfo);
   const {
     _id,
     fullName,
@@ -56,13 +63,10 @@ function PersonalScreen({ route, navigation }) {
   };
 
   const _handleUpdateInfo = () => {
-    navigation.navigate("InfoSelf", {fullName: fullName,
-      bio: bio,
-      gender: gender,
-      birthday: birthday,});
+    navigation.navigate("InfoSelf", { phoneNumber: userInfo.phoneNumber });
   };
 
-  const pickImage = async () => {
+  const pickImage = async (isAvatar) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
@@ -71,28 +75,41 @@ function PersonalScreen({ route, navigation }) {
       quality: 1,
     });
 
-    // if (!result.cancelled) {
-    //   const data = {
-    //     imageLink: result.uri,
-    //     senderID: userInfo._id,
-    //     conversationID: conversationId,
-    //   };
-    //   dispatch(sendImageMessage(data));
-    // }
+    if (!result.cancelled) {
+      
+      if(isAvatar){
+        const data = {
+          userID: infoSelf._id,
+          avatarLink: result.uri,
+        };
+        dispatch(fetchUpdateAvatarUsers(data))
+        console.log("OKKKK");
+      } else{
+        const data = {
+          userID: infoSelf._id,
+          backLink: result.uri,
+        };
+        dispatch(fetchUpdateBackgroundUsers(data))
+        console.log("OKKKK");
+      }
+      setIsMe(true)
+    }
   };
 
   return (
     <>
       <Header />
       <View>
-        <View style={styles.background}>
+        <TouchableOpacity onPress={() => pickImage(false)} style={styles.background}>
           <Image
             style={styles.backgroundImage}
             source={{ uri: backgroundLink }}
           />
-        </View>
+        </TouchableOpacity>
         <View style={styles.bottomContainer}>
-          <Image style={styles.avatar} source={{ uri: avatarLink }} onPress={pickImage}/>
+          <TouchableOpacity style={{bottom :"8%"}} onPress={() => pickImage(true)}>
+            <Image style={styles.avatar} source={{ uri: avatarLink }} />
+          </TouchableOpacity>
           <Text style={styles.name}>{fullName}</Text>
           <Text style={styles.bio}>{bio}</Text>
           <View style={styles.info}>
@@ -170,7 +187,6 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderColor: "white",
     borderWidth: 2,
-    bottom: "8%",
   },
   name: {
     fontSize: 18,

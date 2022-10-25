@@ -5,9 +5,11 @@ const userListSlice = createSlice({
     name: 'users',
     initialState: {data: []},
     extraReducers: (builder) => {
-        builder.addCase(fetchUsers.fulfilled, (state, action) => {
+        builder
+        .addCase(fetchUsers.fulfilled, (state, action) => {
             state.data = action.payload;
         })
+        
     }
 });
 
@@ -23,5 +25,7 @@ export const fetchUsers = createAsyncThunk('users/fetchUsers', async() => {
         console.log(`err fetch users: ${err}`);
     }
 });
+
+
 
 export default userListSlice;

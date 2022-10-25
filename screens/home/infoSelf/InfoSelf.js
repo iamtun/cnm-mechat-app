@@ -7,31 +7,60 @@ import RadioForm from "react-native-simple-radio-button";
 import Header from "../../../components/Header";
 import { ScrollView } from "react-native";
 import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUpdateInfoUsers } from "../../../redux/slice/userInfoSlice";
+import {  userInfoSelector } from "../../../redux/selector";
+import { useEffect } from "react";
+import { fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
+import { Alert } from "react-native";
 
 export default function InfoSelf({ route, navigation }) {
-  const [selectedDate, setSelectedDate] = useState(moment(birthday).format('YYYY/MM/DD'));
-  const [textName, setTextName] = useState(null);
-  const [textBio, setTextBio] = useState(null);
-  const [chosenOption, setChosenOption] = useState("Nam");
+  const phoneNumber = route.params.phoneNumber;
+  const userInfo = useSelector(userInfoSelector);
 
-  const fullName = route.params.fullName;
-  const bio = route.params.bio;
-  const gender = route.params.gender;
-  const birthday = route.params.birthday;
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    dispatch(fetchUserByPhone(phoneNumber));
+  }, []);
+  //use state
+  const [selectedDate, setSelectedDate] = useState(userInfo.birthday);
+  const [textName, setTextName] = useState(userInfo.fullName);
+  const [textBio, setTextBio] = useState(userInfo.bio);
+  const [chosenOption, setChosenOption] = useState(userInfo.gender);
 
+  //selected
   const options = [
     { label: "Nam", value: "0" },
     { label: "Nữ", value: "1" },
   ];
 
- 
+  //update
+  const data = {
+    userID: userInfo._id,
+    fullName: textName,
+    gender: chosenOption,
+    birthday: moment(selectedDate, ["YYYY/MM/DD"]),
+    bio: textBio,
+  };
+
+  const _handleUpdateInfo = () => {
+    dispatch(fetchUpdateInfoUsers(data));
+    dispatch(fetchUserByPhone(phoneNumber));
+    Alert.alert("Cập nhật thông tin cá nhân thành công")
+  };
 
   return (
     <>
       <Header />
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("PersonalScreen", {
+              isMe: true,
+            })
+          }
+        >
           <Icon
             style={{ marginLeft: 10 }}
             name="arrow-back-outline"
@@ -48,17 +77,17 @@ export default function InfoSelf({ route, navigation }) {
           <View style={styles.updateSelf}>
             <View style={styles.infoSelf}>
               <TextInput
-                value={fullName}
                 placeholder="Họ và tên"
                 style={styles.input}
-                onChange={(value) => setTextName(value)}
+                value={textName}
+                onChangeText={(value) => setTextName(value)}
               ></TextInput>
 
               <TextInput
-                value={bio}
+                value={textBio}
                 style={styles.input}
                 placeholder="Sở thích"
-                onChange={(value) => setTextBio(value)}
+                onChangeText={(value) => setTextBio(value)}
               ></TextInput>
 
               <View style={styles.input}>
@@ -68,7 +97,7 @@ export default function InfoSelf({ route, navigation }) {
                 </View>
                 <DatePicker
                   mode="calendar"
-                  selected={getFormatedDate(new Date(), "YYYY/MM/DD")}
+                  selected={getFormatedDate(userInfo.birthday, "YYYY/MM/DD")}
                   selectorStartingYear={2000}
                   onSelectedChange={(date) => setSelectedDate(date)}
                   locale="vie"
@@ -79,7 +108,7 @@ export default function InfoSelf({ route, navigation }) {
               <View style={styles.input}>
                 <RadioForm
                   radio_props={options}
-                  initial={gender}
+                  initial={chosenOption}
                   onPress={(value) => {
                     setChosenOption(value);
                   }}
@@ -87,7 +116,10 @@ export default function InfoSelf({ route, navigation }) {
               </View>
             </View>
 
-            <TouchableOpacity style={styles.buttonSave}>
+            <TouchableOpacity
+              style={styles.buttonSave}
+              onPress={_handleUpdateInfo}
+            >
               <Text style={{ color: "white", fontSize: 16 }}>Lưu</Text>
             </TouchableOpacity>
           </View>
