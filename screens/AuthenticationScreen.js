@@ -14,7 +14,7 @@ import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import firebase from "firebase/compat/app";
 import { setItem } from "../utils/asyncStorage";
-import config from '../config';
+import config from "../config";
 
 function AuthenticationScreen({ route, navigation }) {
   //data receiver from login screen
@@ -46,8 +46,8 @@ function AuthenticationScreen({ route, navigation }) {
     setIntervalId(interval);
   };
 
-  const register = async () => {
-    const res = await fetch(`${config.LINK_API_V2}/users/signup`, {
+  const register = () => {
+    return fetch(`${config.LINK_API_V2}/users/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -58,16 +58,17 @@ function AuthenticationScreen({ route, navigation }) {
         passWord: passWord,
         fullName: fullName,
       }),
-    });
-    const resData = await res.json();
-    if (resData.status == "success") {
-      return resData._token;
-    }
-    //return catch
-    if (resData?.error.statusCode === 403)
-      throw new Error("Số điện thoại đã tồn tại");
-    if (resData?.error.statusCode === 404)
-      throw new Error("Số điện thoại sai định dạng");
+    })
+      .then((res) => res.json())
+      .then((resData) => {
+        if (resData.status == "success") {
+          return resData._token;
+        }
+        if (resData?.error.statusCode === 403)
+          throw new Error("Mật khẩu của bạn không đúng!");
+        if (resData?.error.statusCode === 402)
+          throw new Error("Bạn chưa đăng ký tài khoản?");
+      });
   };
 
   const OtpVerify = () => {
@@ -79,11 +80,13 @@ function AuthenticationScreen({ route, navigation }) {
       .auth()
       .signInWithCredential(credential)
       .then(async () => {
+        console.log("OKOKO");
         setCode("");
-        register().then((token) => {
-          setItem("user_token", token);
-          navigation.navigate("LoadingScreen");
-        });
+        register()
+          .then((token) => {
+            setItem("user_token", token)
+            navigation.navigate("LoadingScreen");
+          })
       })
       .catch((err) => {
         Alert.alert("Mã không tồn tại hoặc quá hạn");
