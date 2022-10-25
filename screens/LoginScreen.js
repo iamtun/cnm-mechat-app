@@ -22,7 +22,7 @@ function LoginScreen({ navigation }) {
     // function
 
     const sign = () => {
-        return fetch(`${config.LINK_API_V2}/users/login`, {
+        return fetch(`${config.LINK_API_V2}/auths/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
