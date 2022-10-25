@@ -96,7 +96,6 @@ function ProfileScreen({ navigation }) {
         style={styles.image}
         onPress={() =>
           navigation.navigate("PersonalScreen", {
-            _userInfoSelector: _userInfoSelector,
             isMe: true,
           })
         }
