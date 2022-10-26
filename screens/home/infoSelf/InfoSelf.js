@@ -5,84 +5,126 @@ import { TextInput, Platform } from "react-native";
 import DatePicker, { getFormatedDate } from "react-native-modern-datepicker";
 import RadioForm from "react-native-simple-radio-button";
 import Header from "../../../components/Header";
+import { ScrollView } from "react-native";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchUpdateInfoUsers } from "../../../redux/slice/userInfoSlice";
+import {  userInfoSelector } from "../../../redux/selector";
+import { useEffect } from "react";
+import { fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
+import { Alert } from "react-native";
 
-export default function InfoSelf({ navigation }) {
-  const [selectedDate, setSelectedDate] = useState("2022/10/18");
-  const [textName, setTextName] = useState(null);
-  const [textBio, setTextBio] = useState(null);
-  const [chosenOption, setChosenOption] = useState("Nam");
+export default function InfoSelf({ route, navigation }) {
+  const phoneNumber = route.params.phoneNumber;
+  const userInfo = useSelector(userInfoSelector);
 
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(fetchUserByPhone(phoneNumber));
+  }, []);
+  //use state
+  const [selectedDate, setSelectedDate] = useState(userInfo.birthday);
+  const [textName, setTextName] = useState(userInfo.fullName);
+  const [textBio, setTextBio] = useState(userInfo.bio);
+  const [chosenOption, setChosenOption] = useState(userInfo.gender);
+
+  //selected
   const options = [
-    { label: "Nam", value: "Nam" },
-    { label: "Nữ", value: "Nữ" },
+    { label: "Nam", value: "0" },
+    { label: "Nữ", value: "1" },
   ];
 
-  //console.log(selectedDate);
+  //update
+  const data = {
+    userID: userInfo._id,
+    fullName: textName,
+    gender: chosenOption,
+    birthday: moment(selectedDate, ["YYYY/MM/DD"]),
+    bio: textBio,
+  };
+
+  const _handleUpdateInfo = () => {
+    dispatch(fetchUpdateInfoUsers(data));
+    dispatch(fetchUserByPhone(phoneNumber));
+    Alert.alert("Cập nhật thông tin cá nhân thành công")
+  };
 
   return (
     <>
       <Header />
-      <View style={styles.container}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Icon
-              style={{ marginLeft: 10 }}
-              name="arrow-back-outline"
-              color="white"
-              size={20}
-            />
-          </TouchableOpacity>
-          <Text style={{ color: "white", fontSize: 15, marginLeft: 10 }}>
-            Chỉnh sửa thông tin
-          </Text>
-        </View>
-        <View style={styles.updateSelf}>
-          <View style={styles.infoSelf}>
-            <TextInput
-              value={textName}
-              placeholder="Họ và tên"
-              style={styles.input}
-              onChange={(value) => setTextName(value)}
-            ></TextInput>
-
-            <TextInput
-              value={textBio}
-              style={styles.input}
-              placeholder="Sở thích"
-              onChange={(value) => setTextBio(value)}
-            ></TextInput>
-
-            <View style={styles.input}>
-              <View style={styles.inputDate}>
-                <Text>Ngày sinh:</Text>
-                <Text style={styles.date}>{selectedDate}</Text>
-              </View>
-              <DatePicker
-                mode="calendar"
-                selected={getFormatedDate(new Date(), "YYYY/MM/DD")}
-                selectorStartingYear={2000}
-                onSelectedChange={(date) => setSelectedDate(date)}
-                locale="vie"
-              />
-            </View>
-
-            {/* không được xóa để dành xài <Text> {chosenOption}</Text> */}
-            <View style={styles.input}>
-              <RadioForm
-                radio_props={options}
-                initial={0}
-                onPress={(value) => {
-                  setChosenOption(value);
-                }}
-              />
-            </View>
-          </View>
-
-          <TouchableOpacity style={styles.buttonSave}>
-            <Text style={{ color: "white", fontSize: 16 }}>Lưu</Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.header}>
+        <TouchableOpacity
+          onPress={() =>
+            navigation.navigate("PersonalScreen", {
+              isMe: true,
+            })
+          }
+        >
+          <Icon
+            style={{ marginLeft: 10 }}
+            name="arrow-back-outline"
+            color="white"
+            size={20}
+          />
+        </TouchableOpacity>
+        <Text style={{ color: "white", fontSize: 15, marginLeft: 10 }}>
+          Chỉnh sửa thông tin
+        </Text>
       </View>
+      <ScrollView>
+        <View style={styles.container}>
+          <View style={styles.updateSelf}>
+            <View style={styles.infoSelf}>
+              <TextInput
+                placeholder="Họ và tên"
+                style={styles.input}
+                value={textName}
+                onChangeText={(value) => setTextName(value)}
+              ></TextInput>
+
+              <TextInput
+                value={textBio}
+                style={styles.input}
+                placeholder="Sở thích"
+                onChangeText={(value) => setTextBio(value)}
+              ></TextInput>
+
+              <View style={styles.input}>
+                <View style={styles.inputDate}>
+                  <Text>Ngày sinh:</Text>
+                  <Text style={styles.date}>{selectedDate}</Text>
+                </View>
+                <DatePicker
+                  mode="calendar"
+                  selected={getFormatedDate(userInfo.birthday, "YYYY/MM/DD")}
+                  selectorStartingYear={2000}
+                  onSelectedChange={(date) => setSelectedDate(date)}
+                  locale="vie"
+                />
+              </View>
+
+              {/* không được xóa để dành xài <Text> {chosenOption}</Text> */}
+              <View style={styles.input}>
+                <RadioForm
+                  radio_props={options}
+                  initial={chosenOption}
+                  onPress={(value) => {
+                    setChosenOption(value);
+                  }}
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={styles.buttonSave}
+              onPress={_handleUpdateInfo}
+            >
+              <Text style={{ color: "white", fontSize: 16 }}>Lưu</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
     </>
   );
 }

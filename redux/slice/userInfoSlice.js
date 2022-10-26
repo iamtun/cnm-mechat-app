@@ -21,7 +21,7 @@ const userInfoSlice = createSlice({
       })
       .addCase(fetchUserByPhone.fulfilled, (state, action) => {
         state.data = action.payload;
-      });
+      })
   },
 });
 
@@ -69,20 +69,84 @@ export const fetchUserByPhone = createAsyncThunk(
   }
 );
 
+export const fetchUpdateInfoUsers = createAsyncThunk(
+  "info/fetchUpdateInfoUsers",
+  async (data) => {
+    try {
+      const {userID} = data;
+     
+      const {fullName, gender, birthday, bio} = data;
+      
+      await fetch(`${config.LINK_API_V2}/users/${userID}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({fullName, gender, birthday, bio}),
+      });
+    } catch (err) {
+      console.log(`err fetch users: ${err}`);
+    }
+  }
+);
+
+export const fetchUpdateAvatarUsers = createAsyncThunk(
+  "info/fetchUpdateAvatarUsers",
+  async (data) => {
+    try {
+      const {userID} = data;
+     
+      const {avatarLink} = data;
+      
+      await fetch(`${config.LINK_API_V2}/update-avatar/${userID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({avatarLink}),
+      });
+    } catch (err) {
+      console.log(`err fetch users: ${err}`);
+    }
+  }
+);
+
+export const fetchUpdateBackgroundUsers = createAsyncThunk(
+  "info/fetchUpdateBackgroundUsers",
+  async (data) => {
+    try {
+      const {userID} = data;
+     
+      const {backLink} = data;
+      
+      console.log("-----BACK LINK", backLink);
+      await fetch(`${config.LINK_API_V2}/update-background/${userID}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({backLink}),
+      });
+      console.log("SUCESSS");
+    } catch (err) {
+      console.log(`err fetch users: ${err}`);
+    }
+  }
+);
+
+
 export const fetchForgetPassword= createAsyncThunk(
   "info/fetchForgetPassword",
   async (data) => {
     try {
       console.log("Data", data);
-      const res = await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
+      await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
       });
-      const abc = res.json()
-      console.log("OKOKK", abc.data);
     } catch (err) {
       console.log(`err fetch users: ${err}`);
     }

@@ -22,7 +22,6 @@ function AuthenticationScreen({ route, navigation }) {
   const phoneNumber = route.params.phoneNumber;
   const isForgetPass = route.params.isForgetPass;
 
-  console.log("isForgetPass", isForgetPass);
   let passWord;
   let fullName;
 
@@ -30,9 +29,6 @@ function AuthenticationScreen({ route, navigation }) {
     passWord = route.params.passWord;
     fullName = route.params.fullName;
   }
-
-  console.log("passWord", passWord);
-  console.log("fullName", fullName);
 
   //screen's variables
   const [counter, setCounter] = useState(10);

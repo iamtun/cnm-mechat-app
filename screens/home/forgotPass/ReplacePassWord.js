@@ -24,7 +24,7 @@ function ReplacePassWord({route, navigation}) {
     } else{
       const data = {phoneNumber: phoneNumber, newPassword: newPassAgain.current}
       dispatch(fetchForgetPassword(data))
-      console.log("Mật khẩu đã được thay đổi");
+      Alert.alert("Đổi mật khẩu thành công")
       navigation.navigate("LoginScreen")
     }
   }
