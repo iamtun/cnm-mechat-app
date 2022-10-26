@@ -68,4 +68,25 @@ export const fetchUserByPhone = createAsyncThunk(
     }
   }
 );
+
+export const fetchForgetPassword= createAsyncThunk(
+  "info/fetchForgetPassword",
+  async (data) => {
+    try {
+      console.log("Data", data);
+      const res = await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const abc = res.json()
+      console.log("OKOKK", abc.data);
+    } catch (err) {
+      console.log(`err fetch users: ${err}`);
+    }
+  }
+);
+
 export default userInfoSlice;
