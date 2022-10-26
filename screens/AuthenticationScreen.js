@@ -20,8 +20,15 @@ function AuthenticationScreen({ route, navigation }) {
   //data receiver from login screen
   const confirm = route.params.verificationId;
   const phoneNumber = route.params.phoneNumber;
-  const passWord = route.params.passWord;
-  const fullName = route.params.fullName;
+  const isForgetPass = route.params.isForgetPass;
+
+  let passWord;
+  let fullName;
+
+  if (isForgetPass == false) {
+    passWord = route.params.passWord;
+    fullName = route.params.fullName;
+  }
 
   //screen's variables
   const [counter, setCounter] = useState(10);
@@ -47,7 +54,7 @@ function AuthenticationScreen({ route, navigation }) {
   };
 
   const register = () => {
-    return fetch(`${config.LINK_API_V2}/users/signup`, {
+    return fetch(`${config.LINK_API_V2}/auths/signup`, {
       method: "POST",
       headers: {
         Accept: "application/json",
@@ -64,10 +71,6 @@ function AuthenticationScreen({ route, navigation }) {
         if (resData.status == "success") {
           return resData._token;
         }
-        if (resData?.error.statusCode === 403)
-          throw new Error("Mật khẩu của bạn không đúng!");
-        if (resData?.error.statusCode === 402)
-          throw new Error("Bạn chưa đăng ký tài khoản?");
       });
   };
 
@@ -82,11 +85,12 @@ function AuthenticationScreen({ route, navigation }) {
       .then(async () => {
         console.log("OKOKO");
         setCode("");
-        register()
-          .then((token) => {
-            setItem("user_token", token)
-            navigation.navigate("LoadingScreen");
-          })
+        isForgetPass
+          ? navigation.navigate("ReplacePassWord", { phoneNumber: phoneNumber })
+          : register().then((token) => {
+              setItem("user_token", token);
+              navigation.navigate("LoadingScreen");
+            });
       })
       .catch((err) => {
         Alert.alert("Mã không tồn tại hoặc quá hạn");

@@ -134,4 +134,23 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk(
   }
 );
 
+
+export const fetchForgetPassword= createAsyncThunk(
+  "info/fetchForgetPassword",
+  async (data) => {
+    try {
+      console.log("Data", data);
+      await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+    } catch (err) {
+      console.log(`err fetch users: ${err}`);
+    }
+  }
+);
+
 export default userInfoSlice;

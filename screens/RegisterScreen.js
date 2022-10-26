@@ -55,7 +55,7 @@ function RegisterScreen({ navigation }) {
   
   const _handleRegister = async () => {
     const userPhone = await getUserByPhoneNumber();
-
+    console.log("userPhone", userPhone);
     var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
     if (
       phoneNumberRegisterRef.current == null ||
@@ -81,6 +81,7 @@ function RegisterScreen({ navigation }) {
             phoneNumber: phoneNumberRegisterRef.current,
             passWord: passRegisterRef.current,
             fullName: userNameRegisterRef.current,
+            isForgetPass: false
           });
         })
         .catch((err) => {
