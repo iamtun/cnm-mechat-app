@@ -36,7 +36,7 @@ export const fetchFriendsRequest = createAsyncThunk(
         body: JSON.stringify(data),
       });
       const friendRequest = await res.json();
-      //console.log("---friend", friendRequest);
+      // console.log("---friend", friendRequest);
       return friendRequest;
     } catch (err) {
       console.log(`err fetch users: ${err}`);
@@ -53,6 +53,7 @@ export const fetchLoadFriendsRequest = createAsyncThunk(
           `${config.LINK_API_V2}/friendRequests/get-list-request/${id}`
         );
         const allFriendRequest = await res.json();
+        console.log("allFriendRequest",allFriendRequest);
         return allFriendRequest.data;
       } catch (err) {
         console.log(`[fetch messages]: ${err}`);

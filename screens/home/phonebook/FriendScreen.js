@@ -11,7 +11,7 @@ function FriendScreen() {
     let friendInfo = [];
 
     const friends = useSelector(getFriendsByUserSelector);
-
+    
     if (friends) {
         if (friends.length != 0) {
             for (let i = 0; i < friends.length; i++) {

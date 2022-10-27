@@ -15,7 +15,6 @@ function TextInputPrimary({ placeholder, isPass, keyboardType}, ref) {
     });
   };
 
-  console.log("name icon", nameIcon);
   const _handleClickIcon = () => {
     setIsPassState(!isPassState)
     if(nameIcon == "eye-outline"){
