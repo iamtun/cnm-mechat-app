@@ -4,7 +4,7 @@ import firebase from "firebase/compat/app";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
 import { firebaseConfig } from "../utils/firebase";
-import config from "../config";
+import config, {checkPhoneNumber} from "../config";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
@@ -55,8 +55,7 @@ function RegisterScreen({ navigation }) {
   
   const _handleRegister = async () => {
     const userPhone = await getUserByPhoneNumber();
-    console.log("userPhone", userPhone);
-    var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
     if (
       phoneNumberRegisterRef.current == null ||
       passRegisterRef.current == null ||
@@ -66,7 +65,7 @@ function RegisterScreen({ navigation }) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
     } else if (phoneNumberRegisterRef.current.toString().length != 10) {
       Alert.alert("Vui lòng nhập số điện thoại là 10 số");
-    } else if (vnf_regex.test(phoneNumberRegisterRef.current) == false) {
+    } else if (!checkPhoneNumber(phoneNumberRegisterRef.current)) {
       Alert.alert("Số điện thoại của bạn không đúng định dạng");
     } else if (userPhone) {
       Alert.alert("Số điện thoại của bạn đã đăng ký tài khoản");

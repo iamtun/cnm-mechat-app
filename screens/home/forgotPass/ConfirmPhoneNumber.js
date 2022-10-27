@@ -7,7 +7,7 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
 import { firebaseConfig } from "../../../utils/firebase";
-import config from "../../../config";
+import config,{checkPhoneNumber} from "../../../config";
 import GlobalStyle from "../../../styles/GlobalStyle";
 import LoginStyles from "../../../styles/LoginStyles";
 import ButtonPrimary from "../../../components/Buttons/ButtonPrimary";
@@ -52,7 +52,9 @@ function ConfirmPhoneNumber({ navigation }) {
 
   const _handleForgotPass  = async() => {
     const userPhone = await getUserByPhoneNumber();
-    if(userPhone){
+    if(!checkPhoneNumber(phoneNumberForgotRef.current)){
+      Alert.alert("Số điện thoại của bạn không đúng định dạng");
+    }else if(userPhone){
       senOTP()
         .then((otp) => {
           setVerificationId(otp);
