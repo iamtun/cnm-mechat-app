@@ -8,7 +8,7 @@ import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
-import config from "../config";
+import config,{checkPhoneNumber} from "../config";
 import { setItem } from "../utils/asyncStorage";
 import { TouchableOpacity } from "react-native";
 
@@ -77,7 +77,10 @@ function LoginScreen({ navigation }) {
   const _handleLoginTemp = () => {
     if (phoneNumberLoginRef.current == null || passLoginRef.current == null) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
-    } else {
+    }else if(!checkPhoneNumber(phoneNumberLoginRef.current )){
+      Alert.alert("Số điện thoại của bạn không đúng định dạng");
+    }
+    else {
       sign()
         .then((token) => {
           setItem("user_token", token)
