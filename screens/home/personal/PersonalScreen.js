@@ -21,9 +21,6 @@ moment().format();
 function PersonalScreen({ route, navigation }) {
   const [isMe,setIsMe] =useState(route.params.isMe);
   const infoSelf = useSelector(userInfoSelector);
-
-  console.log("isMe", isMe);
-  console.log("---infoSelf", infoSelf);
   let userInfo;
   if (isMe) {
     // dispatch(fetchUserByPhone(phoneNumber))
@@ -32,7 +29,6 @@ function PersonalScreen({ route, navigation }) {
     userInfo = useSelector(searchItemClickSelector);
   }
 
-  console.log("----userInfo",userInfo);
   const {
     _id,
     fullName,
@@ -82,14 +78,12 @@ function PersonalScreen({ route, navigation }) {
           avatarLink: result.uri,
         };
         dispatch(fetchUpdateAvatarUsers(data))
-        console.log("OKKKK");
       } else{
         const data = {
           userID: infoSelf._id,
           backLink: result.uri,
         };
         dispatch(fetchUpdateBackgroundUsers(data))
-        console.log("OKKKK");
       }
       setIsMe(true)
     }

@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { Alert } from "react-native";
-import config, { socket } from "../../config";
+import config, { createFormData, socket } from "../../config";
 
 const messageListSlice = createSlice({
   name: "messages",
@@ -52,7 +52,8 @@ const messageListSlice = createSlice({
         } else {
           Alert.alert("Thông báo", "Tệp đa phương tiện này không gửi được");
         }
-      }).addCase(sendFile.fulfilled, (state, action) => {
+      })
+      .addCase(sendFile.fulfilled, (state, action) => {
         if (action.payload) {
           socket.emit("send_message", { message: action.payload });
           state.data.push(action.payload);
@@ -118,37 +119,16 @@ export const sendMessage = createAsyncThunk("messages/add", async (message) => {
   }
 });
 
-const createFormData = (imageMessage) => {
-  let uriParts = imageMessage.imageLink.split(".");
-  const path = imageMessage.imageLink.split("/");
-  let fileType = uriParts[uriParts.length - 1];
-  let nameFile = path[path.length - 1];
-  //console.log(fileType, nameFile);
-  const imagePath = ["png", "jpg", "jpeg"];
-  const { imageLink, senderID, conversationID } = imageMessage;
-  //console.log(imageLink, senderID, conversationID);
-  const image = {
-    uri: imageLink,
-    type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
-    name: imagePath.includes(fileType)
-      ? nameFile
-      : nameFile.replace(".mov", ".mp4"),
-  };
-
-  let formData = new FormData();
-  //console.log(image);
-  formData.append("imageLink", image);
-  formData.append("senderID", senderID);
-  formData.append("conversationID", conversationID);
-
-  return formData;
-};
 
 export const sendImageMessage = createAsyncThunk(
   "messages/send-image",
   async (imageMessage) => {
     if (imageMessage) {
-      let formData = createFormData(imageMessage);
+      const { imageLink, senderID, conversationID } = imageMessage;
+      let formData = createFormData(imageLink, "imageLink");
+
+      formData.append("senderID", senderID);
+      formData.append("conversationID", conversationID);
 
       const res = await fetch(`${config.LINK_API_V2}/messages`, {
         method: "POST",
@@ -174,11 +154,11 @@ export const sendFile = createAsyncThunk(
   "message/sendFile",
   async (message) => {
     if (message) {
-      const {senderID, conversationID, fileToUpload} = message;
+      const { senderID, conversationID, fileToUpload } = message;
       const formData = new FormData();
       formData.append("senderID", senderID);
       formData.append("conversationID", conversationID);
-      formData.append("fileLink", fileToUpload)
+      formData.append("fileLink", fileToUpload);
       const res = await fetch(`${config.LINK_API_V2}/messages`, {
         method: "POST",
         body: formData,

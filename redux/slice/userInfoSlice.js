@@ -69,6 +69,7 @@ export const fetchUserByPhone = createAsyncThunk(
   }
 );
 
+
 export const fetchUpdateInfoUsers = createAsyncThunk(
   "info/fetchUpdateInfoUsers",
   async (data) => {
@@ -90,21 +91,31 @@ export const fetchUpdateInfoUsers = createAsyncThunk(
   }
 );
 
+const createForm = (data) =>{
+  const {userID,avatarLink} = data;
+  console.log(userID,avatarLink);
+  const dataForm = new FormData();
+  dataForm.append("userID", userID);
+  dataForm.append("avatarLink", avatarLink);
+
+  return dataForm;
+}
+
 export const fetchUpdateAvatarUsers = createAsyncThunk(
   "info/fetchUpdateAvatarUsers",
   async (data) => {
     try {
-      const {userID} = data;
-     
-      const {avatarLink} = data;
+      let dataForm = createForm(data);
       
-      await fetch(`${config.LINK_API_V2}/update-avatar/${userID}`, {
+      const res = await fetch(`${config.LINK_API_V2}/update-avatar/${dataForm.userID}`, {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type": "application/form-data",
         },
-        body: JSON.stringify({avatarLink}),
+        body: dataForm.avatarLink,
       });
+      const ok = res.json();
+      console.log("OKKK", ok.data);
     } catch (err) {
       console.log(`err fetch users: ${err}`);
     }
