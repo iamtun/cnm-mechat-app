@@ -12,15 +12,23 @@ export const socket = io("https://cnm-socket-server-heroku.herokuapp.com", {
   withCredentials: true,
 });
 
+export const checkPhoneNumber = (phoneNumber) => {
+  var vnf_regex = /((09|03|07|08|05)+([0-9]{8})\b)/g;
+
+  if (vnf_regex.test(phoneNumber) == false) {
+    return false;
+  }
+  return true;
+};
+
 export const createFormData = (imageLink, key) => {
   let uriParts = imageLink.split(".");
   const path = imageLink.split("/");
   let fileType = uriParts[uriParts.length - 1];
   let nameFile = path[path.length - 1];
-  //console.log(fileType, nameFile);
+  //console.log();
   const imagePath = ["png", "jpg", "jpeg"];
 
-  //console.log(imageLink, senderID, conversationID);
   const image = {
     uri: imageLink,
     type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,

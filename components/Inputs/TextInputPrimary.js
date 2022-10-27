@@ -6,6 +6,7 @@ import { StyleSheet } from "react-native";
 function TextInputPrimary({ placeholder, isPass, keyboardType}, ref) {
   const [isPassState, setIsPassState] = useState(isPass);
   const [text, setText] = useState("");
+  const [nameIcon, setNameIcon] = useState("eye-outline");
 
   const handleChangeText = (value) => {
     setText(preValue => {
@@ -14,6 +15,15 @@ function TextInputPrimary({ placeholder, isPass, keyboardType}, ref) {
     });
   };
 
+  const _handleClickIcon = () => {
+    setIsPassState(!isPassState)
+    if(nameIcon == "eye-outline"){
+      setNameIcon("eye-off-outline")
+    } else{
+      setNameIcon("eye-outline")
+    }
+   
+  }
   return (
     <View style={styles.frameInput}>
       <TextInput
@@ -26,10 +36,10 @@ function TextInputPrimary({ placeholder, isPass, keyboardType}, ref) {
       />
       {isPass && (
         <Icon
-          name="eye-outline"
+          name={nameIcon}
           color="#000"
           size={20}
-          onPress={() => setIsPassState(!isPassState)}
+          onPress={() =>_handleClickIcon()}
         />
       )}
     </View>

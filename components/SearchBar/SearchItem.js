@@ -29,6 +29,8 @@ function SearchItem({
   const _userInfoSelector = useSelector(userInfoSelector);
   const allFriendsRequest = useSelector(friendListSelector);
 
+  // console.log("usersByPhone", usersByPhone);
+  // console.log("_userInfoSelector", _userInfoSelector);
   // request make friend
   const _handleSendRequest = () => {
     //Set data for send require make friend

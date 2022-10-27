@@ -12,6 +12,9 @@ import InfoSelf from "../screens/home/infoSelf/InfoSelf";
 import SearchScreen from "../screens/home/search/SearchScreen";
 import ChatListScreen from "../screens/home/ChatListScreen";
 import SyncPhoneBook from "../screens/home/phonebook/SyncPhoneBook";
+import ConfirmPhoneNumber from "../screens/home/forgotPass/ConfirmPhoneNumber";
+import ReplacePassWord from "../screens/home/forgotPass/ReplacePassWord"
+
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -44,6 +47,8 @@ function RootStackNavigator() {
         <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
         <Stack.Screen name="SearchScreen" component={SearchScreen}></Stack.Screen>
         <Stack.Screen name="SyncPhoneBook" component={SyncPhoneBook}/>
+        <Stack.Screen name="ConfirmPhoneNumber" component={ConfirmPhoneNumber}/>
+        <Stack.Screen name="ReplacePassWord" component={ReplacePassWord}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

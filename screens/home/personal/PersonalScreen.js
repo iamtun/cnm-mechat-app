@@ -22,6 +22,7 @@ function PersonalScreen({ route, navigation }) {
   const [isMe,setIsMe] =useState(route.params.isMe);
   const infoSelf = useSelector(userInfoSelector);
   let userInfo;
+
   if (isMe) {
     // dispatch(fetchUserByPhone(phoneNumber))
     userInfo = infoSelf;
@@ -39,9 +40,7 @@ function PersonalScreen({ route, navigation }) {
     backgroundLink,
     isFriend,
   } = userInfo;
-
   const conversationId = useSelector(getConversationIdByIdFriendSelector);
-
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -74,12 +73,15 @@ function PersonalScreen({ route, navigation }) {
     if (!result.cancelled) {
       if(isAvatar){
         const data = {
+          key: "avatarLink",
           userID: infoSelf._id,
           avatarLink: result.uri,
         };
         dispatch(fetchUpdateAvatarUsers(data))
+       
       } else{
         const data = {
+          key: "backLink",
           userID: infoSelf._id,
           backLink: result.uri,
         };

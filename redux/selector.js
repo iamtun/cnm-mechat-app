@@ -140,7 +140,7 @@ export const getMessageByIdConversationSelector = createSelector(
                     action: message.action ? message.action : null,
                     content: message.action ? null : message.content,
                     imageLink: message.imageLink,
-                    fileLink: message.fileLink?.replaceAll('%20', ' '),
+                    fileLink: message.fileLink? message.fileLink?.replaceAll('%20', ' ') : null,
                     createdAt: message.action
                         ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
                         : moment(message.createdAt).format('hh:mm'),

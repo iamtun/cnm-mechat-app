@@ -126,9 +126,9 @@ export const sendImageMessage = createAsyncThunk(
     if (imageMessage) {
       const { imageLink, senderID, conversationID } = imageMessage;
       let formData = createFormData(imageLink, "imageLink");
-
       formData.append("senderID", senderID);
       formData.append("conversationID", conversationID);
+      console.log("formData",formData);
 
       const res = await fetch(`${config.LINK_API_V2}/messages`, {
         method: "POST",
