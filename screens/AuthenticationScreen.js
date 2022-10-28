@@ -5,20 +5,24 @@ import {
   TextInput,
   Platform,
   TouchableOpacity,
-  ToastAndroid,
   Alert,
 } from "react-native";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import GlobalStyle from "../styles/GlobalStyle";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import firebase from "firebase/compat/app";
 import { setItem } from "../utils/asyncStorage";
 import config from "../config";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
+import { firebaseConfig } from "../utils/firebase";
 function AuthenticationScreen({ route, navigation }) {
+  const recaptchaVerifier = useRef(null);
+
   //data receiver from login screen
-  const confirm = route.params.verificationId;
+  let confirm = route.params.verificationId;
+
   const phoneNumber = route.params.phoneNumber;
   const isForgetPass = route.params.isForgetPass;
 
@@ -31,28 +35,59 @@ function AuthenticationScreen({ route, navigation }) {
   }
 
   //screen's variables
-  const [counter, setCounter] = useState(10);
+  const [counter, setCounter] = useState(60);
   const [intervalId, setIntervalId] = useState(null);
   const [code, setCode] = useState("");
+  const [isBack, setIsBack] = useState(false);
 
-  if (counter === 0) {
-    clearInterval(intervalId);
-    setCounter(20);
-  }
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setCounter((prev) => setCounter(prev - 1));
+  //   }, 1000);
+
+  //   setIntervalId(interval);
+  // }, [isBack]);
+
+  // if (counter === 0) {
+  //   clearInterval(intervalId);
+  // }
 
   //functions
   const handleTextChange = (value) => {
     setCode(value);
   };
 
-  const sendBackOTP = () => {
-    const interval = setInterval(() => {
-      setCounter((prev) => setCounter(prev - 1));
-    }, 1000);
+  // const sendOtp = async () => {
+  //   let _phoneNumber = "+84" + phoneNumber.slice(1);
+  //   console.log("phone", _phoneNumber);
+  //   try {
+  //     const phoneProvider = new firebase.auth.PhoneAuthProvider();
+  //     const verificationId = await phoneProvider.verifyPhoneNumber(
+  //       _phoneNumber,
+  //       recaptchaVerifier.current
+  //     );
+  //     if (verificationId) {
+  //       return verificationId;
+  //     }
+  //   } catch (err) {
+  //     throw new Error(err);
+  //   }
+  // };
 
-    setIntervalId(interval);
-  };
+  // const sendBackOTP = () => {
+  //   setCounter(60);
+  //   setIsBack(true);
+  //   sendOtp()
+  //     .then((otp) => {
+  //       confirm = otp;
+  //     })
+  //     .catch((err) => {
+  //       console.log("ERRR", err);
+  //       return;
+  //     });
+  // };
 
+  // console.log("---isback", isBack);
   const register = () => {
     return fetch(`${config.LINK_API_V2}/auths/signup`, {
       method: "POST",
@@ -82,23 +117,31 @@ function AuthenticationScreen({ route, navigation }) {
     firebase
       .auth()
       .signInWithCredential(credential)
-      .then(async () => {
-        console.log("OKOKO");
+      .then(() => {
         setCode("");
         isForgetPass
-          ? navigation.navigate("ReplacePassWord", { phoneNumber: phoneNumber })
+          ? navigation.navigate("ReplacePassWord", {
+              phoneNumber: phoneNumber,
+            })
           : register().then((token) => {
               setItem("user_token", token);
               navigation.navigate("LoadingScreen");
             });
       })
       .catch((err) => {
-        Alert.alert("Mã không tồn tại hoặc quá hạn");
+        Alert.alert("Mã không tồn tại hoặc quá hạn", err);
       });
   };
 
   return (
     <View style={GlobalStyle.container}>
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={firebaseConfig}
+        title="Xác thực"
+        cancelLabel="Hủy"
+      />
+
       <View style={GlobalStyle.centerCol}>
         <Text style={GlobalStyle.textSize}>
           Nhập OTP được gửi tới số điện thoại của bạn
@@ -115,12 +158,12 @@ function AuthenticationScreen({ route, navigation }) {
           : { keyboardType: "number-pad" })}
       />
 
-      <TouchableOpacity onPress={sendBackOTP} style={styles.sendBackButton}>
+      {/* <TouchableOpacity onPress={sendBackOTP} style={styles.sendBackButton}>
         <FontAwesome5 name="undo" size={15} style={GlobalStyle.primaryColor} />
         <Text style={[GlobalStyle.primaryColor, styles.sendBackText]}>
           Gửi lại OTP ({counter})
         </Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
 
       <ButtonPrimary title="Xác nhận" onPress={OtpVerify} />
     </View>

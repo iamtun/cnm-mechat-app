@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import jwtDecode from "jwt-decode";
-import { useDispatch } from "react-redux";
+import { Alert } from "react-native";
 import config, { socket, createFormData } from "../../config";
 
 const userInfoSlice = createSlice({
@@ -25,9 +25,15 @@ const userInfoSlice = createSlice({
       })
       .addCase(fetchUpdateAvatarUsers.fulfilled, (state, action) => {
         state.data = action.payload;
+        Alert.alert("Thông báo", "Cập nhật ảnh đại diện thành công!");
       })
       .addCase(fetchUpdateBackgroundUsers.fulfilled, (state, action) => {
         state.data = action.payload;
+        Alert.alert("Thông báo", "Cập nhật ảnh bìa thành công!");
+      })
+      .addCase(fetchUpdateInfoUsers.fulfilled, (state, action) => {
+        state.data = action.payload;
+        Alert.alert("Thông báo", "Cập nhật thông tin thành công!");
       });
   },
 });
@@ -84,13 +90,17 @@ export const fetchUpdateInfoUsers = createAsyncThunk(
 
       const { fullName, gender, birthday, bio } = data;
 
-      await fetch(`${config.LINK_API_V2}/users/${userID}`, {
+      const res = await fetch(`${config.LINK_API_V2}/users/${userID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ fullName, gender, birthday, bio }),
       });
+
+      const userInfo = await res.json();
+      console.log(userInfo);
+      return userInfo;
     } catch (err) {
       console.log(`err fetch users: ${err}`);
     }
@@ -114,8 +124,9 @@ export const fetchUpdateAvatarUsers = createAsyncThunk(
           body: dataForm,
         }
       );
-      const avatar = await res.json();
-      return avatar.user;
+      const userInfo = await res.json();
+      console.log("----Avatar",userInfo);
+      return userInfo;
     } catch (err) {
       console.log(`err fetch avatar user info: ${err}`);
     }
@@ -142,7 +153,8 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk(
       );
 
       const background = await res.json();
-      return background.data;
+      console.log("----background",background);
+      return background;
     } catch (err) {
       console.log(`err fetch background user info: ${err}`);
     }

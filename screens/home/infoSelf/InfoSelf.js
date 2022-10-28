@@ -12,12 +12,11 @@ import { fetchUpdateInfoUsers } from "../../../redux/slice/userInfoSlice";
 import {  userInfoSelector } from "../../../redux/selector";
 import { useEffect } from "react";
 import { fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
-import { Alert } from "react-native";
 
 export default function InfoSelf({ route, navigation }) {
   const phoneNumber = route.params.phoneNumber;
   const userInfo = useSelector(userInfoSelector);
-
+  console.log("userInfo", userInfo);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,8 +45,6 @@ export default function InfoSelf({ route, navigation }) {
 
   const _handleUpdateInfo = () => {
     dispatch(fetchUpdateInfoUsers(data));
-    dispatch(fetchUserByPhone(phoneNumber));
-    Alert.alert("Cập nhật thông tin cá nhân thành công")
   };
 
   return (

@@ -78,7 +78,7 @@ function LoginScreen({ navigation }) {
     if (phoneNumberLoginRef.current == null || passLoginRef.current == null) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
     }else if(!checkPhoneNumber(phoneNumberLoginRef.current )){
-      Alert.alert("Số điện thoại của bạn không đúng định dạng");
+      Alert.alert("Số điện thoại của bạn không tồn tại");
     }
     else {
       sign()

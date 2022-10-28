@@ -24,12 +24,10 @@ function PersonalScreen({ route, navigation }) {
   let userInfo;
 
   if (isMe) {
-    // dispatch(fetchUserByPhone(phoneNumber))
     userInfo = infoSelf;
   } else {
     userInfo = useSelector(searchItemClickSelector);
   }
-
   const {
     _id,
     fullName,
@@ -40,6 +38,8 @@ function PersonalScreen({ route, navigation }) {
     backgroundLink,
     isFriend,
   } = userInfo;
+
+  console.log("personal screen", userInfo);
   const conversationId = useSelector(getConversationIdByIdFriendSelector);
   const dispatch = useDispatch();
 
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
   },
   bottomContainer: {
     position: "absolute",
-    marginTop: "65%",
+    marginTop: "55%",
     height: "190%",
     width: "100%",
     backgroundColor: "white",
