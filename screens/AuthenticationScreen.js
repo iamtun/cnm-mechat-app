@@ -40,52 +40,52 @@ function AuthenticationScreen({ route, navigation }) {
   const [code, setCode] = useState("");
   const [isBack, setIsBack] = useState(false);
 
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setCounter((prev) => setCounter(prev - 1));
-  //   }, 1000);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCounter((prev) => setCounter(prev - 1));
+    }, 1000);
 
-  //   setIntervalId(interval);
-  // }, [isBack]);
+    setIntervalId(interval);
+  }, [isBack]);
 
-  // if (counter === 0) {
-  //   clearInterval(intervalId);
-  // }
+  if (counter === 0) {
+    clearInterval(intervalId);
+  }
 
   //functions
   const handleTextChange = (value) => {
     setCode(value);
   };
 
-  // const sendOtp = async () => {
-  //   let _phoneNumber = "+84" + phoneNumber.slice(1);
-  //   console.log("phone", _phoneNumber);
-  //   try {
-  //     const phoneProvider = new firebase.auth.PhoneAuthProvider();
-  //     const verificationId = await phoneProvider.verifyPhoneNumber(
-  //       _phoneNumber,
-  //       recaptchaVerifier.current
-  //     );
-  //     if (verificationId) {
-  //       return verificationId;
-  //     }
-  //   } catch (err) {
-  //     throw new Error(err);
-  //   }
-  // };
+  const sendOtp = async () => {
+    let _phoneNumber = "+84" + phoneNumber.slice(1);
+    console.log("phone", _phoneNumber);
+    try {
+      const phoneProvider = new firebase.auth.PhoneAuthProvider();
+      const verificationId = await phoneProvider.verifyPhoneNumber(
+        _phoneNumber,
+        recaptchaVerifier.current
+      );
+      if (verificationId) {
+        return verificationId;
+      }
+    } catch (err) {
+      throw new Error(err);
+    }
+  };
 
-  // const sendBackOTP = () => {
-  //   setCounter(60);
-  //   setIsBack(true);
-  //   sendOtp()
-  //     .then((otp) => {
-  //       confirm = otp;
-  //     })
-  //     .catch((err) => {
-  //       console.log("ERRR", err);
-  //       return;
-  //     });
-  // };
+  const sendBackOTP = () => {
+    setCounter(60);
+    setIsBack(true);
+    sendOtp()
+      .then((otp) => {
+        confirm = otp;
+      })
+      .catch((err) => {
+        console.log("ERRR", err);
+        return;
+      });
+  };
 
   // console.log("---isback", isBack);
   const register = () => {
@@ -158,12 +158,12 @@ function AuthenticationScreen({ route, navigation }) {
           : { keyboardType: "number-pad" })}
       />
 
-      {/* <TouchableOpacity onPress={sendBackOTP} style={styles.sendBackButton}>
+      <TouchableOpacity onPress={sendBackOTP} style={styles.sendBackButton}>
         <FontAwesome5 name="undo" size={15} style={GlobalStyle.primaryColor} />
         <Text style={[GlobalStyle.primaryColor, styles.sendBackText]}>
           Gửi lại OTP ({counter})
         </Text>
-      </TouchableOpacity> */}
+      </TouchableOpacity>
 
       <ButtonPrimary title="Xác nhận" onPress={OtpVerify} />
     </View>
