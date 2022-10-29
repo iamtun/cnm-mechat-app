@@ -125,7 +125,6 @@ export const fetchUpdateAvatarUsers = createAsyncThunk(
         }
       );
       const userInfo = await res.json();
-      console.log("----Avatar",userInfo);
       return userInfo;
     } catch (err) {
       console.log(`err fetch avatar user info: ${err}`);

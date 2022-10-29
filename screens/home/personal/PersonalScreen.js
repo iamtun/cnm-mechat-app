@@ -39,7 +39,6 @@ function PersonalScreen({ route, navigation }) {
     isFriend,
   } = userInfo;
 
-  console.log("personal screen", userInfo);
   const conversationId = useSelector(getConversationIdByIdFriendSelector);
   const dispatch = useDispatch();
 

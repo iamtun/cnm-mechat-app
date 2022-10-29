@@ -125,7 +125,7 @@ function AuthenticationScreen({ route, navigation }) {
             })
           : register().then((token) => {
               setItem("user_token", token);
-              navigation.navigate("LoadingScreen");
+              navigation.navigate("LoadingScreen",{isRegister: true});
             });
       })
       .catch((err) => {

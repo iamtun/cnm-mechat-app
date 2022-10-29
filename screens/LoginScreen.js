@@ -77,7 +77,10 @@ function LoginScreen({ navigation }) {
   const _handleLoginTemp = () => {
     if (phoneNumberLoginRef.current == null || passLoginRef.current == null) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
-    }else if(!checkPhoneNumber(phoneNumberLoginRef.current )){
+    } else  if (phoneNumberLoginRef.current.toString().length != 10) {
+      Alert.alert("Vui lòng nhập số điện thoại là 10 số");
+    } 
+    else if(!checkPhoneNumber(phoneNumberLoginRef.current )){
       Alert.alert("Số điện thoại của bạn không tồn tại");
     }
     else {
