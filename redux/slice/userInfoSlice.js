@@ -55,6 +55,7 @@ export const fetchUserInfo = createAsyncThunk(
       try {
         const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
         const userInfo = await res.json();
+        console.log(userInfo.data);
         return userInfo.data;
       } catch (err) {
         console.log(`[fetch userInfo]: ${err}`);
@@ -125,6 +126,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk(
         }
       );
       const userInfo = await res.json();
+      console.log(userInfo);
       return userInfo;
     } catch (err) {
       console.log(`err fetch avatar user info: ${err}`);
