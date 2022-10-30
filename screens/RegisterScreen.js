@@ -4,27 +4,75 @@ import firebase from "firebase/compat/app";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
 import { firebaseConfig } from "../utils/firebase";
-import config, {checkPhoneNumber} from "../config";
+import config, { checkPhoneNumber } from "../config";
 import GlobalStyle from "../styles/GlobalStyle";
 import LoginStyles from "../styles/LoginStyles";
 import ButtonPrimary from "../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../components/Inputs/TextInputPrimary";
-function RegisterScreen({ navigation }) {
+import useDebounce from "../hooks/useDebounce";
+import { useEffect } from "react";
 
+function RegisterScreen({ navigation }) {
   //ui ref
-  const phoneNumberRegisterRef = useRef(null);
-  const passRegisterRef = useRef(null);
-  const userNameRegisterRef = useRef(null);
-  const passRegisterRefAgain = useRef(null);
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [userName, setUserName] = useState(null);
+  const [password, setPassword] = useState(null);
+  const [passwordAgain, setPasswordAgain] = useState(null);
+  const [errPhone, setErrPhone] = useState(null);
+  const [errUserName, setErrUserName] = useState(null);
+  const [errPass, setErrPass] = useState(null);
+  const [errPassAgain, setErrPassAgain] = useState(null);
+
+  const debouncedPhone = useDebounce(phoneNumber, 500);
+  const debouncedUseName = useDebounce(userName, 500);
+  const debouncedPass = useDebounce(password, 500);
+  const debouncedPassAgain = useDebounce(passwordAgain, 500);
+
+  useEffect(() => {
+    if (phoneNumber === "") {
+      setErrPhone("Vui lòng nhập số điện thoại");
+    } else if (phoneNumber != null && phoneNumber.length != 10) {
+      setErrPhone("Vui lòng nhập số điện thoại là 10 số");
+    } else if (phoneNumber != null && !checkPhoneNumber(phoneNumber)) {
+      setErrPhone("Số điện thoại của bạn không tồn tại");
+    } else {
+      setErrPhone(null);
+    }
+  }, [debouncedPhone]);
+
+  useEffect(() => {
+    if (userName === "") {
+      setErrUserName("Vui lòng nhập tên tài khoản");
+    } else {
+      setErrUserName(null);
+    }
+  }, [debouncedUseName]);
+
+  useEffect(() => {
+    if (password === "") {
+      setErrPass("Vui lòng nhập mật khẩu");
+    } else {
+      setErrPass(null);
+    }
+  }, [debouncedPass]);
+
+  useEffect(() => {
+    if (passwordAgain === "") {
+      setErrPassAgain("Vui lòng nhập lại mật khẩu");
+    } else if (password != passwordAgain) {
+      setErrPassAgain("Vui lòng nhập lại đúng mật khẩu");
+    } else {
+      setErrPassAgain(null);
+    }
+  }, [debouncedPassAgain]);
 
   //firebase
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
-  
+
   //function
   const senOTP = async () => {
-
-    let _phoneNumber = "+84" + phoneNumberRegisterRef.current.slice(1);
+    let _phoneNumber = "+84" + phoneNumber.slice(1);
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
       const verificationId = await phoneProvider.verifyPhoneNumber(
@@ -41,7 +89,7 @@ function RegisterScreen({ navigation }) {
 
   const getUserByPhoneNumber = async () => {
     return await fetch(
-      `${config.LINK_API_V2}/users/get-user-by-phone/${phoneNumberRegisterRef.current}`
+      `${config.LINK_API_V2}/users/get-user-by-phone/${phoneNumber}`
     )
       .then((res) => res.json())
       .then((resData) => {
@@ -52,25 +100,29 @@ function RegisterScreen({ navigation }) {
         if (resData?.status == 500) return false;
       });
   };
-  
+
   const _handleRegister = async () => {
     const userPhone = await getUserByPhoneNumber();
 
-    if (
-      phoneNumberRegisterRef.current == null ||
-      passRegisterRef.current == null ||
-      userNameRegisterRef == null ||
-      passRegisterRefAgain == null
+    if (phoneNumber === null) {
+      setPhoneNumber("");
+    }
+    if (userName === null) {
+      setUserName("");
+    }
+    if (password === null) {
+      setPassword("");
+    }
+    if (passwordAgain === null) {
+      setPasswordAgain("");
+    } else if(userPhone){
+      setErrPhone("Số điện thoại đã đăng ký tài khoản")
+    } else if (
+      errPhone != null ||
+      errPass != null ||
+      userName != null ||
+      errPassAgain != null
     ) {
-      Alert.alert("Vui lòng nhập đầy đủ thông tin");
-    } else if (phoneNumberRegisterRef.current.toString().length != 10) {
-      Alert.alert("Vui lòng nhập số điện thoại là 10 số");
-    } else if (!checkPhoneNumber(phoneNumberRegisterRef.current)) {
-      Alert.alert("Số điện thoại của bạn không tồn tại");
-    } else if (userPhone) {
-      Alert.alert("Số điện thoại của bạn đã đăng ký tài khoản");
-    } else if (passRegisterRef.current != passRegisterRefAgain.current) {
-      Alert.alert("Vui lòng nhập lại đúng mật khẩu");
     } else {
       senOTP()
         .then((otp) => {
@@ -80,7 +132,7 @@ function RegisterScreen({ navigation }) {
             phoneNumber: phoneNumberRegisterRef.current,
             passWord: passRegisterRef.current,
             fullName: userNameRegisterRef.current,
-            isForgetPass: false
+            isForgetPass: false,
           });
         })
         .catch((err) => {
@@ -110,27 +162,39 @@ function RegisterScreen({ navigation }) {
       {/* Register */}
       <View style={LoginStyles.enterData}>
         <TextInputPrimary
+          value={phoneNumber}
+          onChange={(value) => {
+            setPhoneNumber(value);
+          }}
           keyboardType="number-pad"
-          ref={phoneNumberRegisterRef}
           placeholder="Số điện thoại"
           isPass={false}
         />
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPhone}</Text>
         <TextInputPrimary
-          ref={userNameRegisterRef}
+          onChange={(value) => {
+            setUserName(value);
+          }}
           placeholder="Tên người dùng"
           isPass={false}
         />
+        <Text style={{ marginLeft: 15, color: "red" }}>{errUserName}</Text>
         <TextInputPrimary
-          ref={passRegisterRef}
+          onChange={(value) => {
+            setPassword(value);
+          }}
           placeholder="Nhập mật khẩu"
           isPass={true}
         />
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPass}</Text>
         <TextInputPrimary
-          ref={passRegisterRefAgain}
+          onChange={(value) => {
+            setPasswordAgain(value);
+          }}
           placeholder="Nhập lại mật khẩu"
           isPass={true}
         />
-
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPassAgain}</Text>
         <ButtonPrimary
           title="Đăng ký"
           onPress={() => {

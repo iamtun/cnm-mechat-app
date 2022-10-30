@@ -8,26 +8,56 @@ import TextInputPrimary from "../../../components/Inputs/TextInputPrimary";
 import { useRef } from "react";
 import { useDispatch } from "react-redux";
 import { fetchForgetPassword } from "../../../redux/slice/userInfoSlice";
+import useDebounce from "../../../hooks/useDebounce";
 import { Alert } from "react-native";
+import { useEffect } from "react";
+import { useState } from "react";
 
-function ReplacePassWord({route, navigation}) {
+function ReplacePassWord({ route, navigation }) {
   const dispatch = useDispatch();
 
   const phoneNumber = route.params.phoneNumber;
 
-  const newPass = useRef(null);
-  const newPassAgain = useRef(null);
+  const [password, setPassword] = useState(null);
+  const [passwordAgain, setPasswordAgain] = useState(null);
 
-  const _handleForgotPass = () =>{
-    if (newPass.current != newPassAgain.current) {
-      Alert.alert("Vui lòng nhập lại đúng mật khẩu");
-    } else{
-      const data = {phoneNumber: phoneNumber, newPassword: newPassAgain.current}
-      dispatch(fetchForgetPassword(data))
-      Alert.alert("Đổi mật khẩu thành công")
-      navigation.navigate("LoginScreen")
+  const [errPass, setErrPass] = useState(null);
+  const [errPassAgain, setErrPassAgain] = useState(null);
+  const debouncedPass = useDebounce(password, 500);
+  const debouncedPassAgain = useDebounce(passwordAgain, 500);
+
+  useEffect(() => {
+    if (password === "") {
+      setErrPass("Vui lòng nhập mật khẩu mới");
+    } else {
+      setErrPass(null);
     }
-  }
+  }, [debouncedPass]);
+
+  useEffect(() => {
+    if (passwordAgain === "") {
+      setErrPassAgain("Vui lòng nhập lại mật khẩu");
+    } else if (password != passwordAgain) {
+      setErrPassAgain("Vui lòng nhập lại đúng mật khẩu");
+    } else {
+      setErrPassAgain(null);
+    }
+  }, [debouncedPassAgain]);
+
+  const _handleForgotPass = () => {
+    if (password === null) {
+      setPassword("");
+    }
+    if (passwordAgain === null) {
+      setPasswordAgain("");
+    } else if (errPass != null || errPassAgain != null) {
+    } else {
+      const data = { phoneNumber: phoneNumber, newPassword: passwordAgain };
+      dispatch(fetchForgetPassword(data));
+      Alert.alert("Đổi mật khẩu thành công");
+      navigation.navigate("LoginScreen");
+    }
+  };
   return (
     <View style={GlobalStyle.container}>
       {/* logo */}
@@ -42,20 +72,23 @@ function ReplacePassWord({route, navigation}) {
       {/* Register */}
       <View style={LoginStyles.enterData}>
         <TextInputPrimary
-          ref={newPass}
+          onChange={(value) => {
+            setPassword(value);
+          }}
           placeholder="Nhập mật khẩu mới"
           isPass={true}
         />
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPass}</Text>
         <TextInputPrimary
-          ref={newPassAgain}
+          onChange={(value) => {
+            setPasswordAgain(value);
+          }}
           placeholder="Nhập lại mật khẩu"
           isPass={true}
         />
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPassAgain}</Text>
 
-        <ButtonPrimary
-          title="Xác nhận"
-          onPress={_handleForgotPass}
-        />
+        <ButtonPrimary title="Xác nhận" onPress={_handleForgotPass} />
       </View>
       {Platform.OS === "ios" ? (
         <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20} />

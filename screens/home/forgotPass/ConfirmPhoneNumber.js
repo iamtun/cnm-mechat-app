@@ -7,20 +7,37 @@ import Icon from "react-native-vector-icons/Ionicons";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 
 import { firebaseConfig } from "../../../utils/firebase";
-import config,{checkPhoneNumber} from "../../../config";
+import config, { checkPhoneNumber } from "../../../config";
 import GlobalStyle from "../../../styles/GlobalStyle";
 import LoginStyles from "../../../styles/LoginStyles";
 import ButtonPrimary from "../../../components/Buttons/ButtonPrimary";
 import TextInputPrimary from "../../../components/Inputs/TextInputPrimary";
 import { TouchableOpacity } from "react-native";
+import useDebounce from "../../../hooks/useDebounce";
+import { useEffect } from "react";
 
 function ConfirmPhoneNumber({ navigation }) {
+  const [phoneNumber, setPhoneNumber] = useState(null);
+  const [errPhone, setErrPhone] = useState(null);
+  const debouncedPhone = useDebounce(phoneNumber, 500);
   const phoneNumberForgotRef = useRef(null);
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
 
+  useEffect(() => {
+    if (phoneNumber === "") {
+      setErrPhone("Vui lòng nhập số điện thoại");
+    } else if (phoneNumber != null && phoneNumber.length != 10) {
+      setErrPhone("Vui lòng nhập số điện thoại là 10 số");
+    } else if (phoneNumber != null && !checkPhoneNumber(phoneNumber)) {
+      setErrPhone("Số điện thoại của bạn không tồn tại");
+    } else {
+      setErrPhone(null);
+    }
+  }, [debouncedPhone]);
+
   const senOTP = async () => {
-    let _phoneNumber = "+84" + phoneNumberForgotRef.current.slice(1);
+    let _phoneNumber = "+84" + phoneNumber.slice(1);
 
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
@@ -38,7 +55,7 @@ function ConfirmPhoneNumber({ navigation }) {
 
   const getUserByPhoneNumber = async () => {
     return await fetch(
-      `${config.LINK_API_V2}/users/get-user-by-phone/${phoneNumberForgotRef.current}`
+      `${config.LINK_API_V2}/users/get-user-by-phone/${phoneNumber}`
     )
       .then((res) => res.json())
       .then((resData) => {
@@ -50,28 +67,29 @@ function ConfirmPhoneNumber({ navigation }) {
       });
   };
 
-  const _handleForgotPass  = async() => {
+  const _handleForgotPass = async () => {
     const userPhone = await getUserByPhoneNumber();
-    if(!checkPhoneNumber(phoneNumberForgotRef.current)){
-      Alert.alert("Số điện thoại của bạn không đúng định dạng");
-    }else if(userPhone){
+    if (phoneNumber === null) {
+      setPhoneNumber("");
+    } else if (errPhone != null) {
+    } else if (userPhone) {
       senOTP()
         .then((otp) => {
           setVerificationId(otp);
           navigation.navigate("AuthenticationScreen", {
             verificationId: otp,
-            phoneNumber: phoneNumberForgotRef.current,
-            isForgetPass: true
+            phoneNumber: phoneNumber,
+            isForgetPass: true,
           });
         })
         .catch((err) => {
           console.log("ERRR", err);
           return;
         });
-    } else{
-      Alert.alert("Số điện thoại của bạn chưa đăng kí tài khoản")
+    } else {
+      setErrPhone("Số điện thoại của bạn chưa đăng kí tài khoản");
     }
-  }
+  };
 
   return (
     <View style={GlobalStyle.container}>
@@ -95,11 +113,15 @@ function ConfirmPhoneNumber({ navigation }) {
       {/* Login */}
       <View style={LoginStyles.enterData}>
         <TextInputPrimary
-          ref={phoneNumberForgotRef}
+           value={phoneNumber}
+           onChange={(value) => {
+             setPhoneNumber(value);
+           }}
           placeholder="Số điện thoại"
           keyboardType="number-pad"
         />
-        <ButtonPrimary title="Tiếp tục" onPress ={_handleForgotPass}/>
+        <Text style={{ marginLeft: 15, color: "red" }}>{errPhone}</Text>
+        <ButtonPrimary title="Tiếp tục" onPress={_handleForgotPass} />
       </View>
       <TouchableOpacity
         style={styles.goBack}
