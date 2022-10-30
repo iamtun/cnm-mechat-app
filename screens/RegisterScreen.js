@@ -23,8 +23,8 @@ function RegisterScreen({ navigation }) {
   
   //function
   const senOTP = async () => {
-    let _phoneNumber = "+84" + phoneNumberRegisterRef.current.slice(1);
 
+    let _phoneNumber = "+84" + phoneNumberRegisterRef.current.slice(1);
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
       const verificationId = await phoneProvider.verifyPhoneNumber(
@@ -66,7 +66,7 @@ function RegisterScreen({ navigation }) {
     } else if (phoneNumberRegisterRef.current.toString().length != 10) {
       Alert.alert("Vui lòng nhập số điện thoại là 10 số");
     } else if (!checkPhoneNumber(phoneNumberRegisterRef.current)) {
-      Alert.alert("Số điện thoại của bạn không đúng định dạng");
+      Alert.alert("Số điện thoại của bạn không tồn tại");
     } else if (userPhone) {
       Alert.alert("Số điện thoại của bạn đã đăng ký tài khoản");
     } else if (passRegisterRef.current != passRegisterRefAgain.current) {

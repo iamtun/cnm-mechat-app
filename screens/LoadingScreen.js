@@ -8,7 +8,7 @@ import { getItem, removeItem } from "../utils/asyncStorage";
 import { fetchUserInfo } from "../redux/slice/userInfoSlice";
 import { fetchUsers } from "../redux/slice/usersSlice";
 
-function LoadingScreen({ navigation }) {
+function LoadingScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
   // removeItem("user_token");
@@ -22,7 +22,10 @@ function LoadingScreen({ navigation }) {
             dispatch(fetchUsers());
             dispatch(fetchUserInfo(token));
             setTimeout(() => {
-              navigation.navigate("HomeScreen", { screen: "HomeScreen" });
+              // Đăng ký dô đây đi qua cập nhật thông tin
+              route.params?.isRegister
+                ? navigation.navigate("InfoSelf", { screen: "InfoSelf" })
+                : navigation.navigate("HomeScreen", { screen: "HomeScreen" });
             }, 2000);
           }
         })
