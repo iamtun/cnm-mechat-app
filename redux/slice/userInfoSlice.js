@@ -99,7 +99,6 @@ export const fetchUpdateInfoUsers = createAsyncThunk(
       });
 
       const userInfo = await res.json();
-      console.log(userInfo);
       return userInfo;
     } catch (err) {
       console.log(`err fetch users: ${err}`);
@@ -152,7 +151,6 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk(
       );
 
       const background = await res.json();
-      console.log("----background",background);
       return background;
     } catch (err) {
       console.log(`err fetch background user info: ${err}`);
