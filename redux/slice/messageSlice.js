@@ -85,10 +85,10 @@ const messageListSlice = createSlice({
  */
 export const fetchMessagesById = createAsyncThunk(
   "messages/fetchMessagesById",
-  async (id) => {
+  async (id, countMessage) => {
     if (id) {
       try {
-        const res = await fetch(`${config.LINK_API_V2}/messages/${id}`);
+        const res = await fetch(`${config.LINK_API_V2}/messages/ten-last-messages/${id}`);
         const messages = await res.json();
         return messages;
       } catch (err) {
@@ -197,13 +197,13 @@ export const deleteMessage = createAsyncThunk(
     if (data) {
       try {
         const res = await fetch(
-          `${config.LINK_API_V2}/messages/${data.messageId}`,
+          `${config.LINK_API_V2}/messages/delete-for-you/${data.messageId}`,
           {
             method: "DELETE",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ conversationID: data.conversationId }),
+            body: JSON.stringify({ userId: data.userId }),
           }
         );
         const id = await res.json();
