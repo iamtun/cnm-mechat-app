@@ -28,7 +28,7 @@ function MessageItem({ message, id }) {
     {
       title: "Xóa",
       onPress: () => {
-        const data = { messageId: message._id, conversationId: id };
+        const data = { messageId: message._id, userId: _id };
         dispatch(deleteMessage(data));
       },
     },

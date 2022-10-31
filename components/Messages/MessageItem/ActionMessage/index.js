@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
         padding: 8,
         borderRadius: 50,
-        flexDirection: "row"
+        flexDirection: "column"
     },
     createAt: {
         textAlign: "center",

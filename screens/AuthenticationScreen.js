@@ -59,7 +59,7 @@ function AuthenticationScreen({ route, navigation }) {
 
   const sendOtp = async () => {
     let _phoneNumber = "+84" + phoneNumber.slice(1);
-    console.log("phone", _phoneNumber);
+    //console.log("phone", _phoneNumber);
     try {
       const phoneProvider = new firebase.auth.PhoneAuthProvider();
       const verificationId = await phoneProvider.verifyPhoneNumber(

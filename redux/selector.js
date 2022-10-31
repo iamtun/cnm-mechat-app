@@ -128,36 +128,38 @@ export const getConversationIdByIdFriendSelector = createSelector(
 );
 
 export const getMessageByIdConversationSelector = createSelector(
+  userInfoSelector,
   userListSelector,
   messageListSelector,
-  (users, messages) => {
+  (userInfo, users, messages) => {
     try {
+      //console.log(users, messages);
       const _messages = messages.map((message) => {
         const user = users.filter((_user) => _user._id === message.senderID)[0];
-
-        return {
-          _id: message._id,
-          action: message.action ? message.action : null,
-          content: message.action ? null : message.content,
-          imageLink: message.imageLink,
-          fileLink: message.fileLink
-            ? message.fileLink.replace(/%20/g, " ")
-            : null,
-          createdAt: message.action
-            ? moment(message.createdAt).format("DD/MM/YYYY hh:mm")
-            : moment(message.createdAt).format("hh:mm"),
-          user: {
-            id: user._id,
-            name: message.action ? null : user.fullName,
-            avatar: message.action ? null : user.avatarLink,
-          },
-        };
+        return message.deleteBy === userInfo._id
+          ? null
+          : {
+              _id: message._id,
+              action: message.action ? message.action : null,
+              content: message.action ? null : message.content,
+              imageLink: message.imageLink,
+              fileLink: message.fileLink
+                ? message.fileLink.replace(/%20/g, " ")
+                : null,
+              createdAt: message.action
+                ? moment(message.createdAt).format("DD/MM/YYYY hh:mm")
+                : moment(message.createdAt).format("hh:mm"),
+              user: {
+                id: user._id,
+                name: message.action ? null : user.fullName,
+                avatar: message.action ? null : user.avatarLink,
+              },
+            };
       });
 
-      //return _messages.slice(-10);
-      return _messages.reverse();
+      return _messages;
     } catch (err) {
-      console.log("get message ", err);
+      console.log("selector get message ", err);
     }
   }
 );
@@ -204,7 +206,7 @@ export const getUserRegister = createSelector(
   userListSelector,
   searchTextSelector,
   (users, search) => {
-    console.log("search", search);
+    //console.log("search", search);
 
     if (search) {
       if (search.startsWith("0")) {

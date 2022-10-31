@@ -125,7 +125,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk(
         }
       );
       const userInfo = await res.json();
-      console.log(userInfo);
+      //console.log(userInfo);
       return userInfo;
     } catch (err) {
       console.log(`err fetch avatar user info: ${err}`);
@@ -164,7 +164,7 @@ export const fetchForgetPassword = createAsyncThunk(
   "info/fetchForgetPassword",
   async (data) => {
     try {
-      console.log("Data", data);
+      //console.log("Data", data);
       await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
         method: "POST",
         headers: {

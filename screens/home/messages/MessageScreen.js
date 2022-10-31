@@ -20,6 +20,7 @@ import {
   messageLoadingSelector,
 } from "../../../redux/selector";
 import messageListSlice, {
+  fetch10NextMessagesById,
   fetchMessagesById,
 } from "../../../redux/slice/messageSlice";
 import GlobalStyle from "../../../styles/GlobalStyle";
@@ -35,18 +36,22 @@ function MessageScreen({ route, navigation }) {
 
   useEffect(() => {
     socket.emit("join_room", id);
-    dispatch(fetchMessagesById(id));
+    dispatch(fetchMessagesById({ id }));
     socket.on("receiver_message", (message) => {
       dispatch(messageListSlice.actions.addMessageFromSocket(message));
     });
   }, []);
 
-  const renderItem = ({ item }) => <MessageItem message={item} id={id} />;
+  const renderItem = ({ item }) =>
+    item ? <MessageItem message={item} id={id} /> : null;
 
   const handleFetchMessageScrollTop = () => {
     const numberMessage = messages.length;
     console.log(numberMessage);
-  }
+    if (numberMessage >= 10) {
+      dispatch(fetch10NextMessagesById({ id, countMessage: numberMessage }));
+    }
+  };
   return (
     <>
       <Header />
@@ -63,7 +68,7 @@ function MessageScreen({ route, navigation }) {
               renderItem={renderItem}
               initialNumToRender={50}
               inverted //selected last scroll
-              keyExtractor={(item, index) => item._id || index.toString()}
+              keyExtractor={(item, index) => item?._id || index.toString()}
               onEndReached={handleFetchMessageScrollTop} //scroll top by inverted
             />
           ) : (

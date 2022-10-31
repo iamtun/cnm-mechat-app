@@ -114,8 +114,8 @@ function RegisterScreen({ navigation }) {
     }
     if (passwordAgain === null) {
       setPasswordAgain("");
-    } else if(userPhone){
-      setErrPhone("Số điện thoại đã đăng ký tài khoản")
+    } else if (userPhone) {
+      setErrPhone("Số điện thoại đã đăng ký tài khoản");
     } else if (
       errPhone != null ||
       errPass != null ||
