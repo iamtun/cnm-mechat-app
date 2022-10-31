@@ -22,8 +22,6 @@ const styles = StyleSheet.create({
     },
     enterData: {
         marginTop: 10,
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });
 

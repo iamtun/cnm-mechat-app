@@ -57,7 +57,7 @@ function PersonalScreen({ route, navigation }) {
   };
 
   const _handleUpdateInfo = () => {
-    navigation.navigate("InfoSelf", { phoneNumber: userInfo.phoneNumber });
+    navigation.navigate("InfoSelf");
   };
 
   const pickImage = async (isAvatar) => {

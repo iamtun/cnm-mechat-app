@@ -11,7 +11,7 @@ function ButtonPrimary({ title, onPress }) {
 
 const styles = StyleSheet.create({
     button: {
-        marginTop: 30,
+        marginTop: 10,
         width: 330,
         height: 50,
         backgroundColor: '#3777F3',

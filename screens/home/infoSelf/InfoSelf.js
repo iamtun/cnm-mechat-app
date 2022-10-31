@@ -18,9 +18,9 @@ export default function InfoSelf({ route, navigation }) {
   const userInfo = useSelector(userInfoSelector);
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(fetchUserByPhone(phoneNumber));
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchUserByPhone(phoneNumber));
+  // }, []);
   //use state
   const [selectedDate, setSelectedDate] = useState(userInfo.birthday);
   const [textName, setTextName] = useState(userInfo.fullName);
