@@ -65,7 +65,6 @@ function RegisterScreen({ navigation }) {
       setErrPassAgain(null);
     }
   }, [debouncedPassAgain]);
-
   //firebase
   const recaptchaVerifier = useRef(null);
   const [verificationId, setVerificationId] = useState(null);
@@ -120,18 +119,19 @@ function RegisterScreen({ navigation }) {
     } else if (
       errPhone != null ||
       errPass != null ||
-      userName != null ||
+      errUserName != null ||
       errPassAgain != null
     ) {
     } else {
+      console.log("OK");
       senOTP()
         .then((otp) => {
           setVerificationId(otp);
           navigation.navigate("AuthenticationScreen", {
             verificationId: otp,
-            phoneNumber: phoneNumberRegisterRef.current,
-            passWord: passRegisterRef.current,
-            fullName: userNameRegisterRef.current,
+            phoneNumber: phoneNumber,
+            passWord: passwordAgain,
+            fullName: userName,
             isForgetPass: false,
           });
         })
