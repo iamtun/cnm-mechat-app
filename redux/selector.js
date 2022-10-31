@@ -133,9 +133,9 @@ export const getMessageByIdConversationSelector = createSelector(
   messageListSelector,
   (userInfo, users, messages) => {
     try {
+      //console.log(users, messages);
       const _messages = messages.map((message) => {
         const user = users.filter((_user) => _user._id === message.senderID)[0];
-
         return message.deleteBy === userInfo._id
           ? null
           : {
@@ -157,10 +157,9 @@ export const getMessageByIdConversationSelector = createSelector(
             };
       });
 
-      //return _messages.slice(-10);
-      return _messages.reverse();
+      return _messages;
     } catch (err) {
-      console.log("get message ", err);
+      console.log("selector get message ", err);
     }
   }
 );
@@ -207,7 +206,7 @@ export const getUserRegister = createSelector(
   userListSelector,
   searchTextSelector,
   (users, search) => {
-    console.log("search", search);
+    //console.log("search", search);
 
     if (search) {
       if (search.startsWith("0")) {
