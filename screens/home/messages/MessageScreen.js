@@ -23,6 +23,7 @@ import messageListSlice, {
   fetchMessagesById,
 } from "../../../redux/slice/messageSlice";
 import GlobalStyle from "../../../styles/GlobalStyle";
+import { RefreshControl } from "react-native";
 
 function MessageScreen({ route, navigation }) {
   const { id, name } = route.params;
@@ -42,6 +43,10 @@ function MessageScreen({ route, navigation }) {
 
   const renderItem = ({ item }) => <MessageItem message={item} id={id} />;
 
+  const handleFetchMessageScrollTop = () => {
+    const numberMessage = messages.length;
+    console.log(numberMessage);
+  }
   return (
     <>
       <Header />
@@ -56,10 +61,10 @@ function MessageScreen({ route, navigation }) {
             <FlatList
               data={messages}
               renderItem={renderItem}
-              initialNumToRender={20}
-              inverted
+              initialNumToRender={50}
+              inverted //selected last scroll
               keyExtractor={(item, index) => item._id || index.toString()}
-              contentContainerStyle={{ flexDirection: "column-reverse" }}
+              onEndReached={handleFetchMessageScrollTop} //scroll top by inverted
             />
           ) : (
             <View style={styles.isLoading}>
