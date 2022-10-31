@@ -18,7 +18,6 @@ function MessageItem({ message, id }) {
   const { _id } = useSelector(userInfoSelector);
   const isMe = message.user.id === _id;
   const dispatch = useDispatch();
-
   const items = [
     {
       title: "Thu hồi",

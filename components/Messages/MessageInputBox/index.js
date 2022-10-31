@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Platform } from "react-native";
+import { Alert, Platform } from "react-native";
 import { View, StyleSheet, TextInput } from "react-native";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import MICon from "react-native-vector-icons/MaterialIcons";
@@ -13,6 +13,7 @@ import {
   sendMessage,
 } from "../../../redux/slice/messageSlice";
 
+import { iconExtends } from "../../../utils/filePathConfig";
 function MessageInputBox({ conversationId }) {
   const [isWrite, setIsWrite] = useState(false);
   const [message, setMessage] = useState("");
@@ -73,20 +74,27 @@ function MessageInputBox({ conversationId }) {
       const { name, size, uri } = result;
       let nameParts = name.split(".");
       const fileType = nameParts[nameParts.length - 1];
-      const fileToUpload = {
-        name,
-        size,
-        uri,
-        type: "application/" + fileType,
-      };
+      if (iconExtends.includes(fileType)) {
+        const fileToUpload = {
+          name,
+          size,
+          uri,
+          type: "application/" + fileType,
+        };
 
-      const message = {
-        senderID: userInfo._id,
-        conversationID: conversationId,
-        fileToUpload
-      };
+        const message = {
+          senderID: userInfo._id,
+          conversationID: conversationId,
+          fileToUpload,
+        };
 
-      dispatch(sendFile(message));
+        dispatch(sendFile(message));
+      } else {
+        Alert.alert(
+          "Thông báo",
+          "Bạn đang gửi file vui lòng không chọn ảnh hoặc video!"
+        );
+      }
     }
   };
 
