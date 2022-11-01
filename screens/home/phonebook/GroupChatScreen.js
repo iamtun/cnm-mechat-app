@@ -21,7 +21,7 @@ function GroupChatScreen() {
   const groupChat = useSelector(conversationsListSelector);
 
   for (let group of groupChat) {
-    if (group.members.length > 2) {
+    if (group.isGroup) {
       listGroupChat.push({
         id : group.id,
         name: group.name,

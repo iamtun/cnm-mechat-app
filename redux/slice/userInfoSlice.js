@@ -25,15 +25,12 @@ const userInfoSlice = createSlice({
       })
       .addCase(fetchUpdateAvatarUsers.fulfilled, (state, action) => {
         state.data = action.payload;
-        Alert.alert("Thông báo", "Cập nhật ảnh đại diện thành công!");
       })
       .addCase(fetchUpdateBackgroundUsers.fulfilled, (state, action) => {
         state.data = action.payload;
-        Alert.alert("Thông báo", "Cập nhật ảnh bìa thành công!");
       })
       .addCase(fetchUpdateInfoUsers.fulfilled, (state, action) => {
         state.data = action.payload;
-        Alert.alert("Thông báo", "Cập nhật thông tin thành công!");
       });
   },
 });
@@ -55,7 +52,7 @@ export const fetchUserInfo = createAsyncThunk(
       try {
         const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
         const userInfo = await res.json();
-        console.log(userInfo.data);
+
         return userInfo.data;
       } catch (err) {
         console.log(`[fetch userInfo]: ${err}`);

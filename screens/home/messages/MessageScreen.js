@@ -26,7 +26,7 @@ import GlobalStyle from "../../../styles/GlobalStyle";
 import { RefreshControl } from "react-native";
 
 function MessageScreen({ route, navigation }) {
-  const { id, name } = route.params;
+  const { id,isGroup, members, name,image } = route.params;
   const dispatch = useDispatch();
   // const isFocus = useIsFocused();
 
@@ -56,7 +56,7 @@ function MessageScreen({ route, navigation }) {
         keyboardVerticalOffset={Platform.OS === "ios" ? 20 : 10}
       >
         <View style={styles.body}>
-          <TopBar name={name} navigation={navigation} />
+          <TopBar isGroup={isGroup} members ={members} name={name} image = {image} navigation={navigation} />
           {isLoading ? (
             <FlatList
               data={messages}

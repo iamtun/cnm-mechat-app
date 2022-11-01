@@ -11,6 +11,7 @@ import { fetchUsers } from "../redux/slice/usersSlice";
 function LoadingScreen({ navigation, route }) {
   const dispatch = useDispatch();
   const isFocus = useIsFocused();
+  let isRegister = route.params?.isRegister;
   // removeItem("user_token");
 
   useEffect(() => {
@@ -23,8 +24,8 @@ function LoadingScreen({ navigation, route }) {
             dispatch(fetchUserInfo(token));
             setTimeout(() => {
               // Đăng ký dô đây đi qua cập nhật thông tin
-              route.params?.isRegister
-                ? navigation.navigate("InfoSelf", { screen: "InfoSelf" })
+              isRegister
+                ? navigation.navigate("InfoSelf", { screen: "InfoSelf", isRegister: isRegister })
                 : navigation.navigate("HomeScreen", { screen: "HomeScreen" });
             }, 2000);
           }

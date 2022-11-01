@@ -1,7 +1,8 @@
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from "react-native-vector-icons/Ionicons";
-function TopBar({ name, memberGroup, navigation }) {
+function TopBar({isGroup,members ,image,name, memberGroup, navigation }) {
+
   const handleClickArrowLeftIcon = () => {
     navigation.goBack();
   };
@@ -45,7 +46,7 @@ function TopBar({ name, memberGroup, navigation }) {
             </TouchableOpacity>
           </>
         )}
-        <TouchableOpacity onPress={() => navigation.navigate("DetailChat")}>
+        <TouchableOpacity onPress={() => navigation.navigate("DetailChat",{isGroup, members: members, name: name, image: image})}>
           <Icon name="list-outline" size={24} style={styles.icon} />
         </TouchableOpacity>
       </View>

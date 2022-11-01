@@ -15,9 +15,6 @@ import { useIsFocused } from "@react-navigation/native";
 
 function ChatListScreen({ navigation }) {
   const dispatch = useDispatch();
-  // const userSearching = useSelector(usersRemainingSelector);
-  //console.log("----userSearching", userSearching);
-  // const userInfo = useSelector(userInfoSelector);
   const conversations = useSelector(conversationsListSelector);
   const isFocus = useIsFocused();
   // console.log(conversations, userInfo);
@@ -35,8 +32,10 @@ function ChatListScreen({ navigation }) {
         renderItem={({ item }) => (
           <ChatItem
             id={item.id}
+            isGroup ={item.isGroup}
             name={item.name}
             image={item.imageLinkOfConver}
+            members={item.members}
             message={item.content ? item.content : item.lastMessage}
             time={moment(item.time).fromNow()}
             navigation={navigation}

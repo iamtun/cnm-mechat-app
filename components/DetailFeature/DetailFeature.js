@@ -3,9 +3,9 @@ import React from "react";
 import Icon from "react-native-vector-icons/Ionicons";
 import { TouchableOpacity } from "react-native";
 
-function DetailFeature({nameIcon, nameFeature}) {
+function DetailFeature({onPress,nameIcon, nameFeature}) {
   return (
-    <TouchableOpacity style={styles.container}>
+    <TouchableOpacity style={styles.container} onPress ={onPress}>
       <View style={styles.icon}>
         <Icon
           style={{ marginLeft: 10 }}

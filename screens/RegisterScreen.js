@@ -123,7 +123,6 @@ function RegisterScreen({ navigation }) {
       errPassAgain != null
     ) {
     } else {
-      console.log("OK");
       senOTP()
         .then((otp) => {
           setVerificationId(otp);
@@ -133,6 +132,7 @@ function RegisterScreen({ navigation }) {
             passWord: passwordAgain,
             fullName: userName,
             isForgetPass: false,
+            isRegister: true,
           });
         })
         .catch((err) => {

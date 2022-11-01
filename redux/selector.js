@@ -204,7 +204,6 @@ export const getUserRegister = createSelector(
   userListSelector,
   searchTextSelector,
   (users, search) => {
-    console.log("search", search);
 
     if (search) {
       if (search.startsWith("0")) {
@@ -225,3 +224,4 @@ export const getUserRegister = createSelector(
     return false;
   }
 );
+

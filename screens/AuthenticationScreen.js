@@ -22,7 +22,7 @@ function AuthenticationScreen({ route, navigation }) {
 
   //data receiver from login screen
   let confirm = route.params.verificationId;
-
+  let isRegister = route.params.isRegister;
   const phoneNumber = route.params.phoneNumber;
   const isForgetPass = route.params.isForgetPass;
 
@@ -125,11 +125,12 @@ function AuthenticationScreen({ route, navigation }) {
             })
           : register().then((token) => {
               setItem("user_token", token);
-              navigation.navigate("LoadingScreen",{isRegister: true});
+              navigation.navigate("LoadingScreen",{isRegister: isRegister});
             });
       })
       .catch((err) => {
-        Alert.alert("Mã không tồn tại hoặc quá hạn", err);
+        console.log("lỗi", err);
+        Alert.alert("Mã không tồn tại hoặc quá hạn");
       });
   };
 

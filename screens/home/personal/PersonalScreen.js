@@ -14,13 +14,20 @@ import * as ImagePicker from "expo-image-picker";
 import moment from "moment";
 import { useEffect } from "react";
 import Header from "../../../components/Header";
-import { fetchUpdateAvatarUsers, fetchUpdateBackgroundUsers, fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
+import {
+  fetchUpdateAvatarUsers,
+  fetchUpdateBackgroundUsers,
+  fetchUserByPhone,
+} from "../../../redux/slice/userInfoSlice";
 import { useState } from "react";
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
-  const [isMe,setIsMe] =useState(route.params.isMe);
+  const [isMe, setIsMe] = useState(route.params.isMe);
   const infoSelf = useSelector(userInfoSelector);
+
+  let isRegister = route.params?.isRegister;
+
   let userInfo;
 
   if (isMe) {
@@ -60,6 +67,10 @@ function PersonalScreen({ route, navigation }) {
     navigation.navigate("InfoSelf");
   };
 
+  const _successRegister = () => {
+    navigation.navigate("LoadingScreen");
+  }
+
   const pickImage = async (isAvatar) => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -70,23 +81,22 @@ function PersonalScreen({ route, navigation }) {
     });
 
     if (!result.cancelled) {
-      if(isAvatar){
+      if (isAvatar) {
         const data = {
           key: "avatarLink",
           userID: infoSelf._id,
           avatarLink: result.uri,
         };
-        dispatch(fetchUpdateAvatarUsers(data))
-       
-      } else{
+        dispatch(fetchUpdateAvatarUsers(data));
+      } else {
         const data = {
           key: "backLink",
           userID: infoSelf._id,
           backLink: result.uri,
         };
-        dispatch(fetchUpdateBackgroundUsers(data))
+        dispatch(fetchUpdateBackgroundUsers(data));
       }
-      setIsMe(true)
+      setIsMe(true);
     }
   };
 
@@ -94,14 +104,20 @@ function PersonalScreen({ route, navigation }) {
     <>
       <Header />
       <View>
-        <TouchableOpacity onPress={() => pickImage(false)} style={styles.background}>
+        <TouchableOpacity
+          onPress={() => pickImage(false)}
+          style={styles.background}
+        >
           <Image
             style={styles.backgroundImage}
             source={{ uri: backgroundLink }}
           />
         </TouchableOpacity>
         <View style={styles.bottomContainer}>
-          <TouchableOpacity style={{bottom :"8%"}} onPress={() => pickImage(true)}>
+          <TouchableOpacity
+            style={{ bottom: "8%" }}
+            onPress={() => pickImage(true)}
+          >
             <Image style={styles.avatar} source={{ uri: avatarLink }} />
           </TouchableOpacity>
           <Text style={styles.name}>{fullName}</Text>
@@ -152,6 +168,20 @@ function PersonalScreen({ route, navigation }) {
               <Text style={{ color: "white" }}>Cập nhật thông tin</Text>
             </TouchableOpacity>
           )}
+          {isRegister ? (
+            <TouchableOpacity
+              style={styles.successRegister}
+              onPress={_successRegister}
+            >
+              <Icon
+                style={{ marginRight: 10 }}
+                name="checkmark-outline"
+                color="#4ACFED"
+                size={20}
+              />
+              <Text style={{ color: "#4ACFED" }}>Hoàn thành</Text>
+            </TouchableOpacity>
+          ) : null}
         </View>
       </View>
     </>
@@ -227,6 +257,17 @@ const styles = StyleSheet.create({
     shadowOpacity: 1,
     shadowRadius: 12,
     elevation: 10,
+  },
+  successRegister: {
+    marginTop: 10,
+    borderWidth: 2,
+    borderColor: "#5D90F5",
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 15,
+    width: "70%",
+    height: 50,
   },
   buttonChat: {
     flexDirection: "row",

@@ -14,9 +14,10 @@ import { useEffect } from "react";
 import { fetchUserByPhone } from "../../../redux/slice/userInfoSlice";
 
 export default function InfoSelf({ route, navigation }) {
-  const phoneNumber = route.params.phoneNumber;
+
   const userInfo = useSelector(userInfoSelector);
   const dispatch = useDispatch();
+  let isRegister = route.params?.isRegister;
 
   // useEffect(() => {
   //   dispatch(fetchUserByPhone(phoneNumber));
@@ -44,6 +45,7 @@ export default function InfoSelf({ route, navigation }) {
 
   const _handleUpdateInfo = () => {
     dispatch(fetchUpdateInfoUsers(data));
+    navigation.navigate("PersonalScreen",{isMe:true,isRegister: isRegister})
   };
 
   return (
