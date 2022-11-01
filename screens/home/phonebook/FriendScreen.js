@@ -11,7 +11,7 @@ function FriendScreen() {
     let friendInfo = [];
 
     const friends = useSelector(getFriendsByUserSelector);
-    
+
     if (friends) {
         if (friends.length != 0) {
             for (let i = 0; i < friends.length; i++) {
@@ -25,10 +25,10 @@ function FriendScreen() {
         }
     }
 
-    useEffect(()=>{
-        getUserItem
-    },[])
-    
+    useEffect(() => {
+        getUserItem;
+    }, []);
+
     function getUserItem(item) {
         return (
             <View styles={{ flex: 1 }}>
@@ -49,7 +49,7 @@ function FriendScreen() {
         <>
             <AlphabetList
                 data={friendInfo}
-                key = {friendInfo.key}
+                key={friendInfo.key}
                 letterItemStyle={{ height: 90 }}
                 renderCustomItem={(item) => getUserItem(item)}
                 renderCustomSectionHeader={(section) => <Text>{section.title}</Text>}
