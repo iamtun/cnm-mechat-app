@@ -45,7 +45,7 @@ export const fetchLoadFriendsRequest = createAsyncThunk('friends/fetchLoadFriend
         try {
             const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-list-request/${id}`);
             const allFriendRequest = await res.json();
-            console.log('allFriendRequest', allFriendRequest);
+            //console.log('allFriendRequest', allFriendRequest);
             return allFriendRequest.data;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);

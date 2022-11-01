@@ -24,11 +24,21 @@ function MessageScreen({ route, navigation }) {
     const isLoading = useSelector(messageLoadingSelector);
 
     useEffect(() => {
+        //user join room with socket
         socket.emit('join_room', id);
+
+        //fetch message by conversation id
         dispatch(fetchMessagesById({ id }));
+
+        //receiver message from socket
         socket.on('receiver_message', (message) => {
             dispatch(messageListSlice.actions.addMessageFromSocket(message));
         });
+
+        //receiver recall message and update
+        socket.on('receiver_recall_message', (message) => {
+            dispatch(messageListSlice.actions.recallMessageFromSocket(message))
+        })
     }, []);
 
     const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} /> : null);
