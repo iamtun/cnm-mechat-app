@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import config from '../../config';
+import config, { socket } from '../../config';
 
 const friendListSlice = createSlice({
     name: 'friends',
@@ -8,17 +8,24 @@ const friendListSlice = createSlice({
         clickSendChat: (state, action) => {
             state.friendId = action.payload;
         },
+        friendRequestReceiverSocket: (state, action) => {
+            state.data.push(action.payload);
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchFriendsRequest.fulfilled, (state, action) => {
-                state.data = action.payload;
+                //state.data = action.payload;
+                if(action.payload)
+                    socket.emit("send_friend_request", {request: action.payload});
+                else 
+                    console.warn('exists request!');
             })
             .addCase(fetchLoadFriendsRequest.fulfilled, (state, action) => {
                 state.data = action.payload;
             })
             .addCase(fetchListFriendRequestSent.fulfilled, (state, action) => {
-                state.data = action.payload;
+                //state.data = action.payload;
             });
     },
 });
@@ -33,8 +40,10 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
             body: JSON.stringify(data),
         });
         const friendRequest = await res.json();
-        // console.log("---friend", friendRequest);
-        return friendRequest;
+        console.log("---friend", friendRequest);
+        if(friendRequest?.receiver)
+            return friendRequest;
+        return null;
     } catch (err) {
         console.log(`err fetch users: ${err}`);
     }
