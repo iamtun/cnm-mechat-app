@@ -6,7 +6,7 @@ export default {
     LINK_API_V2,
 };
 
-export const socket = io('https://cnm-socket-server-heroku.herokuapp.com', {
+export const socket = io('https://2c93-42-119-224-98.ap.ngrok.io', {
     transports: ['websocket'],
     //reconnection: true,
     withCredentials: true,

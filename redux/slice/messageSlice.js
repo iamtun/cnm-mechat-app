@@ -13,21 +13,15 @@ const messageListSlice = createSlice({
         addMessageFromSocket: (state, action) => {
             const messageExist = state.data.find((message) => message._id === action.payload._id);
             if (!messageExist) {
-                state.data.push(action.payload);
+                state.data.unshift(action.payload);
             } else {
                 return;
             }
         },
-        sendVideo: (state, action) => {
-            const { imageLink, senderID } = action.payload;
-            const temp = {
-                _id: '1212121v',
-                imageLink,
-                senderID,
-                createAt: Date.now(),
-            };
-
-            state.data.push(temp);
+        recallMessageFromSocket: (state, action) => {
+            const message = action.payload;
+            const messageList = state.data.map((_message) => (_message._id === message._id ? message : _message));
+            state.data = messageList;
         },
     },
     extraReducers: (builder) => {
@@ -77,6 +71,7 @@ const messageListSlice = createSlice({
             })
             .addCase(recallMessage.fulfilled, (state, action) => {
                 const message = action.payload;
+                socket.emit('recall_message', { message });
                 const messageList = state.data.map((_message) => (_message._id === message._id ? message : _message));
                 state.data = messageList;
             })
