@@ -14,7 +14,7 @@ const store = configureStore({
         usersByPhone: userListSlice.reducer,
         info: userInfoSlice.reducer,
         friends: friendListSlice.reducer,
-        conversations: conversationsListByUserId.reducer
+        conversations: conversationsListByUserId.reducer,
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
