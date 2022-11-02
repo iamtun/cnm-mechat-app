@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { View, Image, Text, StyleSheet, TouchableOpacity } from "react-native";
-import Tooltip from "react-native-walkthrough-tooltip";
-import MenuItem from "../SearchBar/Menu/MenuItem";
+import { useState } from 'react';
+import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import Tooltip from 'react-native-walkthrough-tooltip';
+import MenuItem from '../SearchBar/Menu/MenuItem';
 
 function ChatItem({id, isGroup,members, name, image, message, time, navigation }) {
   const [isVisible, setIsVisible] = useState(false);
@@ -48,33 +48,33 @@ function ChatItem({id, isGroup,members, name, image, message, time, navigation }
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flexDirection: "row",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: "#ccc",
-  },
-  left: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-start",
-  },
-  imageView: {
-    paddingRight: 16,
-  },
-  image: {
-    width: 70,
-    height: 70,
-    borderRadius: 50,
-  },
-  nameText: {
-    fontSize: 16,
-    fontWeight:'600'
-  },
-  messageText: {
-    fontSize: 14,
-  },
+    body: {
+        flexDirection: 'row',
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
+        padding: 12,
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+    },
+    left: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
+    },
+    imageView: {
+        paddingRight: 16,
+    },
+    image: {
+        width: 70,
+        height: 70,
+        borderRadius: 50,
+    },
+    nameText: {
+        fontSize: 16,
+        fontWeight: '600',
+    },
+    messageText: {
+        fontSize: 14,
+    },
 });
 export default ChatItem;

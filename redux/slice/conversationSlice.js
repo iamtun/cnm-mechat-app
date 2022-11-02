@@ -4,7 +4,12 @@ import config from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsListByUserId = createSlice({
     name: 'conversations',
-    initialState: { data: [] },
+    initialState: { data: [] , conversationId: null},
+    reducers: {
+        clickGroupChat: (state, action) => {
+            state.conversationId = action.payload;
+        },
+    },
     extraReducers: (builder) => {
         builder.addCase(fetchConversations.fulfilled, (state, action) => {
             state.data = action.payload;

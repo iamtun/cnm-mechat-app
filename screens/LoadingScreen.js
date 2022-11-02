@@ -1,12 +1,12 @@
-import { useEffect } from "react";
-import { View, ActivityIndicator, Text } from "react-native";
-import { useDispatch } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import { useEffect } from 'react';
+import { View, ActivityIndicator, Text } from 'react-native';
+import { useDispatch } from 'react-redux';
+import { useIsFocused } from '@react-navigation/native';
 
-import GlobalStyle from "../styles/GlobalStyle";
-import { getItem, removeItem } from "../utils/asyncStorage";
-import { fetchUserInfo } from "../redux/slice/userInfoSlice";
-import { fetchUsers } from "../redux/slice/usersSlice";
+import GlobalStyle from '../styles/GlobalStyle';
+import { getItem, removeItem } from '../utils/asyncStorage';
+import { fetchUserInfo } from '../redux/slice/userInfoSlice';
+import { fetchUsers } from '../redux/slice/usersSlice';
 
 function LoadingScreen({ navigation, route }) {
   const dispatch = useDispatch();
@@ -37,12 +37,12 @@ function LoadingScreen({ navigation, route }) {
     }
   }, [isFocus]);
 
-  return (
-    <View style={GlobalStyle.container}>
-      <ActivityIndicator size="large" color={GlobalStyle.primaryColor} />
-      <Text>Loading...</Text>
-    </View>
-  );
+    return (
+        <View style={GlobalStyle.container}>
+            <ActivityIndicator size="large" color={GlobalStyle.primaryColor} />
+            <Text>Loading...</Text>
+        </View>
+    );
 }
 
 export default LoadingScreen;

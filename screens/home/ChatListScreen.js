@@ -1,17 +1,14 @@
-import { FlatList } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
-import moment from "moment";
+import { FlatList } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import moment from 'moment';
 
-import {
-  usersRemainingSelector,
-  conversationsListSelector,
-} from "../../redux/selector";
-import SearchBar from "../../components/SearchBar";
-import ChatItem from "../../components/ChatItem";
-import Header from "../../components/Header";
-import { fetchConversations } from "../../redux/slice/conversationSlice";
-import { useIsFocused } from "@react-navigation/native";
+import {conversationsListSelector } from '../../redux/selector';
+import SearchBar from '../../components/SearchBar';
+import ChatItem from '../../components/ChatItem';
+import Header from '../../components/Header';
+import { fetchConversations } from '../../redux/slice/conversationSlice';
+import { useIsFocused } from '@react-navigation/native';
 
 function ChatListScreen({ navigation }) {
   const dispatch = useDispatch();
@@ -19,9 +16,9 @@ function ChatListScreen({ navigation }) {
   const isFocus = useIsFocused();
   // console.log(conversations, userInfo);
 
-  useEffect(() => {
-    dispatch(fetchConversations());
-  }, [isFocus]);
+    useEffect(() => {
+        dispatch(fetchConversations());
+    }, [isFocus]);
 
   return (
     <>

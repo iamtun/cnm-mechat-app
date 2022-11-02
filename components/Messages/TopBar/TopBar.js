@@ -1,15 +1,15 @@
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from "react-native-vector-icons/Ionicons";
 function TopBar({isGroup,members ,image,name, memberGroup, navigation }) {
 
   const handleClickArrowLeftIcon = () => {
-    navigation.goBack();
+    navigation.navigate("HomeScreen");
   };
 
-  const _sendCallVoice = () => {
-    navigation.navigate("SendCallVoice");
-  };
+    const _sendCallVoice = () => {
+        navigation.navigate('SendCallVoice');
+    };
 
   const _receiveCallVoice = () => {
     navigation.navigate("ReceiveCallVoice");
@@ -55,37 +55,37 @@ function TopBar({isGroup,members ,image,name, memberGroup, navigation }) {
 }
 
 const styles = StyleSheet.create({
-  topBar: {
-    width: "100%",
-    height: 60,
-    backgroundColor: "#3777F3",
-  },
-  leftBar: {
-    width: "50%",
-    paddingHorizontal: 16,
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    alignItems: "center",
-  },
-  group: {
-    marginLeft: 8,
-  },
-  nameText: {
-    fontSize: 16,
-    color: "#fff",
-  },
-  rightBar: {
-    width: "40%",
-    paddingHorizontal: 16,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  icon: {
-    fontWeight: "500",
-    color: "#fff",
-  },
+    topBar: {
+        width: '100%',
+        height: 60,
+        backgroundColor: '#3777F3',
+    },
+    leftBar: {
+        width: '50%',
+        paddingHorizontal: 16,
+        flexDirection: 'row',
+        justifyContent: 'flex-start',
+        alignItems: 'center',
+    },
+    group: {
+        marginLeft: 8,
+    },
+    nameText: {
+        fontSize: 16,
+        color: '#fff',
+    },
+    rightBar: {
+        width: '40%',
+        paddingHorizontal: 16,
+    },
+    row: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    icon: {
+        fontWeight: '500',
+        color: '#fff',
+    },
 });
 export default TopBar;

@@ -1,5 +1,5 @@
-import { createSelector } from "@reduxjs/toolkit";
-import moment from "moment";
+import { createSelector } from '@reduxjs/toolkit';
+import moment from 'moment';
 
 export const messageListSelector = (state) => state.messages.data;
 export const messageLoadingSelector = (state) => state.messages.loading;
@@ -14,214 +14,237 @@ export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 
 export const conversationsListSelector = (state) => state.conversations.data;
-
+export const conversationsIdSelector = (state) => state.conversations.conversationId;
 /**
  * get friend list then user info changed
  */
-export const getFriendsByUserSelector = createSelector(
-  userInfoSelector,
-  userListSelector,
-  (user, users) => {
+export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
     if (users && user?.friends) {
-      const friends = users.filter((_user) => user.friends.includes(_user._id));
-      return friends;
+        const friends = users.filter((_user) => user.friends.includes(_user._id));
+        return friends;
     }
     return null;
-  }
-);
+});
 
 /**
  * user searching to get friend list
  */
 export const usersRemainingSelector = createSelector(
-  userListSelector,
-  getFriendsByUserSelector,
-  userInfoSelector,
-  searchTextSelector,
-  (users, friends, user, search) => {
-    if (search != null) {
-      if (search.startsWith("0")) {
-        const usersFilter = users.filter(
-          (_user) =>
-            _user.phoneNumber === search &&
-            _user.phoneNumber !== user.phoneNumber
-        );
+    userListSelector,
+    getFriendsByUserSelector,
+    userInfoSelector,
+    searchTextSelector,
+    (users, friends, user, search) => {
+        if (search != null) {
+            if (search.startsWith('0')) {
+                const usersFilter = users.filter(
+                    (_user) => _user.phoneNumber === search && _user.phoneNumber !== user.phoneNumber,
+                );
 
-        const friendFilter = friends.filter(
-          (friend) => friend.phoneNumber === search
-        );
+                const friendFilter = friends.filter((friend) => friend.phoneNumber === search);
 
-        if (friendFilter.length > 0) {
-          return friendFilter.map((friend) => ({
-            ...friend,
-            isFriend: true,
-          }));
-        } else if (usersFilter.length > 0) {
-          return usersFilter.map((user) => ({
-            ...user,
-            isFriend: false,
-          }));
+                if (friendFilter.length > 0) {
+                    return friendFilter.map((friend) => ({
+                        ...friend,
+                        isFriend: true,
+                    }));
+                } else if (usersFilter.length > 0) {
+                    return usersFilter.map((user) => ({
+                        ...user,
+                        isFriend: false,
+                    }));
+                }
+                //don't find
+                if (!usersFilter.length) {
+                    return 1;
+                }
+
+                //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
+            } else if (search.match('^[A-Z]')) {
+                const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
+                //don't find
+                if (!friendFilter.length) {
+                    return 1;
+                }
+
+                return friendFilter.map((user) => ({
+                    _id: user._id,
+                    fullName: user.fullName,
+                    avatarLink: user.avatarLink,
+                    backgroundLink: user.backgroundLink,
+                    phoneNumber: user.phoneNumber,
+                    gender: user.gender,
+                    isFriend: true,
+                }));
+            } else {
+                return 1;
+            }
         }
-        //don't find
-        if (!usersFilter.length) {
-          return 1;
-        }
 
-        //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
-      } else if (search.match("^[A-Z]")) {
-        const friendFilter = friends.filter((friend) =>
-          friend.fullName.includes(search)
-        );
-        //don't find
-        if (!friendFilter.length) {
-          return 1;
-        }
-
-        return friendFilter.map((user) => ({
-          _id: user._id,
-          fullName: user.fullName,
-          avatarLink: user.avatarLink,
-          backgroundLink: user.backgroundLink,
-          phoneNumber: user.phoneNumber,
-          gender: user.gender,
-          isFriend: true,
-        }));
-      } else {
-        return 1;
-      }
-    }
-
-    return false;
-  }
+        return false;
+    },
 );
 
 /**
  * get user info then click item search your friend
  */
 export const searchItemClickSelector = createSelector(
-  userIdSelector,
-  usersRemainingSelector,
-  (id, users) => {
-    const userInfo = users.filter((user) => user._id === id);
-    return userInfo[0];
-  }
+    userIdSelector,
+    getFriendsByUserSelector,
+    userListSelector,
+    (id, friends, users) => {
+        console.log("friends", friends);
+        const friendFilter = friends.filter((friend) => friend._id === id);
+        const userInfo = users.filter((user) => user._id === id);
+
+        if (friendFilter.length > 0) {
+            return friendFilter.map((friend) => ({
+                ...friend,
+                isFriend: true,
+            }));
+        } else if (userInfo.length > 0) {
+            return userInfo[0].map((user) => ({
+                ...user,
+                isFriend: false,
+            }));
+        }
+    },
 );
 
 /**
  * get conversation by id
  */
 export const getConversationIdByIdFriendSelector = createSelector(
-  friendIdSelector,
-  conversationsListSelector,
-  (friendId, conversations) => {
-    const conversation = conversations.filter(
-      (_conversation) =>
-        _conversation.members.length === 2 &&
-        _conversation.members.includes(friendId)
-    );
+    friendIdSelector,
+    conversationsListSelector,
+    (friendId, conversations) => {
+        const conversation = conversations.filter(
+            (_conversation) => !_conversation.isGroup && _conversation.members.includes(friendId),
+        );
 
-    if (conversation.length > 0) {
-      return conversation[0].id;
-    }
-    return 0;
-  }
+        if (conversation.length > 0) {
+            return conversation[0];
+        }
+        return 0;
+    },
+);
+
+export const getConversationIdByIdConversation = createSelector(
+    conversationsIdSelector,
+    conversationsListSelector,
+    (conversationId, conversations) => {
+        const conversation = conversations.filter(
+            (_conversation) => _conversation.isGroup && _conversation.id===conversationId,
+        );
+
+        if (conversation.length > 0) {
+            return conversation[0];
+        }
+        return 0;
+    },
 );
 
 export const getMessageByIdConversationSelector = createSelector(
-  userListSelector,
-  messageListSelector,
-  (users, messages) => {
-    try {
-      const _messages = messages.map((message) => {
-        const user = users.filter((_user) => _user._id === message.senderID)[0];
+    userInfoSelector,
+    userListSelector,
+    messageListSelector,
+    (userInfo, users, messages) => {
+        try {
+            const _messages = messages.map((message) => {
+                const user = users.filter((_user) => _user._id === message.senderID)[0];
+                return message.deleteBy === userInfo._id
+                    ? null
+                    : {
+                          _id: message._id,
+                          action: message.action ? message.action : null,
+                          content: message.action ? null : message.content,
+                          imageLink: message.imageLink,
+                          fileLink: message.fileLink ? message.fileLink.replace(/%20/g, ' ') : null,
+                          createdAt: message.action
+                              ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
+                              : moment(message.createdAt).format('hh:mm'),
+                          user: {
+                              id: user._id,
+                              name: message.action ? null : user.fullName,
+                              avatar: message.action ? null : user.avatarLink,
+                          },
+                      };
+            });
 
-        return {
-          _id: message._id,
-          action: message.action ? message.action : null,
-          content: message.action ? null : message.content,
-          imageLink: message.imageLink,
-          fileLink: message.fileLink
-            ? message.fileLink.replace(/%20/g, " ")
-            : null,
-          createdAt: message.action
-            ? moment(message.createdAt).format("DD/MM/YYYY hh:mm")
-            : moment(message.createdAt).format("hh:mm"),
-          user: {
-            id: user._id,
-            name: message.action ? null : user.fullName,
-            avatar: message.action ? null : user.avatarLink,
-          },
-        };
-      });
-
-      //return _messages.slice(-10);
-      return _messages.reverse();
-    } catch (err) {
-      console.log("get message ", err);
-    }
-  }
+            return _messages; //data receive reversed
+        } catch (err) {
+            console.log('selector get message ', err);
+        }
+    },
 );
 
 export const getUserByPhoneNumber = createSelector(
-  userListSelector,
-  getFriendsByUserSelector,
-  searchTextSelector,
-  (users, friends, search) => {
-    if (search) {
-      if (search.startsWith("0")) {
-        const usersFilter = users.filter(
-          (_user) => _user.phoneNumber === search
-        );
+    userListSelector,
+    getFriendsByUserSelector,
+    searchTextSelector,
+    (users, friends, search) => {
+        if (search) {
+            if (search.startsWith('0')) {
+                const usersFilter = users.filter((_user) => _user.phoneNumber === search);
 
-        const friendFilter = friends.filter(
-          (friend) => friend.phoneNumber === search
-        );
+                const friendFilter = friends.filter((friend) => friend.phoneNumber === search);
 
-        if (friendFilter.length > 0) {
-          return friendFilter.map((friend) => ({
-            ...friend,
-            isFriend: true,
-          }));
-        } else if (usersFilter.length > 0) {
-          return usersFilter.map((user) => ({
-            ...user,
-            isFriend: false,
-          }));
+                if (friendFilter.length > 0) {
+                    return friendFilter.map((friend) => ({
+                        ...friend,
+                        isFriend: true,
+                    }));
+                } else if (usersFilter.length > 0) {
+                    return usersFilter.map((user) => ({
+                        ...user,
+                        isFriend: false,
+                    }));
+                }
+                //don't find
+                if (!usersFilter.length) {
+                    return 1;
+                }
+            } else {
+                return 1;
+            }
         }
-        //don't find
-        if (!usersFilter.length) {
-          return 1;
-        }
-      } else {
-        return 1;
-      }
-    }
-    return false;
-  }
+        return false;
+    },
 );
 
-export const getUserRegister = createSelector(
-  userListSelector,
-  searchTextSelector,
-  (users, search) => {
-
+export const getUserRegister = createSelector(userListSelector, searchTextSelector, (users, search) => {
     if (search) {
-      if (search.startsWith("0")) {
-        const usersFilter = users.filter(
-          (_user) => _user.phoneNumber === search
-        );
+        if (search.startsWith('0')) {
+            const usersFilter = users.filter((_user) => _user.phoneNumber === search);
 
-        //don't find
-        if (!usersFilter.length) {
-          return 1;
+            //don't find
+            if (!usersFilter.length) {
+                return 1;
+            }
+
+            return usersFilter;
+        } else {
+            return 1;
         }
-
-        return usersFilter;
-      } else {
-        return 1;
-      }
     }
     return false;
-  }
-);
+});
 
+export const getImageMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
+    
+    if (messages.length) {
+        const imageMessages = messages.map((message) => (message?.imageLink ? message.imageLink : null));
+        console.log("imageMessages", imageMessages);
+
+        return imageMessages;
+    }
+});
+
+export const getFileMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
+    if (messages.length) {
+        const fileMessages = messages.map((message) => (message?.fileLink ? message.fileLink : null));
+        console.log("fileMessages", fileMessages);
+
+        return fileMessages;
+    }
+});

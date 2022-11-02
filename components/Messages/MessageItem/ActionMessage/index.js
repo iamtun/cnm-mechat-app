@@ -22,12 +22,12 @@ const styles = StyleSheet.create({
         maxWidth: '80%',
         padding: 8,
         borderRadius: 50,
-        flexDirection: "row"
+        flexDirection: 'column',
     },
     createAt: {
-        textAlign: "center",
+        textAlign: 'center',
         marginLeft: 8,
-        color: "#abf"
-    }
+        color: '#abf',
+    },
 });
 export default ActionMessage;

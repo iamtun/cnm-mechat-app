@@ -1,7 +1,6 @@
 import HomeTabNavigator from '../../routers/HomeTabNavigator';
 
 function HomeScreen() {
-    
     return <HomeTabNavigator />;
 }
 

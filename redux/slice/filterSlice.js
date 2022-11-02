@@ -1,15 +1,15 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 const filterSlice = createSlice({
-    name: "filters",
+    name: 'filters',
     initialState: {
-        search: ""
+        search: '',
     },
     reducers: {
         searchFilterChange: (state, action) => {
             state.search = action.payload;
-        }
-    }
-})
+        },
+    },
+});
 
 export default filterSlice;
