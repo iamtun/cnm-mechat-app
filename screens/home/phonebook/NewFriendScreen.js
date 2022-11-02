@@ -3,14 +3,14 @@ import { useEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
+import { socket } from '../../../config';
 import { friendListSelector, userInfoSelector } from '../../../redux/selector';
-import { fetchHandleFriendsRequest, fetchLoadFriendsRequest } from '../../../redux/slice/friendSlice';
+import friendListSlice, { fetchHandleFriendsRequest, fetchLoadFriendsRequest } from '../../../redux/slice/friendSlice';
 
 function NewFriendScreen({ navigation }) {
     const userInfo = useSelector(userInfoSelector);
     const { _id } = userInfo;
     const dispatch = useDispatch();
-    const [isLoading, setIsLoading] = useState(false);
 
     const handleClickSyncButton = () => {
         navigation.navigate('SyncPhoneBook');
@@ -23,6 +23,11 @@ function NewFriendScreen({ navigation }) {
     useEffect(() => {
         allFriendsRequest;
         getListFriendRequest();
+
+        socket.on('receiver_friend_request', (request) => {
+            dispatch(friendListSlice.actions.friendRequestReceiverSocket(request));
+        });
+            
     }, []);
 
     // get all request friends

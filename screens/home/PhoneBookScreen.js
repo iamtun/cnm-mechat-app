@@ -5,6 +5,7 @@ import Header from '../../components/Header';
 import FriendScreen from './phonebook/FriendScreen';
 import GroupChatScreen from './phonebook/GroupChatScreen';
 import NewFriendScreen from './phonebook/NewFriendScreen';
+import { Text } from 'react-native';
 
 const Tab = createMaterialTopTabNavigator();
 function PhoneBookScreen({ navigation }) {
@@ -15,7 +16,11 @@ function PhoneBookScreen({ navigation }) {
             <Tab.Navigator>
                 <Tab.Screen name="Friend" component={FriendScreen} options={{ tabBarLabel: 'Bạn bè' }} />
                 <Tab.Screen name="GroupChat" component={GroupChatScreen} options={{ tabBarLabel: 'Nhóm' }} />
-                <Tab.Screen name="NewFriend" component={NewFriendScreen} options={{ tabBarLabel: 'Lời mời' }} />
+                <Tab.Screen
+                    name="NewFriend"
+                    component={NewFriendScreen}
+                    options={{ tabBarBadge: () => <Text>3</Text>, tabBarLabel: 'Lời mời' }}
+                />
             </Tab.Navigator>
         </>
     );
