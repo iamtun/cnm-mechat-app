@@ -15,10 +15,9 @@ import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '..
 import GlobalStyle from '../../../styles/GlobalStyle';
 
 function MessageScreen({ route, navigation }) {
-  const { id, isGroup, members, name,image } = route.params;
-
-  const dispatch = useDispatch();
-  // const isFocus = useIsFocused();
+    const { id, isGroup, members, name, image } = route.params;
+    const dispatch = useDispatch();
+    // const isFocus = useIsFocused();
 
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
@@ -37,8 +36,8 @@ function MessageScreen({ route, navigation }) {
 
         //receiver recall message and update
         socket.on('receiver_recall_message', (message) => {
-            dispatch(messageListSlice.actions.recallMessageFromSocket(message))
-        })
+            dispatch(messageListSlice.actions.recallMessageFromSocket(message));
+        });
     }, []);
 
     const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} /> : null);
@@ -59,7 +58,7 @@ function MessageScreen({ route, navigation }) {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 10}
             >
                 <View style={styles.body}>
-                <TopBar isGroup={isGroup} members ={members} name={name} image = {image} navigation={navigation} />
+                    <TopBar isGroup={isGroup} members={members} name={name} image={image} navigation={navigation} />
                     {isLoading ? (
                         <FlatList
                             data={messages}

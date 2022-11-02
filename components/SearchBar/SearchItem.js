@@ -40,7 +40,7 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation 
 
     const handleClickSearchItem = () => {
         dispatch(userInfoSlice.actions.clickSearchItem(id));
-        navigation.navigate('PersonalScreen', {isClick: false, isMe: false });
+        navigation.navigate('PersonalScreen', {isMe: false });
     };
 
     return (
