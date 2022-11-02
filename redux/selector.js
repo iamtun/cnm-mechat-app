@@ -93,17 +93,15 @@ export const searchItemClickSelector = createSelector(
     getFriendsByUserSelector,
     userListSelector,
     (id, friends, users) => {
-        console.log("friends", friends);
         const friendFilter = friends.filter((friend) => friend._id === id);
         const userInfo = users.filter((user) => user._id === id);
-
         if (friendFilter.length > 0) {
             return friendFilter.map((friend) => ({
                 ...friend,
                 isFriend: true,
             }));
         } else if (userInfo.length > 0) {
-            return userInfo[0].map((user) => ({
+            return userInfo.map((user) => ({
                 ...user,
                 isFriend: false,
             }));
@@ -129,7 +127,7 @@ export const getConversationIdByIdFriendSelector = createSelector(
     },
 );
 
-export const getConversationIdByIdConversation = createSelector(
+export const getConversationIdByIdGroupConversation = createSelector(
     conversationsIdSelector,
     conversationsListSelector,
     (conversationId, conversations) => {

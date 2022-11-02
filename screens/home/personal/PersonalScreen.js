@@ -41,7 +41,6 @@ function PersonalScreen({ route, navigation }) {
         });
     } else {
         userInfo = useSelector(searchItemClickSelector);
-
         infoMe.push({
             _id: userInfo[0]._id,
             fullName: userInfo[0].fullName,
