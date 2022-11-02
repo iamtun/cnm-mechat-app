@@ -15,7 +15,6 @@ function PhoneBookScreen({ navigation }) {
             <SearchBar navigation={navigation} />
             <Tab.Navigator>
                 <Tab.Screen name="Friend" component={FriendScreen} options={{ tabBarLabel: 'Bạn bè' }} />
-
                 <Tab.Screen name="GroupChat" component={GroupChatScreen} options={{ tabBarLabel: 'Nhóm' }} />
                 <Tab.Screen
                     name="NewFriend"

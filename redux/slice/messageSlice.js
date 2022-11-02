@@ -97,7 +97,6 @@ export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', 
                 body: JSON.stringify({ count: 0 }),
             });
             const messages = await res.json();
-            //console.log(messages);
             return messages;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
@@ -121,7 +120,6 @@ export const fetch10NextMessagesById = createAsyncThunk(
                     body: JSON.stringify({ count: countMessage }),
                 });
                 const messages = await res.json();
-                //console.log("next message: ->", messages);
                 return messages;
             } catch (err) {
                 console.log(`[fetch messages]: ${err}`);
@@ -146,7 +144,6 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
         });
 
         const _message = await res.json();
-        //console.log(`----> ${JSON.stringify(_message)}`);
         return _message;
     }
 });
@@ -157,7 +154,6 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
         let formData = createFormData(imageLink, 'imageLink');
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
-        //console.log("formData", formData);
 
         const res = await fetch(`${config.LINK_API_V2}/messages`, {
             method: 'POST',

@@ -12,11 +12,11 @@ import { firebaseConfig } from '../utils/firebase';
 function AuthenticationScreen({ route, navigation }) {
     const recaptchaVerifier = useRef(null);
 
-    //data receiver from login screen
-    let confirm = route.params.verificationId;
-
-    const phoneNumber = route.params.phoneNumber;
-    const isForgetPass = route.params.isForgetPass;
+  //data receiver from login screen
+  let confirm = route.params.verificationId;
+  let isRegister = route.params.isRegister;
+  const phoneNumber = route.params.phoneNumber;
+  const isForgetPass = route.params.isForgetPass;
 
     let passWord;
     let fullName;
@@ -51,7 +51,6 @@ function AuthenticationScreen({ route, navigation }) {
 
     const sendOtp = async () => {
         let _phoneNumber = '+84' + phoneNumber.slice(1);
-        //console.log("phone", _phoneNumber);
         try {
             const phoneProvider = new firebase.auth.PhoneAuthProvider();
             const verificationId = await phoneProvider.verifyPhoneNumber(_phoneNumber, recaptchaVerifier.current);
@@ -75,8 +74,6 @@ function AuthenticationScreen({ route, navigation }) {
                 return;
             });
     };
-
-    // console.log("---isback", isBack);
     const register = () => {
         return fetch(`${config.LINK_API_V2}/auths/signup`, {
             method: 'POST',
@@ -98,26 +95,30 @@ function AuthenticationScreen({ route, navigation }) {
             });
     };
 
-    const OtpVerify = () => {
-        const credential = firebase.auth.PhoneAuthProvider.credential(confirm, code);
-        firebase
-            .auth()
-            .signInWithCredential(credential)
-            .then(() => {
-                setCode('');
-                isForgetPass
-                    ? navigation.navigate('ReplacePassWord', {
-                          phoneNumber: phoneNumber,
-                      })
-                    : register().then((token) => {
-                          setItem('user_token', token);
-                          navigation.navigate('LoadingScreen', { isRegister: true });
-                      });
+  const OtpVerify = () => {
+    const credential = firebase.auth.PhoneAuthProvider.credential(
+      confirm,
+      code
+    );
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(() => {
+        setCode("");
+        isForgetPass
+          ? navigation.navigate("ReplacePassWord", {
+              phoneNumber: phoneNumber,
             })
-            .catch((err) => {
-                Alert.alert('Mã không tồn tại hoặc quá hạn', err);
+          : register().then((token) => {
+              setItem("user_token", token);
+              navigation.navigate("LoadingScreen",{isRegister: isRegister});
             });
-    };
+      })
+      .catch((err) => {
+        console.log("lỗi", err);
+        Alert.alert("Mã không tồn tại hoặc quá hạn");
+      });
+  };
 
     return (
         <View style={GlobalStyle.container}>

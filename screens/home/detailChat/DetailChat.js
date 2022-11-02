@@ -5,8 +5,25 @@ import { TouchableOpacity } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
+import { useDispatch, useSelector } from 'react-redux';
+import userInfoSlice from '../../../redux/slice/userInfoSlice';
+import { userInfoSelector } from '../../../redux/selector';
 
-export default function DetailChat({ navigation }) {
+export default function DetailChat({ route, navigation }) {
+    const { isGroup, members, name, image } = route.params;
+    const userInfo = useSelector(userInfoSelector)
+
+    const idFriend = userInfo._id === members[0] ? members[1] : members[0];
+
+    const dispatch = useDispatch();
+
+    const handleClickInfo = () => {
+        if(!isGroup){
+            dispatch(userInfoSlice.actions.clickSearchItem(idFriend));
+            navigation.navigate("PersonalScreen",{isMe: false})
+        }
+    };
+    
     return (
         <>
             <Header />
@@ -19,19 +36,47 @@ export default function DetailChat({ navigation }) {
                 </View>
                 <View style={styles.infoUser}>
                     <View style={styles.avatar}>
-                        <Avatar rounded size={90} source={require('../../../assets/anh-shinichi.jpg')}></Avatar>
-                        <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>Tên</Text>
+                        <Avatar rounded size={90} source={{ uri: image }}></Avatar>
+                        <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
                     </View>
                     <View style={styles.feature}>
                         <DetailFeature nameIcon="search-outline" nameFeature="Tìm tin nhắn"></DetailFeature>
-                        <DetailFeature nameIcon="person-outline" nameFeature="Trang cá nhân"></DetailFeature>
+                        {isGroup ? (
+                            <DetailFeature
+                                nameIcon="person-add-outline"
+                                nameFeature="Thêm hành viên"
+                            ></DetailFeature>
+                        ) : (
+                            <DetailFeature
+                                nameIcon="person-outline"
+                                nameFeature="Trang cá nhân"
+                                onPress={handleClickInfo}
+                            ></DetailFeature>
+                        )}
+
                         <DetailFeature nameIcon="brush-outline" nameFeature="Đổi hình nền"></DetailFeature>
                         <DetailFeature nameIcon="notifications-outline" nameFeature="Tắt thông báo"></DetailFeature>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.photo}>
+                <TouchableOpacity style={styles.photo} onPress ={() => {navigation.navigate("ImageScreen")}}>
                     <Icon name="images-outline" color="black" size={20}></Icon>
-                    <Text style={{ marginLeft: 10 }}>Ảnh,file,link đã gửi</Text>
+                    <Text style={{ marginLeft: 10 }}>Ảnh,file,video đã gửi</Text>
+                </TouchableOpacity>
+                {isGroup ? (
+                    <TouchableOpacity style={styles.photo} >
+                        <Icon name="people-outline" color="black" size={20}></Icon>
+                        <Text style={{ marginLeft: 10 }}>Xem thành viên</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.photo}>
+                        <Icon name="remove-circle-outline" color="black" size={20}></Icon>
+                        <Text style={{ marginLeft: 10 }}>Chặn tin nhắn</Text>
+                    </TouchableOpacity>
+                )}
+
+                <TouchableOpacity style={styles.photo}>
+                    <Icon name="trash-bin-outline" color="red" size={20}></Icon>
+                    <Text style={{ marginLeft: 10, color: 'red' }}>Xóa cuộc trò chuyện</Text>
                 </TouchableOpacity>
             </View>
         </>

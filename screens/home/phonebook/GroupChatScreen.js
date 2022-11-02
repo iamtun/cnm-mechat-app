@@ -1,39 +1,48 @@
 import { ListItem, Avatar } from 'react-native-elements';
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
 import { useEffect } from 'react';
 
-import { conversationsListSelector, userInfoSelector } from '../../../redux/selector';
+import { conversationsListSelector, getConversationIdByIdConversation, getConversationIdByIdFriendSelector, userInfoSelector } from '../../../redux/selector';
 import { fetchConversations } from '../../../redux/slice/conversationSlice';
-function GroupChatScreen() {
+import conversationsListByUserId from '../../../redux/slice/conversationSlice';
+function GroupChatScreen({navigation}) {
     let listGroupChat = [];
     const _userInfoSelector = useSelector(userInfoSelector);
     const dispatch = useDispatch();
-
+    const conversation = useSelector(getConversationIdByIdConversation);
     useEffect(() => {
         dispatch(fetchConversations(_userInfoSelector._id));
     }, []);
 
     const groupChat = useSelector(conversationsListSelector);
 
-    for (let group of groupChat) {
-        if (group.members.length > 2) {
-            listGroupChat.push({
-                id: group.id,
-                name: group.name,
-                members: group.members,
-                imageLinkOfConver: group.imageLinkOfConver,
-                content: group.content,
-                imageLinkOfLastMessage: group.imageLinkOfLastMessage,
-                time: group.time,
-            });
-        }
+  for (let group of groupChat) {
+    if (group.isGroup) {
+      listGroupChat.push({
+        id : group.id,
+        name: group.name,
+        members: group.members,
+        imageLinkOfConver: group.imageLinkOfConver,
+        content: group.content,
+        imageLinkOfLastMessage: group.imageLinkOfLastMessage,
+        time: group.time
+      })
     }
-
+  }
+  const handleSendChat = (id) => {
+    dispatch(conversationsListByUserId.actions.clickGroupChat(id));
+    navigation.navigate('MessageScreen', {
+        id: conversation.id,
+        name: conversation.name,
+        members: conversation.members,
+        image: conversation.imageLinkOfConver,
+    });
+};
     function getGroupItem({ item: group }) {
         return (
-            <View styles={{ flex: 1 }}>
+            <TouchableOpacity onPress={() => {handleSendChat(group.id)}} styles={{ flex: 1 }}>
                 <ListItem key={group.id} bottomDivider>
                     <Avatar rounded size={70} source={{ uri: group.imageLinkOfConver }} />
                     <ListItem.Content>
@@ -42,7 +51,7 @@ function GroupChatScreen() {
                     </ListItem.Content>
                     <Text style={{ bottom: '7%' }}>{moment(group.time).fromNow()}</Text>
                 </ListItem>
-            </View>
+            </TouchableOpacity>
         );
     }
 

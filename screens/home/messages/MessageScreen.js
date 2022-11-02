@@ -13,12 +13,12 @@ import { socket } from '../../../config';
 import { getMessageByIdConversationSelector, messageLoadingSelector } from '../../../redux/selector';
 import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '../../../redux/slice/messageSlice';
 import GlobalStyle from '../../../styles/GlobalStyle';
-import { RefreshControl } from 'react-native';
 
 function MessageScreen({ route, navigation }) {
-    const { id, name } = route.params;
-    const dispatch = useDispatch();
-    // const isFocus = useIsFocused();
+  const { id, isGroup, members, name,image } = route.params;
+
+  const dispatch = useDispatch();
+  // const isFocus = useIsFocused();
 
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
@@ -59,7 +59,7 @@ function MessageScreen({ route, navigation }) {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 10}
             >
                 <View style={styles.body}>
-                    <TopBar name={name} navigation={navigation} />
+                <TopBar isGroup={isGroup} members ={members} name={name} image = {image} navigation={navigation} />
                     {isLoading ? (
                         <FlatList
                             data={messages}

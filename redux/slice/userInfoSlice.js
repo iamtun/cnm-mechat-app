@@ -34,6 +34,9 @@ const userInfoSlice = createSlice({
             .addCase(fetchUpdateInfoUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
                 Alert.alert('Thông báo', 'Cập nhật thông tin thành công!');
+            })
+            .addCase(fetchUserByID.fulfilled, (state, action) => {
+                state.data = action.payload;
             });
     },
 });
@@ -50,14 +53,14 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         //call socket
         socket.emit('addUser', _id);
 
-        try {
-            const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
-            const userInfo = await res.json();
-            console.log(userInfo.data);
-            return userInfo.data;
-        } catch (err) {
-            console.log(`[fetch userInfo]: ${err}`);
-        }
+      try {
+        const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
+        const userInfo = await res.json();
+
+        return userInfo.data;
+      } catch (err) {
+        console.log(`[fetch userInfo]: ${err}`);
+      }
     }
 });
 /**
@@ -109,7 +112,6 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
             body: dataForm,
         });
         const userInfo = await res.json();
-        //console.log(userInfo);
         return userInfo;
     } catch (err) {
         console.log(`err fetch avatar user info: ${err}`);
@@ -139,7 +141,6 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
 
 export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', async (data) => {
     try {
-        //console.log("Data", data);
         await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
             method: 'POST',
             headers: {
@@ -149,6 +150,19 @@ export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', 
         });
     } catch (err) {
         console.log(`err fetch users: ${err}`);
+    }
+});
+
+export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) => {
+    if (id) {
+        try {
+            const res = await fetch(`${config.LINK_API_V2}/users/${id}`);
+            const userInfoByID = await res.json();
+            console.log("userInfoByID.data", userInfoByID);
+            return userInfoByID.data;
+        } catch (err) {
+            console.log(`[fetch messages]: ${err}`);
+        }
     }
 });
 

@@ -14,7 +14,7 @@ export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 
 export const conversationsListSelector = (state) => state.conversations.data;
-
+export const conversationsIdSelector = (state) => state.conversations.conversationId;
 /**
  * get friend list then user info changed
  */
@@ -88,10 +88,28 @@ export const usersRemainingSelector = createSelector(
 /**
  * get user info then click item search your friend
  */
-export const searchItemClickSelector = createSelector(userIdSelector, usersRemainingSelector, (id, users) => {
-    const userInfo = users.filter((user) => user._id === id);
-    return userInfo[0];
-});
+export const searchItemClickSelector = createSelector(
+    userIdSelector,
+    getFriendsByUserSelector,
+    userListSelector,
+    (id, friends, users) => {
+        console.log("friends", friends);
+        const friendFilter = friends.filter((friend) => friend._id === id);
+        const userInfo = users.filter((user) => user._id === id);
+
+        if (friendFilter.length > 0) {
+            return friendFilter.map((friend) => ({
+                ...friend,
+                isFriend: true,
+            }));
+        } else if (userInfo.length > 0) {
+            return userInfo[0].map((user) => ({
+                ...user,
+                isFriend: false,
+            }));
+        }
+    },
+);
 
 /**
  * get conversation by id
@@ -101,11 +119,26 @@ export const getConversationIdByIdFriendSelector = createSelector(
     conversationsListSelector,
     (friendId, conversations) => {
         const conversation = conversations.filter(
-            (_conversation) => _conversation.members.length === 2 && _conversation.members.includes(friendId),
+            (_conversation) => !_conversation.isGroup && _conversation.members.includes(friendId),
         );
 
         if (conversation.length > 0) {
-            return conversation[0].id;
+            return conversation[0];
+        }
+        return 0;
+    },
+);
+
+export const getConversationIdByIdConversation = createSelector(
+    conversationsIdSelector,
+    conversationsListSelector,
+    (conversationId, conversations) => {
+        const conversation = conversations.filter(
+            (_conversation) => _conversation.isGroup && _conversation.id===conversationId,
+        );
+
+        if (conversation.length > 0) {
+            return conversation[0];
         }
         return 0;
     },
@@ -117,7 +150,6 @@ export const getMessageByIdConversationSelector = createSelector(
     messageListSelector,
     (userInfo, users, messages) => {
         try {
-            //console.log(users, messages);
             const _messages = messages.map((message) => {
                 const user = users.filter((_user) => _user._id === message.senderID)[0];
                 return message.deleteBy === userInfo._id
@@ -181,8 +213,6 @@ export const getUserByPhoneNumber = createSelector(
 );
 
 export const getUserRegister = createSelector(userListSelector, searchTextSelector, (users, search) => {
-    //console.log("search", search);
-
     if (search) {
         if (search.startsWith('0')) {
             const usersFilter = users.filter((_user) => _user.phoneNumber === search);
@@ -198,4 +228,23 @@ export const getUserRegister = createSelector(userListSelector, searchTextSelect
         }
     }
     return false;
+});
+
+export const getImageMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
+    
+    if (messages.length) {
+        const imageMessages = messages.map((message) => (message?.imageLink ? message.imageLink : null));
+        console.log("imageMessages", imageMessages);
+
+        return imageMessages;
+    }
+});
+
+export const getFileMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
+    if (messages.length) {
+        const fileMessages = messages.map((message) => (message?.fileLink ? message.fileLink : null));
+        console.log("fileMessages", fileMessages);
+
+        return fileMessages;
+    }
 });

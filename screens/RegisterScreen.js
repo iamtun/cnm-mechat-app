@@ -98,39 +98,44 @@ function RegisterScreen({ navigation }) {
     const _handleRegister = async () => {
         const userPhone = await getUserByPhoneNumber();
 
-        if (phoneNumber === null) {
-            setPhoneNumber('');
-        }
-        if (userName === null) {
-            setUserName('');
-        }
-        if (password === null) {
-            setPassword('');
-        }
-        if (passwordAgain === null) {
-            setPasswordAgain('');
-        } else if (userPhone) {
-            setErrPhone('Số điện thoại đã đăng ký tài khoản');
-        } else if (errPhone != null || errPass != null || errUserName != null || errPassAgain != null) {
-        } else {
-            console.log('OK');
-            senOTP()
-                .then((otp) => {
-                    setVerificationId(otp);
-                    navigation.navigate('AuthenticationScreen', {
-                        verificationId: otp,
-                        phoneNumber: phoneNumber,
-                        passWord: passwordAgain,
-                        fullName: userName,
-                        isForgetPass: false,
-                    });
-                })
-                .catch((err) => {
-                    console.log('ERRR', err);
-                    return;
-                });
-        }
-    };
+    if (phoneNumber === null) {
+      setPhoneNumber("");
+    }
+    if (userName === null) {
+      setUserName("");
+    }
+    if (password === null) {
+      setPassword("");
+    }
+    if (passwordAgain === null) {
+      setPasswordAgain("");
+    } else if(userPhone){
+      setErrPhone("Số điện thoại đã đăng ký tài khoản")
+    } else if (
+      errPhone != null ||
+      errPass != null ||
+      errUserName != null ||
+      errPassAgain != null
+    ) {
+    } else {
+      senOTP()
+        .then((otp) => {
+          setVerificationId(otp);
+          navigation.navigate("AuthenticationScreen", {
+            verificationId: otp,
+            phoneNumber: phoneNumber,
+            passWord: passwordAgain,
+            fullName: userName,
+            isForgetPass: false,
+            isRegister: true,
+          });
+        })
+        .catch((err) => {
+          console.log("ERRR", err);
+          return;
+        });
+    }
+  };
 
     return (
         <View style={GlobalStyle.container}>

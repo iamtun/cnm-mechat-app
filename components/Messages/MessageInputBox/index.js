@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { Alert, Platform } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
+import IconSticker from 'react-native-vector-icons/MaterialCommunityIcons';
 import MICon from 'react-native-vector-icons/MaterialIcons';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
@@ -43,31 +44,50 @@ function MessageInputBox({ conversationId }) {
     };
 
     const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.All,
-            videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
-            allowsEditing: false,
-            //mutiple images in version expo 46+ works on web, android and ios 14+
-            allowsMultipleSelection: true,
-            selectionLimit: 5,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        if (!result.cancelled) {
-            result.selected.forEach((image) => {
-                const fileMB = image.fileSize / 1024 / 1024;
-                console.log(fileMB);
-                //file small 5mb don't send
-                if (fileMB < 5) {
-                    const data = {
-                        imageLink: image.uri,
-                        senderID: userInfo._id,
-                        conversationID: conversationId,
-                    };
-                    dispatch(sendImageMessage(data));
-                }
+        if (Platform.OS === 'ios') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
+                allowsEditing: false,
+                //mutiple images in version expo 46+ works on web, android and ios 14+
+                allowsMultipleSelection: true,
+                selectionLimit: 5,
+                aspect: [4, 3],
+                quality: 1,
             });
+
+            if (!result.cancelled) {
+                result.selected.forEach((image) => {
+                    const fileMB = image.fileSize / 1024 / 1024;
+                    console.log(fileMB);
+                    //file small 5mb don't send
+                    if (fileMB < 5) {
+                        const data = {
+                            imageLink: image.uri,
+                            senderID: userInfo._id,
+                            conversationID: conversationId,
+                        };
+                        dispatch(sendImageMessage(data));
+                    }
+                });
+            }
+        } else if (Platform.OS === 'android') {
+            let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.All,
+                videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
+                allowsEditing: false,
+                aspect: [4, 3],
+                quality: 1,
+            });
+
+            if (!result.cancelled) {
+                const data = {
+                    imageLink: result.uri,
+                    senderID: userInfo._id,
+                    conversationID: conversationId,
+                };
+                dispatch(sendImageMessage(data));
+            }
         }
     };
 
@@ -103,7 +123,7 @@ function MessageInputBox({ conversationId }) {
 
     return (
         <View style={[styles.body, styles.row]}>
-            <Icon name="sticker-emoji" size={32} style={styles.icon} />
+           <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
             <View style={styles.inputView}>
                 <TextInput
                     placeholder="Nhập tin nhắn"
@@ -116,15 +136,15 @@ function MessageInputBox({ conversationId }) {
             <View style={[styles.row, styles.rightIcons, { justifyContent: isWrite ? 'flex-end' : 'space-around' }]}>
                 {isWrite ? (
                     <Icon
-                        name="send"
+                        name="paper-plane-outline"
                         size={32}
                         style={[styles.icon, { color: '#3777F3' }]}
                         onPress={handleSendMessage}
                     />
                 ) : (
                     <>
-                        <MICon name="attach-file" size={32} style={styles.icon} onPress={pickerFile} />
-                        <Icon name="image-multiple-outline" size={32} onPress={pickImage} />
+                        <Icon name="attach-outline" size={32} style={styles.icon} onPress={pickerFile} />
+                        <Icon name="images-outline" size={32} onPress={pickImage} />
                     </>
                 )}
             </View>

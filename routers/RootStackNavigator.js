@@ -16,6 +16,7 @@ import ConfirmPhoneNumber from '../screens/home/forgotPass/ConfirmPhoneNumber';
 import ReplacePassWord from '../screens/home/forgotPass/ReplacePassWord';
 import SendCallVoice from '../screens/home/call/SendCallVoice';
 import ReceiveCallVoice from '../screens/home/call/ReceiveCallVoice';
+import ImageScreen from '../screens/home/detailChat/ImageScreen';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -45,6 +46,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="ReplacePassWord" component={ReplacePassWord} />
                 <Stack.Screen name="SendCallVoice" component={SendCallVoice} />
                 <Stack.Screen name="ReceiveCallVoice" component={ReceiveCallVoice} />
+                <Stack.Screen name="ImageScreen" component={ImageScreen} />
             </Stack.Navigator>
         </NavigationContainer>
     );

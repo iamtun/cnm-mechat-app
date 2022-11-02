@@ -14,45 +14,68 @@ import * as ImagePicker from 'expo-image-picker';
 import moment from 'moment';
 import { useEffect } from 'react';
 import Header from '../../../components/Header';
-import {
-    fetchUpdateAvatarUsers,
-    fetchUpdateBackgroundUsers,
-    fetchUserByPhone,
-} from '../../../redux/slice/userInfoSlice';
+import { fetchUpdateAvatarUsers, fetchUpdateBackgroundUsers } from '../../../redux/slice/userInfoSlice';
 import { useState } from 'react';
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
     const [isMe, setIsMe] = useState(route.params.isMe);
     const infoSelf = useSelector(userInfoSelector);
+    const dispatch = useDispatch();
+    let infoMe = [];
+    let isRegister = route.params?.isRegister;
+
     let userInfo;
 
     if (isMe) {
         userInfo = infoSelf;
+        infoMe.push({
+            _id: userInfo._id,
+            fullName: userInfo.fullName,
+            bio: userInfo.bio,
+            gender: userInfo.gender,
+            birthday: userInfo.birthday,
+            avatarLink: userInfo.avatarLink,
+            backgroundLink: userInfo.backgroundLink,
+            isFriend: userInfo.isFriend,
+        });
     } else {
         userInfo = useSelector(searchItemClickSelector);
-    }
-    const { _id, fullName, bio, gender, birthday, avatarLink, backgroundLink, isFriend } = userInfo;
 
-    const conversationId = useSelector(getConversationIdByIdFriendSelector);
-    const dispatch = useDispatch();
+        infoMe.push({
+            _id: userInfo[0]._id,
+            fullName: userInfo[0].fullName,
+            bio: userInfo[0].bio,
+            gender: userInfo[0].gender,
+            birthday: userInfo[0].birthday,
+            avatarLink: userInfo[0].avatarLink,
+            backgroundLink: userInfo[0].backgroundLink,
+            isFriend: userInfo[0].isFriend,
+        });
+    }
+
+    const conversation = useSelector(getConversationIdByIdFriendSelector);
 
     useEffect(() => {
+        dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
         //first run
-        if (conversationId === 0) return;
-        else
-            navigation.navigate('MessageScreen', {
-                id: conversationId,
-                name: fullName,
-            });
-    }, [conversationId]);
+    }, [infoMe[0]._id]);
 
     const handleSendChat = () => {
-        dispatch(friendListSlice.actions.clickSendChat(_id));
+        navigation.navigate('MessageScreen', {
+            id: conversation.id,
+            name: conversation.name,
+            members: conversation.members,
+            image: conversation.imageLinkOfConver,
+        });
     };
 
     const _handleUpdateInfo = () => {
         navigation.navigate('InfoSelf');
+    };
+
+    const _successRegister = () => {
+        navigation.navigate('LoadingScreen');
     };
 
     const pickImage = async (isAvatar) => {
@@ -88,30 +111,49 @@ function PersonalScreen({ route, navigation }) {
         <>
             <Header />
             <View>
-                <TouchableOpacity onPress={() => pickImage(false)} style={styles.background}>
-                    <Image style={styles.backgroundImage} source={{ uri: backgroundLink }} />
-                </TouchableOpacity>
-                <View style={styles.bottomContainer}>
-                    <TouchableOpacity style={{ bottom: '8%' }} onPress={() => pickImage(true)}>
-                        <Image style={styles.avatar} source={{ uri: avatarLink }} />
+                {isMe ? (
+                    <TouchableOpacity onPress={() => pickImage(false)} style={styles.background}>
+                        <Image style={styles.backgroundImage} source={{ uri: infoMe[0].backgroundLink }} />
                     </TouchableOpacity>
-                    <Text style={styles.name}>{fullName}</Text>
-                    <Text style={styles.bio}>{bio}</Text>
+                ) : (
+                    <View style={styles.background}>
+                        <Image style={styles.backgroundImage} source={{ uri: infoMe[0].backgroundLink }} />
+                    </View>
+                )}
+
+                <View style={styles.bottomContainer}>
+                    {isMe ? (
+                        <TouchableOpacity style={{ bottom: '8%' }} onPress={() => pickImage(true)}>
+                            <Image style={styles.avatar} source={{ uri: infoMe[0].avatarLink }} />
+                        </TouchableOpacity>
+                    ) : (
+                        <View style={{ bottom: '8%' }}>
+                            <Image style={styles.avatar} source={{ uri: infoMe[0].avatarLink }} />
+                        </View>
+                    )}
+
+                    <Text style={styles.name}>{infoMe[0].fullName}</Text>
+                    <Text style={styles.bio}>{infoMe[0].bio}</Text>
                     <View style={styles.info}>
                         <Text style={styles.title}>Thông tin cá nhân</Text>
                         <View style={styles.infoDetail}>
-                            <Text>Giới tính: {gender === 0 ? 'Nam' : 'Nữ'}</Text>
-                            <Text>Ngày sinh: {moment(birthday).format('DD/MM/YYYY')}</Text>
+                            <Text>Giới tính: {infoMe[0].gender === 0 ? 'Nam' : 'Nữ'}</Text>
+                            <Text>Ngày sinh: {moment(infoMe[0].birthday).format('DD/MM/YYYY')}</Text>
                         </View>
                     </View>
                     {!isMe ? (
-                        !isFriend ? (
+                        !infoMe[0].isFriend ? (
                             <TouchableOpacity style={styles.buttonMakeFriend}>
                                 <Icon style={{ marginRight: 10 }} name="person-add-outline" color="#4ACFED" size={20} />
                                 <Text>Kết bạn</Text>
                             </TouchableOpacity>
                         ) : (
-                            <TouchableOpacity style={styles.buttonChat} onPress={handleSendChat}>
+                            <TouchableOpacity
+                                style={styles.buttonChat}
+                                onPress={() => {
+                                    handleSendChat();
+                                }}
+                            >
                                 <Icon
                                     style={{ marginRight: 10 }}
                                     name="ios-chatbubble-ellipses-outline"
@@ -127,6 +169,12 @@ function PersonalScreen({ route, navigation }) {
                             <Text style={{ color: 'white' }}>Cập nhật thông tin</Text>
                         </TouchableOpacity>
                     )}
+                    {isRegister ? (
+                        <TouchableOpacity style={styles.successRegister} onPress={_successRegister}>
+                            <Icon style={{ marginRight: 10 }} name="checkmark-outline" color="#4ACFED" size={20} />
+                            <Text style={{ color: '#4ACFED' }}>Hoàn thành</Text>
+                        </TouchableOpacity>
+                    ) : null}
                 </View>
             </View>
         </>
@@ -202,6 +250,17 @@ const styles = StyleSheet.create({
         shadowOpacity: 1,
         shadowRadius: 12,
         elevation: 10,
+    },
+    successRegister: {
+        marginTop: 10,
+        borderWidth: 2,
+        borderColor: '#5D90F5',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        width: '70%',
+        height: 50,
     },
     buttonChat: {
         flexDirection: 'row',
