@@ -45,7 +45,7 @@ function LoginScreen({ navigation }) {
     }, [debouncedPass]);
     // function
     const sign = () => {
-        return fetch(`${config.LINK_API_V2}/auths/login`, {
+        return fetch(`${config.LINK_API_V3}/auths/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

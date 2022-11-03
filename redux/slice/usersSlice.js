@@ -3,11 +3,18 @@ import config from '../../config';
 
 const userListSlice = createSlice({
     name: 'users',
-    initialState: { data: [] },
+    initialState: { data: [], loading: 0 },
     extraReducers: (builder) => {
-        builder.addCase(fetchUsers.fulfilled, (state, action) => {
-            state.data = action.payload;
-        });
+        builder
+            .addCase(fetchUsers.fulfilled, (state, action) => {
+                console.log('users is loading success!');
+                state.data = action.payload;
+                state.loading = 2;
+            })
+            .addCase(fetchUsers.pending, (state, action) => {
+                console.log('users is loading...');
+                state.loading = 1;
+            });
     },
 });
 
@@ -16,7 +23,7 @@ const userListSlice = createSlice({
  */
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     try {
-        const res = await fetch(`${config.LINK_API_V2}/users`);
+        const res = await fetch(`${config.LINK_API_V3}/users`);
         const users = await res.json();
         return users.data;
     } catch (err) {
