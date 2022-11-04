@@ -15,7 +15,7 @@ function ImageMessage({ imageURI, content, images }) {
         <>
             <View style={[images?.length > 1 ? styles.body : null]}>
                 {images?.length > 1 ? (
-                    images.map((link) => {
+                    images.map((link, index) => {
                         return link.split('.')[link.split('.').length - 1] === 'mp4' ? (
                             <Video
                                 key={link}
@@ -70,7 +70,6 @@ function ImageMessage({ imageURI, content, images }) {
 
 const styles = StyleSheet.create({
     body: {
-        flex: 1,
         flexDirection: 'row',
         alignContent: 'space-around',
         flexWrap: 'wrap',
@@ -79,7 +78,7 @@ const styles = StyleSheet.create({
         paddingTop: 8,
     },
     imageMessage: {
-        width: 250,
+        width: 275,
         height: 350,
     },
     imagesMessage: {

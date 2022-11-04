@@ -65,7 +65,7 @@ function MessageInputBox({ conversationId }) {
                         return image.uri;
                     }
                 });
-                const data = { senderID: userInfo._id, conversationID: conversationId, imageLink: images };
+                const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
                 console.log(data);
                 dispatch(sendImageMessage(data));
             }
@@ -80,7 +80,7 @@ function MessageInputBox({ conversationId }) {
 
             if (!result.cancelled) {
                 const data = {
-                    imageLink: result.uri,
+                    imageLinks: [result.uri],
                     senderID: userInfo._id,
                     conversationID: conversationId,
                 };

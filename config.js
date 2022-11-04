@@ -1,9 +1,10 @@
-import { LINK_API_V3 } from '@env';
+import { LINK_API_V3, LINK_API_LOCALHOST } from '@env';
 import { io } from 'socket.io-client';
 
 console.log('API', LINK_API_V3);
 export default {
     LINK_API_V3,
+    LINK_API_LOCALHOST
 };
 
 export const socket = io('https://6bf1-42-119-224-98.ap.ngrok.io', {
@@ -38,9 +39,12 @@ export const createFormData = (images, key) => {
     })
    
     console.log(_images);
-    let formData = new FormData();
+    const formData = new FormData();
     //console.log(image);
-    formData.append(key, _images);
+    _images.forEach(image => {
+        console.log(image, key);
+        formData.append(key, image);
+    });
 
     return formData;
 };

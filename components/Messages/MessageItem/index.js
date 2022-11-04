@@ -63,9 +63,15 @@ function MessageItem({ message, id }) {
                                     <Text style={styles.username}>{message.user.name}</Text>
                                     {message?.imageLink?.length > 0 ? (
                                         message.imageLink.length === 1 ? (
-                                            <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
+                                            <ImageMessage
+                                                imageURI={message.imageLink[0]}
+                                                content={message.content}
+                                            />
                                         ) : (
-                                            <ImageMessage images={message.imageLink} content={message.content}/>
+                                            <ImageMessage
+                                                images={message.imageLink}
+                                                content={message.content}
+                                            />
                                         )
                                     ) : message.fileLink ? (
                                         <FileMessage fileUri={message.fileLink} />
@@ -77,9 +83,17 @@ function MessageItem({ message, id }) {
                                 <>
                                     <Text style={styles.username}>{message.user.name}</Text>
                                     {message?.imageLink?.length > 0 ? (
-                                        message.imageLink.forEach((image) => {
-                                            <ImageMessage imageURI={image} content={message.content}/>;
-                                        })
+                                        message.imageLink.length === 1 ? (
+                                            <ImageMessage
+                                                imageURI={message.imageLink[0]}
+                                                content={message.content}
+                                            />
+                                        ) : (
+                                            <ImageMessage
+                                                images={message.imageLink}
+                                                content={message.content}
+                                            />
+                                        )
                                     ) : message.fileLink ? (
                                         <FileMessage fileUri={message.fileLink} />
                                     ) : (

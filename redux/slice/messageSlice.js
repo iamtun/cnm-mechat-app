@@ -49,12 +49,16 @@ const messageListSlice = createSlice({
                 //send success socket
                 socket.emit('send_message', { message: action.payload });
             })
+            .addCase(sendImageMessage.rejected, (state, action) => {
+                console.log('err send message');
+                Alert.alert('Thông báo', 'Tệp đa phương tiện này quá nặng!');
+            })
             .addCase(sendImageMessage.fulfilled, (state, action) => {
                 if (action.payload) {
                     socket.emit('send_message', { message: action.payload });
                     state.data.unshift(action.payload);
                 } else {
-                    Alert.alert('Thông báo', 'Tệp đa phương tiện này không gửi được');
+                    Alert.alert('Thông báo', 'Tệp đa phương tiện này vượt quá 5MB');
                 }
             })
             .addCase(sendFile.fulfilled, (state, action) => {
@@ -64,10 +68,6 @@ const messageListSlice = createSlice({
                 } else {
                     Alert.alert('Thông báo', 'File này không gửi được');
                 }
-            })
-            .addCase(sendImageMessage.rejected, (state, action) => {
-                console.log('err send message');
-                Alert.alert('Thông báo', 'Tệp đa phương tiện này quá nặng!');
             })
             .addCase(recallMessage.fulfilled, (state, action) => {
                 const message = action.payload;
@@ -151,12 +151,12 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
 
 export const sendImageMessage = createAsyncThunk('messages/send-image', async (imageMessage) => {
     if (imageMessage) {
-        const { imageLink, senderID, conversationID } = imageMessage;
-        let formData = createFormData(imageLink, 'imageLinks');
+        const { imageLinks, senderID, conversationID } = imageMessage;
+        let formData = createFormData(imageLinks, 'imageLinks');
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
-        console.log('form data', formData._parts[0]);
-        const res = await fetch(`${config.LINK_API_V3}/messages`, {
+        console.log('form data', formData);
+        const res = await fetch(`${config.LINK_API_LOCALHOST}/messages`, {
             method: 'POST',
             body: formData,
             headers: {
