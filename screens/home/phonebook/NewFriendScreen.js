@@ -29,11 +29,10 @@ function NewFriendScreen({ navigation }) {
     }, []);
 
     // get all request friends
-   
     const allFriendsRequest = useSelector(friendListSelector);
 
     for(let newFriend of allFriendsRequest){
-        if(newFriend.senderId !== _id && newFriend.receiverId){
+        if(newFriend.senderId !== _id && newFriend.receiverId === _id){
             listFriendRequest.push({
                 content: newFriend.content,
                 fullName: newFriend.fullName,
