@@ -3,19 +3,23 @@ import { ListItem, Avatar } from 'react-native-elements';
 import { TouchableOpacity, Alert } from 'react-native';
 import Header from '../../components/Header';
 import { removeItem } from '../../utils/asyncStorage';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../redux/selector';
+import userInfoSlice from '../../redux/slice/userInfoSlice';
 
 function ProfileScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
+
     const { fullName, phoneNumber, avatarLink } = _userInfoSelector;
 
+    const dispatch = useDispatch();
     const remove = async () => {
         await removeItem('user_token');
     };
 
-    const logoutScreen = () => {
-        remove();
+    const logoutScreen = async() => {
+        await remove();
+        dispatch(userInfoSlice.actions.refreshToLogout());
         navigation.navigate('LoginScreen');
     };
 

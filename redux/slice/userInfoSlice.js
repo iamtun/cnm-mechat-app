@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
 import { Alert } from 'react-native';
-import config, { socket, createFormData } from '../../config';
+import config, { socket, createFormDataUpdate } from '../../config';
 
 const userInfoSlice = createSlice({
     name: 'info',
@@ -13,16 +13,18 @@ const userInfoSlice = createSlice({
         clickSearchUserByPhone: (state, action) => {
             state.phoneNumber = action.payload;
         },
+        refreshToLogout: (state, action) => {
+            state.loading = 0;
+        }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserInfo.fulfilled, (state, action) => {
-                console.log('get info user success!');
-                console.log(action.payload);
+
                 state.data = action.payload;
                 state.loading = 2;
             }).addCase(fetchUserInfo.pending, (state, action) => {
-                console.log('user info is loading...');
+
                 state.loading = 1;
             })
             .addCase(fetchUserByPhone.fulfilled, (state, action) => {
@@ -30,15 +32,12 @@ const userInfoSlice = createSlice({
             })
             .addCase(fetchUpdateAvatarUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật ảnh đại diện thành công!');
             })
             .addCase(fetchUpdateBackgroundUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật ảnh bìa thành công!');
             })
             .addCase(fetchUpdateInfoUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật thông tin thành công!');
             })
             .addCase(fetchUserByID.fulfilled, (state, action) => {
                 state.data = action.payload;
@@ -59,13 +58,13 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         socket.emit('addUser', _id);
 
       try {
-        const res = await fetch(`${config.LINK_API_V3}/users/${_id}`);
+        const res = await fetch(`${config.LINK_API_V4}/users/${_id}`);
         const userInfo = await res.json();
 
-        return userInfo.data;
-      } catch (err) {
-        console.log(`[fetch userInfo]: ${err}`);
-      }
+            return userInfo.data;
+        } catch (err) {
+            console.log(`[fetch userInfo]: ${err}`);
+        }
     }
 });
 /**
@@ -74,7 +73,7 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
 export const fetchUserByPhone = createAsyncThunk('info/fetchUserByPhone', async (phone) => {
     if (phone) {
         try {
-            const res = await fetch(`${config.LINK_API_V3}/users/get-user-by-phone/${phone}`);
+            const res = await fetch(`${config.LINK_API_V4}/users/get-user-by-phone/${phone}`);
             const userInfoByPhone = await res.json();
             return userInfoByPhone;
         } catch (err) {
@@ -89,7 +88,7 @@ export const fetchUpdateInfoUsers = createAsyncThunk('info/fetchUpdateInfoUsers'
 
         const { fullName, gender, birthday, bio } = data;
 
-        const res = await fetch(`${config.LINK_API_V3}/users/${userID}`, {
+        const res = await fetch(`${config.LINK_API_V4}/users/${userID}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -107,8 +106,9 @@ export const fetchUpdateInfoUsers = createAsyncThunk('info/fetchUpdateInfoUsers'
 export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUsers', async (data) => {
     try {
         let dataForm;
-        dataForm = createFormData(data.avatarLink, data.key);
-        const res = await fetch(`${config.LINK_API_V3}/users/update-avatar/${data.userID}`, {
+        dataForm = createFormDataUpdate(data.avatarLink, data.key);
+        console.log("dataForm", dataForm);
+        const res = await fetch(`${config.LINK_API_V4}/users/update-avatar/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -126,9 +126,9 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
 export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBackgroundUsers', async (data) => {
     try {
         let dataForm;
-        dataForm = createFormData(data.backLink, data.key);
+        dataForm = createFormDataUpdate(data.backLink, data.key);
 
-        const res = await fetch(`${config.LINK_API_V3}/users/update-background/${data.userID}`, {
+        const res = await fetch(`${config.LINK_API_V4}/users/update-background/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -146,7 +146,7 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
 
 export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', async (data) => {
     try {
-        await fetch(`${config.LINK_API_V3}/accounts/forget-password`, {
+        await fetch(`${config.LINK_API_V4}/accounts/forget-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -161,9 +161,8 @@ export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', 
 export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V3}/users/${id}`);
+            const res = await fetch(`${config.LINK_API_V4}/users/${id}`);
             const userInfoByID = await res.json();
-            console.log("userInfoByID.data", userInfoByID);
             return userInfoByID.data;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);

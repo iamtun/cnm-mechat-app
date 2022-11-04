@@ -1,13 +1,13 @@
-import { LINK_API_V3, LINK_API_LOCALHOST } from '@env';
+import { LINK_API_V4, LINK_API_LOCALHOST } from '@env';
 import { io } from 'socket.io-client';
 
-console.log('API', LINK_API_V3);
+console.log('API', LINK_API_V4);
 export default {
-    LINK_API_V3,
+    LINK_API_V4,
     LINK_API_LOCALHOST
 };
 
-export const socket = io('https://6bf1-42-119-224-98.ap.ngrok.io', {
+export const socket = io('https://cnm-socket-server-heroku.herokuapp.com', {
     transports: ['websocket'],
     //reconnection: true,
     withCredentials: true,
@@ -30,7 +30,7 @@ export const createFormData = (images, key) => {
         let nameFile = path[path.length - 1];
         //console.log();
         const imagePath = ['png', 'jpg', 'jpeg'];
-    
+        
         return {
             uri: link,
             type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
@@ -42,9 +42,31 @@ export const createFormData = (images, key) => {
     const formData = new FormData();
     //console.log(image);
     _images.forEach(image => {
-        console.log(image, key);
+        // console.log(image, key);
         formData.append(key, image);
     });
+
+    return formData;
+};
+
+
+export const createFormDataUpdate = (imageLink, key) => {
+    let uriParts = imageLink.split('.');
+    const path = imageLink.split('/');
+    let fileType = uriParts[uriParts.length - 1];
+    let nameFile = path[path.length - 1];
+    //console.log();
+    const imagePath = ['png', 'jpg', 'jpeg'];
+
+    const image = {
+        uri: imageLink,
+        type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
+        name: imagePath.includes(fileType) ? nameFile : nameFile.replace('.mov', '.mp4'),
+    };
+
+    let formData = new FormData();
+    //console.log(image);
+    formData.append(key, image);
 
     return formData;
 };

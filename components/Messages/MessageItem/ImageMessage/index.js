@@ -28,12 +28,12 @@ function ImageMessage({ imageURI, content, images }) {
                             />
                         ) : (
                             <TouchableOpacity
+                                key={link}
                                 onPress={() => {
                                     handleViewingImage(link);
                                 }}
                             >
                                 <Image
-                                    key={link}
                                     source={{ uri: link }}
                                     style={[images?.length > 1 ? styles.imagesMessage : styles.imageMessage]}
                                     resizeMode="stretch"
@@ -51,7 +51,9 @@ function ImageMessage({ imageURI, content, images }) {
                         volume={1.0}
                     />
                 ) : (
-                    <TouchableOpacity onPress={handleViewingImage}>
+                    <TouchableOpacity onPress={() => {
+                        handleViewingImage(imageURI);
+                    }}>
                         <Image source={{ uri: imageURI }} style={styles.imageMessage} resizeMode="stretch" />
                     </TouchableOpacity>
                 )}

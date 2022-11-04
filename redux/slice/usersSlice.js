@@ -7,12 +7,10 @@ const userListSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchUsers.fulfilled, (state, action) => {
-                console.log('users is loading success!');
                 state.data = action.payload;
                 state.loading = 2;
             })
             .addCase(fetchUsers.pending, (state, action) => {
-                console.log('users is loading...');
                 state.loading = 1;
             });
     },
@@ -23,7 +21,7 @@ const userListSlice = createSlice({
  */
 export const fetchUsers = createAsyncThunk('users/fetchUsers', async () => {
     try {
-        const res = await fetch(`${config.LINK_API_V3}/users`);
+        const res = await fetch(`${config.LINK_API_V4}/users`);
         const users = await res.json();
         return users.data;
     } catch (err) {

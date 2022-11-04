@@ -14,7 +14,6 @@ const conversationsListByUserId = createSlice({
         builder
             .addCase(fetchConversations.fulfilled, (state, action) => {
                 if (action.payload) {
-                    console.log('conversation loading success...');
                     state.data = action.payload;
                     state.loading = false;
                 }else {
@@ -22,7 +21,6 @@ const conversationsListByUserId = createSlice({
                 }
             })
             .addCase(fetchConversations.pending, (state, action) => {
-                console.log('conversation loading...');
                 state.loading = true;
             });
     },
@@ -35,9 +33,8 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
     try {
         const token = await getItem('user_token');
         const { _id } = jwtDecode(token);
-        const res = await fetch(`${config.LINK_API_V3}/conversations/${_id}`);
+        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`);
         const conversations = await res.json();
-        console.log(conversations);
         if (conversations?.error) return null;
         return conversations.data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time));
     } catch (err) {

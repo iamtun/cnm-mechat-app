@@ -89,7 +89,7 @@ const messageListSlice = createSlice({
 export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', async ({ id }) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V3}/messages/ten-last-messages/${id}`, {
+            const res = await fetch(`${config.LINK_API_V4}/messages/ten-last-messages/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -97,7 +97,6 @@ export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', 
                 body: JSON.stringify({ count: 0 }),
             });
             const messages = await res.json();
-            console.log(messages);
             return messages;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
@@ -113,7 +112,7 @@ export const fetch10NextMessagesById = createAsyncThunk(
     async ({ id, countMessage }) => {
         if (id) {
             try {
-                const res = await fetch(`${config.LINK_API_V3}/messages/ten-last-messages/${id}`, {
+                const res = await fetch(`${config.LINK_API_V4}/messages/ten-last-messages/${id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -136,7 +135,7 @@ export const fetch10NextMessagesById = createAsyncThunk(
  */
 export const sendMessage = createAsyncThunk('messages/add', async (message) => {
     if (message) {
-        const res = await fetch(`${config.LINK_API_V3}/messages`, {
+        const res = await fetch(`${config.LINK_API_V4}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -155,8 +154,7 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
         let formData = createFormData(imageLinks, 'imageLinks');
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
-        console.log('form data', formData);
-        const res = await fetch(`${config.LINK_API_LOCALHOST}/messages`, {
+        const res = await fetch(`${config.LINK_API_V4}/messages`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -167,10 +165,9 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
 
         const _message = await res.json();
         if (_message?._id) {
-            console.log(_message);
+    
             return _message;
         } else {
-            console.log(_message);
             return null;
         }
     }
@@ -183,7 +180,7 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
         formData.append('fileLink', fileToUpload);
-        const res = await fetch(`${config.LINK_API_V3}/messages`, {
+        const res = await fetch(`${config.LINK_API_V4}/messages`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -193,11 +190,11 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
         });
 
         const _message = await res.json();
-        console.log(_message);
+        // console.log(_message);
         if (_message?._id) {
             return _message;
         } else {
-            console.log(_message);
+            // console.log(_message);
             return null;
         }
     }
@@ -205,8 +202,9 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
 export const recallMessage = createAsyncThunk('message/recall', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V3}/messages/recall/${id}`);
+            const res = await fetch(`${config.LINK_API_V4}/messages/recall/${id}`);
             const message = await res.json();
+            console.log("message", message);
             return message;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
@@ -217,7 +215,7 @@ export const recallMessage = createAsyncThunk('message/recall', async (id) => {
 export const deleteMessage = createAsyncThunk('message/delete', async (data) => {
     if (data) {
         try {
-            const res = await fetch(`${config.LINK_API_V3}/messages/delete-for-you/${data.messageId}`, {
+            const res = await fetch(`${config.LINK_API_V4}/messages/delete-for-you/${data.messageId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

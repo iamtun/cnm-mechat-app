@@ -59,14 +59,14 @@ function MessageInputBox({ conversationId }) {
             if (!result.cancelled) {
                 const images = result.selected.map((image) => {
                     const fileMB = image.fileSize / 1024 / 1024;
-                    console.log(fileMB);
+                    // console.log(fileMB);
                     //file small 5mb don't send
                     if (fileMB < 5) {
                         return image.uri;
                     }
                 });
                 const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
-                console.log(data);
+                // console.log(data);
                 dispatch(sendImageMessage(data));
             }
         } else if (Platform.OS === 'android') {

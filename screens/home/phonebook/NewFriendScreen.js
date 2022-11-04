@@ -11,27 +11,39 @@ function NewFriendScreen({ navigation }) {
     const userInfo = useSelector(userInfoSelector);
     const { _id } = userInfo;
     const dispatch = useDispatch();
+    let listFriendRequest = [];
 
     const handleClickSyncButton = () => {
         navigation.navigate('SyncPhoneBook');
     };
+
     // load all request make friends
-    const getListFriendRequest = () => {
-        dispatch(fetchLoadFriendsRequest(_id));
-    };
-
     useEffect(() => {
-        allFriendsRequest;
-        getListFriendRequest();
-
         socket.on('receiver_friend_request', (request) => {
             dispatch(friendListSlice.actions.friendRequestReceiverSocket(request));
         });
-            
+    }, []);
+
+    useEffect(() => {
+        dispatch(fetchLoadFriendsRequest(_id));
     }, []);
 
     // get all request friends
     const allFriendsRequest = useSelector(friendListSelector);
+
+    for(let newFriend of allFriendsRequest){
+        if(newFriend.senderId !== _id && newFriend.receiverId === _id){
+            listFriendRequest.push({
+                content: newFriend.content,
+                fullName: newFriend.fullName,
+                idFriendRequest: newFriend.idFriendRequest,
+                imageLink: newFriend.imageLink,
+                phoneNumber: newFriend.phoneNumber,
+                senderId: newFriend.senderId,
+            })
+        }
+    }
+
     //handle request friends
     const _handleRequestFriend = (idRequest, idSender, isAccept) => {
         const data = {
@@ -41,6 +53,7 @@ function NewFriendScreen({ navigation }) {
             receiverID: _id,
         };
         dispatch(fetchHandleFriendsRequest(data));
+        //dispatch(fetchLoadFriendsRequest(_id));
     };
 
     function getNewFriends({ item: user }) {
@@ -58,7 +71,7 @@ function NewFriendScreen({ navigation }) {
                             _handleRequestFriend(user.idFriendRequest, user.senderId, false);
                         }}
                     >
-                        <Text>Hủy</Text>
+                        <Text>Từ chối</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonAdd}
@@ -80,8 +93,8 @@ function NewFriendScreen({ navigation }) {
 
             <View>
                 <FlatList
-                    data={allFriendsRequest}
-                    keyExtractor={(user) => user.senderId.toString()}
+                    data={listFriendRequest}
+                    keyExtractor={(user) => user.senderId.toString() + '*'}
                     renderItem={getNewFriends}
                 />
             </View>

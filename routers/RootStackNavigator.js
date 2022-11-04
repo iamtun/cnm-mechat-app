@@ -17,6 +17,7 @@ import ReplacePassWord from '../screens/home/forgotPass/ReplacePassWord';
 import SendCallVoice from '../screens/home/call/SendCallVoice';
 import ReceiveCallVoice from '../screens/home/call/ReceiveCallVoice';
 import ImageScreen from '../screens/home/detailChat/ImageScreen';
+import NewGroupChat from '../screens/home/groupChat/NewGroupChat';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -47,6 +48,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="SendCallVoice" component={SendCallVoice} />
                 <Stack.Screen name="ReceiveCallVoice" component={ReceiveCallVoice} />
                 <Stack.Screen name="ImageScreen" component={ImageScreen} />
+                <Stack.Screen name="NewGroupChat" component={NewGroupChat} />
             </Stack.Navigator>
         </NavigationContainer>
     );

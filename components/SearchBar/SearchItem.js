@@ -4,43 +4,44 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import userInfoSlice from '../../redux/slice/userInfoSlice';
-import { getUserByPhoneNumber, userInfoSelector, friendListSelector } from '../../redux/selector';
+import { userInfoSelector, friendListSelector } from '../../redux/selector';
 import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
 function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation }) {
     const dispatch = useDispatch();
     const [isRequest, setIsRequest] = useState(false);
 
-    const usersByPhone = useSelector(getUserByPhoneNumber);
+    // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
     const allFriendsRequest = useSelector(friendListSelector);
+    // request make friend
+    const _handleSendRequest = () => {
+        //Set data for send require make friend
 
-  // console.log("usersByPhone", usersByPhone);
-  // console.log("_userInfoSelector", _userInfoSelector);
-  // request make friend
-  const _handleSendRequest = () => {
-    //Set data for send require make friend
-    const data = {
-      senderID: _userInfoSelector._id,
-      receiverID: usersByPhone[0]._id,
+        const data = {
+            senderID: _userInfoSelector._id,
+            receiverID: id,
+        };
+        // console.log("Data", data);
+        setIsRequest(true);
+        dispatch(fetchFriendsRequest(data));
     };
-    setIsRequest(true);
-    dispatch(fetchFriendsRequest(data));
-  };
 
     //Close request make friend
     const _handleCloseRequest = () => {
         setIsRequest(false);
         const data = {
-            friendRequestID: allFriendsRequest.receiver.id,
+            friendRequestID: allFriendsRequest.idFriendRequest,
             status: isRequest,
             senderID: _userInfoSelector._id,
         };
+        // console.log('Data', data);
+
         dispatch(fetchBackFriendRequest(data));
     };
 
     const handleClickSearchItem = () => {
         dispatch(userInfoSlice.actions.clickSearchItem(id));
-        navigation.navigate('PersonalScreen', {isMe: false });
+        navigation.navigate('PersonalScreen', { isMe: false });
     };
 
     return (
@@ -73,7 +74,9 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation 
                                 style={styles.buttonAdd}
                             >
                                 <Icon color="#3777F3" name={isRequest ? 'close' : 'person-add-outline'} size={20} />
-                                <Text style={{ marginLeft: 5, color: '#59AFC4' }}>{isRequest ? 'Hủy' : 'Kết bạn'}</Text>
+                                <Text style={{ marginLeft: 5, color: '#59AFC4' }}>
+                                    {isRequest ? 'Thu hồi' : 'Kết bạn'}
+                                </Text>
                             </TouchableOpacity>
                         )}
                     </View>

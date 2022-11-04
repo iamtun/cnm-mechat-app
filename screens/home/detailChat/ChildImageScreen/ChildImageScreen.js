@@ -1,49 +1,64 @@
-import { View, Image, FlatList, StyleSheet,Text} from 'react-native';
-import React from 'react';
+import { View, Image, FlatList, StyleSheet, Text } from 'react-native';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import ImageView from 'react-native-image-viewing';
 import { getImageMessage } from '../../../../redux/selector';
 import { TouchableOpacity } from 'react-native';
 import { handleFileExtension } from '../../../../utils/filePathConfig';
 
 function ChildImageScreen() {
     const allImage = useSelector(getImageMessage);
+    const images = allImage.join(',').split(',');
     let listImage = [];
+    const [visible, setVisible] = useState(false);
+    const [_index, setIndex] = useState(0);
 
-    for (let image of allImage) {
-        if (image != null) {
+    for (let image of images) {
+        if (image != '') {
             const fileEx = handleFileExtension(image);
             if (fileEx === 'jpeg' || fileEx === 'jpg' || fileEx === 'png') {
                 listImage.push({
-                    image: image,
+                    uri: image,
                 });
             }
         }
     }
 
     return (
-        <>
+        <View style={styles.container}>
             {listImage.length > 0 ? (
-                <View style={styles.container}>
-                    <FlatList
-                        data={listImage}
-                        numColumns={3}
-                        keyExtractor={(item, index) => index.toString()}
-                        renderItem={({ item }) => (
-                            <TouchableOpacity
-                                style={{
-                                    flexDirection: 'column',
-                                    margin: 1,
-                                }}
-                            >
-                                <Image style={styles.imageThumbnail} source={{ uri: item.image }} />
-                            </TouchableOpacity>
-                        )}
-                    />
-                </View>
+                <FlatList
+                key={"_"}
+                    data={listImage}
+                    numColumns={3}
+                    keyExtractor={(item, index) => item.uri+"_"}
+                    renderItem={({ item, index }) => (
+                        <TouchableOpacity
+                            style={{
+                                flexDirection: 'column',
+                                margin: 1,
+                            }}
+                            onPress={() => {
+                                setVisible(true);
+                                setIndex(index);
+                            }}
+                        >
+                            <Image style={styles.imageThumbnail} source={{ uri: item.uri }} />
+                        </TouchableOpacity>
+                    )}
+                />
             ) : (
-                <Text>Chưa có ảnh</Text>
+                <View style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 16 }}>Chưa có ảnh</Text>
+                </View>
             )}
-        </>
+            <ImageView
+                images={listImage}
+                imageIndex={_index}
+                visible={visible}
+                onRequestClose={() => setVisible(false)}
+            />
+        </View>
     );
 }
 
