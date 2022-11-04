@@ -5,7 +5,7 @@ import config, { socket, createFormData } from '../../config';
 
 const userInfoSlice = createSlice({
     name: 'info',
-    initialState: { data: null, userId: null },
+    initialState: { data: null, userId: null, loading: 0 },
     reducers: {
         clickSearchItem: (state, action) => {
             state.userId = action.payload;
@@ -18,7 +18,12 @@ const userInfoSlice = createSlice({
         builder
             .addCase(fetchUserInfo.fulfilled, (state, action) => {
                 console.log('get info user success!');
+                console.log(action.payload);
                 state.data = action.payload;
+                state.loading = 2;
+            }).addCase(fetchUserInfo.pending, (state, action) => {
+                console.log('user info is loading...');
+                state.loading = 1;
             })
             .addCase(fetchUserByPhone.fulfilled, (state, action) => {
                 state.data = action.payload;
@@ -54,7 +59,7 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         socket.emit('addUser', _id);
 
       try {
-        const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
+        const res = await fetch(`${config.LINK_API_V3}/users/${_id}`);
         const userInfo = await res.json();
 
         return userInfo.data;
@@ -69,7 +74,7 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
 export const fetchUserByPhone = createAsyncThunk('info/fetchUserByPhone', async (phone) => {
     if (phone) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/users/get-user-by-phone/${phone}`);
+            const res = await fetch(`${config.LINK_API_V3}/users/get-user-by-phone/${phone}`);
             const userInfoByPhone = await res.json();
             return userInfoByPhone;
         } catch (err) {
@@ -84,7 +89,7 @@ export const fetchUpdateInfoUsers = createAsyncThunk('info/fetchUpdateInfoUsers'
 
         const { fullName, gender, birthday, bio } = data;
 
-        const res = await fetch(`${config.LINK_API_V2}/users/${userID}`, {
+        const res = await fetch(`${config.LINK_API_V3}/users/${userID}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -103,7 +108,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
     try {
         let dataForm;
         dataForm = createFormData(data.avatarLink, data.key);
-        const res = await fetch(`${config.LINK_API_V2}/users/update-avatar/${data.userID}`, {
+        const res = await fetch(`${config.LINK_API_V3}/users/update-avatar/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -123,7 +128,7 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
         let dataForm;
         dataForm = createFormData(data.backLink, data.key);
 
-        const res = await fetch(`${config.LINK_API_V2}/users/update-background/${data.userID}`, {
+        const res = await fetch(`${config.LINK_API_V3}/users/update-background/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -141,7 +146,7 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
 
 export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', async (data) => {
     try {
-        await fetch(`${config.LINK_API_V2}/accounts/forget-password`, {
+        await fetch(`${config.LINK_API_V3}/accounts/forget-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -156,7 +161,7 @@ export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', 
 export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/users/${id}`);
+            const res = await fetch(`${config.LINK_API_V3}/users/${id}`);
             const userInfoByID = await res.json();
             console.log("userInfoByID.data", userInfoByID);
             return userInfoByID.data;

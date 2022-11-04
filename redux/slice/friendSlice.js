@@ -32,7 +32,7 @@ const friendListSlice = createSlice({
 
 export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest', async (data) => {
     try {
-        const res = await fetch(`${config.LINK_API_V2}/friendRequests/create`, {
+        const res = await fetch(`${config.LINK_API_V3}/friendRequests/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
 export const fetchLoadFriendsRequest = createAsyncThunk('friends/fetchLoadFriendsRequest', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-list-request/${id}`);
+            const res = await fetch(`${config.LINK_API_V3}/friendRequests/get-list-request/${id}`);
             const allFriendRequest = await res.json();
             //console.log('allFriendRequest', allFriendRequest);
             return allFriendRequest.data;
@@ -68,7 +68,7 @@ export const fetchHandleFriendsRequest = createAsyncThunk('friends/fetchHandleFr
 
         const { status, senderID, receiverID } = data;
 
-        await fetch(`${config.LINK_API_V2}/friendRequests/friend-request/${idFriendRequest}`, {
+        await fetch(`${config.LINK_API_V3}/friendRequests/friend-request/${idFriendRequest}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -85,7 +85,7 @@ export const fetchBackFriendRequest = createAsyncThunk('friends/fetchBackFriendR
         const { friendRequestID } = data;
         const { status, senderID } = data;
 
-        const res = await fetch(`${config.LINK_API_V2}/friendRequests/${friendRequestID}`, {
+        const res = await fetch(`${config.LINK_API_V3}/friendRequests/${friendRequestID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -102,7 +102,7 @@ export const fetchBackFriendRequest = createAsyncThunk('friends/fetchBackFriendR
 export const fetchListFriendRequestSent = createAsyncThunk('friends/fetchListFriendRequestSent', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-of-me/${id}`);
+            const res = await fetch(`${config.LINK_API_V3}/friendRequests/get-of-me/${id}`);
             const allFriendRequestSent = await res.json();
             return allFriendRequestSent.data;
         } catch (err) {

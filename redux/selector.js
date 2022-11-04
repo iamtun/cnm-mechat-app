@@ -6,14 +6,18 @@ export const messageLoadingSelector = (state) => state.messages.loading;
 
 export const searchTextSelector = (state) => state.filters.search;
 export const userListSelector = (state) => state.users.data;
+export const userLoadingSelector = (state) => state.users.loading;
+
 export const userInfoSelector = (state) => state.info.data;
 export const userInfoByPhoneSelector = (state) => state.userInfoByPhone;
 export const userIdSelector = (state) => state.info.userId;
+export const userInfoLoadingSelector = (state) => state.info.loading;
 
 export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 
 export const conversationsListSelector = (state) => state.conversations.data;
+export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 /**
  * get friend list then user info changed
@@ -150,7 +154,7 @@ export const getMessageByIdConversationSelector = createSelector(
         try {
             const _messages = messages.map((message) => {
                 const user = users.filter((_user) => _user._id === message.senderID)[0];
-                return message.deleteBy === userInfo._id
+                return message.deleteBy.includes(userInfo._id)
                     ? null
                     : {
                           _id: message._id,

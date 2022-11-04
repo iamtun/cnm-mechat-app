@@ -75,7 +75,7 @@ function AuthenticationScreen({ route, navigation }) {
             });
     };
     const register = () => {
-        return fetch(`${config.LINK_API_V2}/auths/signup`, {
+        return fetch(`${config.LINK_API_V3}/auths/signup`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

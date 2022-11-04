@@ -26,7 +26,7 @@ function FileMessage({ fileUri }) {
 
 const styles = StyleSheet.create({
     container: {
-        width: 250,
+        width: 275,
         height: 70,
         flexDirection: 'row',
         alignItems: 'center',

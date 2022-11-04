@@ -57,19 +57,17 @@ function MessageInputBox({ conversationId }) {
             });
 
             if (!result.cancelled) {
-                result.selected.forEach((image) => {
+                const images = result.selected.map((image) => {
                     const fileMB = image.fileSize / 1024 / 1024;
                     console.log(fileMB);
                     //file small 5mb don't send
                     if (fileMB < 5) {
-                        const data = {
-                            imageLink: image.uri,
-                            senderID: userInfo._id,
-                            conversationID: conversationId,
-                        };
-                        dispatch(sendImageMessage(data));
+                        return image.uri;
                     }
                 });
+                const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
+                console.log(data);
+                dispatch(sendImageMessage(data));
             }
         } else if (Platform.OS === 'android') {
             let result = await ImagePicker.launchImageLibraryAsync({
@@ -82,7 +80,7 @@ function MessageInputBox({ conversationId }) {
 
             if (!result.cancelled) {
                 const data = {
-                    imageLink: result.uri,
+                    imageLinks: [result.uri],
                     senderID: userInfo._id,
                     conversationID: conversationId,
                 };
@@ -123,7 +121,7 @@ function MessageInputBox({ conversationId }) {
 
     return (
         <View style={[styles.body, styles.row]}>
-           <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
+            <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
             <View style={styles.inputView}>
                 <TextInput
                     placeholder="Nhập tin nhắn"

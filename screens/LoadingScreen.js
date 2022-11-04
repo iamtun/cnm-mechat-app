@@ -1,48 +1,55 @@
 import { useEffect } from 'react';
-import { View, ActivityIndicator, Text } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
-import GlobalStyle from '../styles/GlobalStyle';
 import { getItem, removeItem } from '../utils/asyncStorage';
 import { fetchUserInfo } from '../redux/slice/userInfoSlice';
 import { fetchUsers } from '../redux/slice/usersSlice';
+import { userInfoLoadingSelector, userLoadingSelector } from '../redux/selector';
+import Loading from '../components/Loading';
 
 function LoadingScreen({ navigation, route }) {
-  const dispatch = useDispatch();
-  const isFocus = useIsFocused();
-  let isRegister = route.params?.isRegister;
-  // removeItem("user_token");
+    const dispatch = useDispatch();
+    const isFocus = useIsFocused();
+    let isRegister = route.params?.isRegister;
+    const userInfoLoading = useSelector(userInfoLoadingSelector);
+    const usersLoading = useSelector(userLoadingSelector);
+    //removeItem("user_token");
 
-  useEffect(() => {
-    if (!isFocus) return;
-    else {
-      getItem("user_token")
-        .then((token) => {
-          if (token) {
-            dispatch(fetchUsers());
-            dispatch(fetchUserInfo(token));
-            setTimeout(() => {
-              // Đăng ký dô đây đi qua cập nhật thông tin
-              isRegister
-                ? navigation.navigate("InfoSelf", { screen: "InfoSelf", isRegister: isRegister })
-                : navigation.navigate("HomeScreen", { screen: "HomeScreen" });
-            }, 2000);
-          }
-        })
-        .catch((err) => {
-          navigation.navigate("LoginScreen", { screen: "LoginScreen" });
-          return err;
-        });
-    }
-  }, [isFocus]);
+    useEffect(() => {
+        if (userInfoLoading === 1 || usersLoading === 1) return;
+        else {
+            getItem('user_token')
+                .then((token) => {
+                    if (token) {
+                        console.log('have token!');
+                        //loading all users
+                        if (usersLoading === 0) {
+                            dispatch(fetchUsers());
+                            return;
+                        }
+                        //loading users success next to loading user info
+                        if (userInfoLoading === 0 && usersLoading === 2) {
+                            dispatch(fetchUserInfo(token));
+                            return;
+                        }
+                    }
+                })
+                .catch((err) => {
+                    navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+                    return err;
+                });
+        }
 
-    return (
-        <View style={GlobalStyle.container}>
-            <ActivityIndicator size="large" color={GlobalStyle.primaryColor} />
-            <Text>Loading...</Text>
-        </View>
-    );
+        if (usersLoading === 2 && userInfoLoading === 2) {
+            // Đăng ký dô đây đi qua cập nhật thông tin
+            isRegister
+                ? navigation.navigate('InfoSelf', { screen: 'InfoSelf', isRegister: isRegister })
+                : navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
+        }
+    }, [isFocus, userInfoLoading, usersLoading]);
+
+    return <Loading />;
 }
 
 export default LoadingScreen;

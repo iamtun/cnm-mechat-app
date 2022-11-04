@@ -1,9 +1,10 @@
-import { LINK_API_V2 } from '@env';
+import { LINK_API_V3, LINK_API_LOCALHOST } from '@env';
 import { io } from 'socket.io-client';
 
-console.log('API', LINK_API_V2);
+console.log('API', LINK_API_V3);
 export default {
-    LINK_API_V2,
+    LINK_API_V3,
+    LINK_API_LOCALHOST
 };
 
 export const socket = io('https://6bf1-42-119-224-98.ap.ngrok.io', {
@@ -21,23 +22,29 @@ export const checkPhoneNumber = (phoneNumber) => {
     return true;
 };
 
-export const createFormData = (imageLink, key) => {
-    let uriParts = imageLink.split('.');
-    const path = imageLink.split('/');
-    let fileType = uriParts[uriParts.length - 1];
-    let nameFile = path[path.length - 1];
-    //console.log();
-    const imagePath = ['png', 'jpg', 'jpeg'];
-
-    const image = {
-        uri: imageLink,
-        type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
-        name: imagePath.includes(fileType) ? nameFile : nameFile.replace('.mov', '.mp4'),
-    };
-
-    let formData = new FormData();
+export const createFormData = (images, key) => {
+    const _images = images.map(link => {
+        let uriParts = link.split('.');
+        const path = link.split('/');
+        let fileType = uriParts[uriParts.length - 1];
+        let nameFile = path[path.length - 1];
+        //console.log();
+        const imagePath = ['png', 'jpg', 'jpeg'];
+    
+        return {
+            uri: link,
+            type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
+            name: imagePath.includes(fileType) ? nameFile : nameFile.replace('.mov', '.mp4'),
+        };
+    })
+   
+    console.log(_images);
+    const formData = new FormData();
     //console.log(image);
-    formData.append(key, image);
+    _images.forEach(image => {
+        console.log(image, key);
+        formData.append(key, image);
+    });
 
     return formData;
 };
