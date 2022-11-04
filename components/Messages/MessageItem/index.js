@@ -61,8 +61,18 @@ function MessageItem({ message, id }) {
                             {isMe ? (
                                 <ToolTipCustom height={80} width={100} items={items} backgroundColor="#fff">
                                     <Text style={styles.username}>{message.user.name}</Text>
-                                    {message.imageLink ? (
-                                        <ImageMessage imageURI={message.imageLink} content={message.content} />
+                                    {message?.imageLink?.length > 0 ? (
+                                        message.imageLink.length === 1 ? (
+                                            <ImageMessage
+                                                imageURI={message.imageLink[0]}
+                                                content={message.content}
+                                            />
+                                        ) : (
+                                            <ImageMessage
+                                                images={message.imageLink}
+                                                content={message.content}
+                                            />
+                                        )
                                     ) : message.fileLink ? (
                                         <FileMessage fileUri={message.fileLink} />
                                     ) : (
@@ -72,8 +82,18 @@ function MessageItem({ message, id }) {
                             ) : (
                                 <>
                                     <Text style={styles.username}>{message.user.name}</Text>
-                                    {message.imageLink ? (
-                                        <ImageMessage imageURI={message.imageLink} content={message.content} />
+                                    {message?.imageLink?.length > 0 ? (
+                                        message.imageLink.length === 1 ? (
+                                            <ImageMessage
+                                                imageURI={message.imageLink[0]}
+                                                content={message.content}
+                                            />
+                                        ) : (
+                                            <ImageMessage
+                                                images={message.imageLink}
+                                                content={message.content}
+                                            />
+                                        )
                                     ) : message.fileLink ? (
                                         <FileMessage fileUri={message.fileLink} />
                                     ) : (
@@ -93,7 +113,7 @@ function MessageItem({ message, id }) {
 const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
-        marginVertical: 4,
+        marginVertical: 2,
     },
     body: {
         maxWidth: '80%',

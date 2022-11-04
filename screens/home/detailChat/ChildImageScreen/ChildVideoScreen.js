@@ -8,10 +8,11 @@ import { Video, Audio } from 'expo-av';
 
 function ChildImageScreen() {
     const allImage = useSelector(getImageMessage);
+    const videos = allImage.join(',').split(',');
     let listVideo = [];
 
-    for (let image of allImage) {
-        if (image != null) {
+    for (let image of videos) {
+        if (image != "") {
             const fileEx = handleFileExtension(image);
             if (fileEx === 'mp4') {
                 listVideo.push({
@@ -26,9 +27,9 @@ function ChildImageScreen() {
             {listVideo.length > 0 ? (
                 <View style={styles.container}>
                     <FlatList
-                        key={'_'}
+                        key={'*'}
                         data={listVideo}
-                        keyExtractor={(item, index) => '_' + index.toString()}
+                        keyExtractor={(item, index) => '*' + index.toString()}
                         renderItem={({ item }) => (
                             <TouchableOpacity>
                                 <Video

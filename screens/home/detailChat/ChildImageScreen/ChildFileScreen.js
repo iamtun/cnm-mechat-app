@@ -9,8 +9,7 @@ import { Linking } from 'react-native';
 function ChildImageScreen() {
     const allFile = useSelector(getFileMessage);
     let listFile = [];
-    
-    console.log(allFile);
+
     const handleOpenFile = async (fileUri) => {
         const supported = await Linking.canOpenURL(fileUri);
 
@@ -22,7 +21,7 @@ function ChildImageScreen() {
     };
 
     for (let file of allFile) {
-        if (file != null) {
+        if (file) {
             const fileEx = handleFileExtension(file);
             const fileName = handleFileName(file);
 
@@ -41,7 +40,7 @@ function ChildImageScreen() {
                     <FlatList
                         key={'#'}
                         data={listFile}
-                        keyExtractor={(index) => '#' + index.toString()}
+                        keyExtractor={(item) => '#' + item.fileUri + Math.random()}
                         renderItem={({ item }) => (
                             <TouchableOpacity style={styles.file} onPress={() => {handleOpenFile(item.fileUri)}}>
                                 <Image

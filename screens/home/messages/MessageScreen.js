@@ -44,7 +44,6 @@ function MessageScreen({ route, navigation }) {
 
     const handleFetchMessageScrollTop = () => {
         const numberMessage = messages.length;
-        console.log(numberMessage);
         if (numberMessage >= 10) {
             dispatch(fetch10NextMessagesById({ id, countMessage: numberMessage }));
         }

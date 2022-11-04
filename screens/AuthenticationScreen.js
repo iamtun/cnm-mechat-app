@@ -75,7 +75,7 @@ function AuthenticationScreen({ route, navigation }) {
             });
     };
     const register = () => {
-        return fetch(`${config.LINK_API_V2}/auths/signup`, {
+        return fetch(`${config.LINK_API_V4}/auths/signup`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -115,7 +115,6 @@ function AuthenticationScreen({ route, navigation }) {
             });
       })
       .catch((err) => {
-        console.log("lỗi", err);
         Alert.alert("Mã không tồn tại hoặc quá hạn");
       });
   };

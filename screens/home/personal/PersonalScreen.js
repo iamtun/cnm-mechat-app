@@ -22,7 +22,6 @@ function PersonalScreen({ route, navigation }) {
     const [isMe, setIsMe] = useState(route.params.isMe);
     const infoSelf = useSelector(userInfoSelector);
 
-   
     const dispatch = useDispatch();
     let infoMe = [];
     let isRegister = route.params?.isRegister;
@@ -74,7 +73,6 @@ function PersonalScreen({ route, navigation }) {
         dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
     };
 
-    console.log("isMe", isMe);
     const _handleUpdateInfo = () => {
         navigation.navigate('InfoSelf');
     };
@@ -99,6 +97,7 @@ function PersonalScreen({ route, navigation }) {
                     userID: infoSelf._id,
                     avatarLink: result.uri,
                 };
+                console.log("avatarLink", data);
                 dispatch(fetchUpdateAvatarUsers(data));
             } else {
                 const data = {

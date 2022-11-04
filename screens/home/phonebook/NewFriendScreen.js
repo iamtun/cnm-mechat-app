@@ -31,10 +31,9 @@ function NewFriendScreen({ navigation }) {
     // get all request friends
    
     const allFriendsRequest = useSelector(friendListSelector);
-    console.log("new friend", allFriendsRequest);
 
     for(let newFriend of allFriendsRequest){
-        if(newFriend.senderId !== _id){
+        if(newFriend.senderId !== _id && newFriend.receiverId){
             listFriendRequest.push({
                 content: newFriend.content,
                 fullName: newFriend.fullName,
@@ -55,6 +54,7 @@ function NewFriendScreen({ navigation }) {
             receiverID: _id,
         };
         dispatch(fetchHandleFriendsRequest(data));
+        //dispatch(fetchLoadFriendsRequest(_id));
     };
 
     function getNewFriends({ item: user }) {
@@ -72,7 +72,7 @@ function NewFriendScreen({ navigation }) {
                             _handleRequestFriend(user.idFriendRequest, user.senderId, false);
                         }}
                     >
-                        <Text>Hủy</Text>
+                        <Text>Từ chối</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                         style={styles.buttonAdd}

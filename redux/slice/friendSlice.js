@@ -26,13 +26,17 @@ const friendListSlice = createSlice({
             })
             .addCase(fetchListFriendRequestSent.fulfilled, (state, action) => {
                 //state.data = action.payload;
+            }).addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
+                const id = action.payload;
+                const index = state.data.findIndex((request) => request.idFriendRequest === id);
+                state.data.splice(index, 1);
             });
     },
 });
 
 export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest', async (data) => {
     try {
-        const res = await fetch(`${config.LINK_API_V2}/friendRequests/create`, {
+        const res = await fetch(`${config.LINK_API_V4}/friendRequests/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -40,7 +44,7 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
             body: JSON.stringify(data),
         });
         const friendRequest = await res.json();
-        console.log("---friendRequest",friendRequest);
+        // console.log("---friendRequest",friendRequest);
         if(friendRequest?.data)
             return friendRequest;
         return null;
@@ -52,9 +56,9 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
 export const fetchLoadFriendsRequest = createAsyncThunk('friends/fetchLoadFriendsRequest', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-list-request/${id}`);
+            const res = await fetch(`${config.LINK_API_V4}/friendRequests/get-list-request/${id}`);
             const allFriendRequest = await res.json();
-            console.log("----allFriendRequest",allFriendRequest);
+            // console.log("----allFriendRequest",allFriendRequest);
             return allFriendRequest.data;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
@@ -68,13 +72,16 @@ export const fetchHandleFriendsRequest = createAsyncThunk('friends/fetchHandleFr
 
         const { status, senderID, receiverID } = data;
 
-        await fetch(`${config.LINK_API_V2}/friendRequests/friend-request/${idFriendRequest}`, {
+        const res = await fetch(`${config.LINK_API_V4}/friendRequests/friend-request/${idFriendRequest}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ status, senderID, receiverID }),
         });
+        const user = await res.json();
+
+        return user.friendRequestID;
     } catch (err) {
         console.log(`err fetch users: ${err}`);
     }
@@ -85,7 +92,7 @@ export const fetchBackFriendRequest = createAsyncThunk('friends/fetchBackFriendR
         const { friendRequestID } = data;
         const { status, senderID } = data;
 
-        const res = await fetch(`${config.LINK_API_V2}/friendRequests/${friendRequestID}`, {
+        const res = await fetch(`${config.LINK_API_V4}/friendRequests/${friendRequestID}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -102,7 +109,7 @@ export const fetchBackFriendRequest = createAsyncThunk('friends/fetchBackFriendR
 export const fetchListFriendRequestSent = createAsyncThunk('friends/fetchListFriendRequestSent', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-of-me/${id}`);
+            const res = await fetch(`${config.LINK_API_V4}/friendRequests/get-of-me/${id}`);
             const allFriendRequestSent = await res.json();
             return allFriendRequestSent.data;
         } catch (err) {

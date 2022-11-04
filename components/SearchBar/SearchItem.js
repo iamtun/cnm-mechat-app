@@ -13,16 +13,15 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation 
     // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
     const allFriendsRequest = useSelector(friendListSelector);
-    console.log('allFriendsRequest', allFriendsRequest);
     // request make friend
     const _handleSendRequest = () => {
         //Set data for send require make friend
-        console.log('id', id);
+
         const data = {
             senderID: _userInfoSelector._id,
             receiverID: id,
         };
-        console.log("Data", data);
+        // console.log("Data", data);
         setIsRequest(true);
         dispatch(fetchFriendsRequest(data));
     };
@@ -35,9 +34,9 @@ function SearchItem({ id, image, name, phonNumber, isFriend, isNull, navigation 
             status: isRequest,
             senderID: _userInfoSelector._id,
         };
-        console.log('Data', data);
+        // console.log('Data', data);
 
-        // dispatch(fetchBackFriendRequest(data));
+        dispatch(fetchBackFriendRequest(data));
     };
 
     const handleClickSearchItem = () => {

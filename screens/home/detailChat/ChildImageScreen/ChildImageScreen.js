@@ -8,12 +8,13 @@ import { handleFileExtension } from '../../../../utils/filePathConfig';
 
 function ChildImageScreen() {
     const allImage = useSelector(getImageMessage);
+    const images = allImage.join(',').split(',');
     let listImage = [];
     const [visible, setVisible] = useState(false);
     const [_index, setIndex] = useState(0);
 
-    for (let image of allImage) {
-        if (image != null) {
+    for (let image of images) {
+        if (image != '') {
             const fileEx = handleFileExtension(image);
             if (fileEx === 'jpeg' || fileEx === 'jpg' || fileEx === 'png') {
                 listImage.push({
@@ -27,9 +28,10 @@ function ChildImageScreen() {
         <View style={styles.container}>
             {listImage.length > 0 ? (
                 <FlatList
+                key={"_"}
                     data={listImage}
                     numColumns={3}
-                    keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(item, index) => item.uri+"_"}
                     renderItem={({ item, index }) => (
                         <TouchableOpacity
                             style={{
@@ -50,7 +52,12 @@ function ChildImageScreen() {
                     <Text style={{ fontSize: 16 }}>Chưa có ảnh</Text>
                 </View>
             )}
-            <ImageView images={listImage} imageIndex={_index} visible={visible} onRequestClose={() => setVisible(false)} />
+            <ImageView
+                images={listImage}
+                imageIndex={_index}
+                visible={visible}
+                onRequestClose={() => setVisible(false)}
+            />
         </View>
     );
 }
