@@ -2,7 +2,7 @@ import { useState } from 'react';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { View, StyleSheet, TextInput, FlatList } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Icon from 'react-native-vector-icons/Ionicons';
 import SearchItem from '../../../components/SearchBar/SearchItem';
 
 import Header from '../../../components/Header';
@@ -24,9 +24,9 @@ export default function SearchScreen({ navigation }) {
             <View style={styles.searchBar}>
                 <Icon
                     style={{ marginLeft: 10 }}
-                    name="arrow-left"
+                    name="arrow-back-outline"
+                    color="white"
                     size={30}
-                    color="#fff"
                     onPress={() => navigation.goBack()}
                 />
                 <View style={styles.inputSearch}>

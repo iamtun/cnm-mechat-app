@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import MenuItem from './Menu/MenuItem';
 import filterSlice from '../../redux/slice/filterSlice';
 import useDebounce from '../../hooks/useDebounce';
-import { usersRemainingSelector } from '../../redux/selector';
 const items = [
     {
         id: 1,
@@ -43,6 +42,10 @@ function SearchBar({ navigation }) {
         navigation.navigate('AddFriendScreen');
     };
 
+    const openAddNewGroup = () => {
+        navigation.navigate('NewGroupChat');
+    };
+
     //ui
     return (
         <View style={styles.searchBar}>
@@ -61,7 +64,7 @@ function SearchBar({ navigation }) {
                                 icon={item.icon}
                                 title={item.title}
                                 key={item.id}
-                                onPress={item.isFriends ? openAddNewFriend : null}
+                                onPress={item.isFriends ? openAddNewFriend : openAddNewGroup}
                             />
                         ))}
                     </>

@@ -15,9 +15,9 @@ const friendListSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchFriendsRequest.fulfilled, (state, action) => {
-                //state.data = action.payload;
-                if(action.payload)
-                    socket.emit("send_friend_request", {request: action.payload});
+                if(action.payload){
+                    socket.emit("send_friend_request", {request: action.payload.data});
+                }
                 else 
                     console.warn('exists request!');
             })
@@ -40,8 +40,8 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
             body: JSON.stringify(data),
         });
         const friendRequest = await res.json();
-        console.log("---friend", friendRequest);
-        if(friendRequest?.receiver)
+        console.log("---friendRequest",friendRequest);
+        if(friendRequest?.data)
             return friendRequest;
         return null;
     } catch (err) {
@@ -54,7 +54,7 @@ export const fetchLoadFriendsRequest = createAsyncThunk('friends/fetchLoadFriend
         try {
             const res = await fetch(`${config.LINK_API_V2}/friendRequests/get-list-request/${id}`);
             const allFriendRequest = await res.json();
-            //console.log('allFriendRequest', allFriendRequest);
+            console.log("----allFriendRequest",allFriendRequest);
             return allFriendRequest.data;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);

@@ -21,6 +21,8 @@ moment().format();
 function PersonalScreen({ route, navigation }) {
     const [isMe, setIsMe] = useState(route.params.isMe);
     const infoSelf = useSelector(userInfoSelector);
+
+   
     const dispatch = useDispatch();
     let infoMe = [];
     let isRegister = route.params?.isRegister;
@@ -56,19 +58,23 @@ function PersonalScreen({ route, navigation }) {
     const conversation = useSelector(getConversationIdByIdFriendSelector);
 
     useEffect(() => {
-        dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
+        if(conversation){
+            dispatch(friendListSlice.actions.clickSendChat(null));
+            navigation.navigate('MessageScreen', {
+                id: conversation.id,
+                name: conversation.name,
+                members: conversation.members,
+                image: conversation.imageLinkOfConver,
+            });
+        }
         //first run
-    }, [infoMe[0]._id]);
+    }, [conversation]);
 
     const handleSendChat = () => {
-        navigation.navigate('MessageScreen', {
-            id: conversation.id,
-            name: conversation.name,
-            members: conversation.members,
-            image: conversation.imageLinkOfConver,
-        });
+        dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
     };
 
+    console.log("isMe", isMe);
     const _handleUpdateInfo = () => {
         navigation.navigate('InfoSelf');
     };

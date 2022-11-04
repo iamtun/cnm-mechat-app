@@ -18,8 +18,6 @@ function GroupChatScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
     const dispatch = useDispatch();
     const conversation = useSelector(getConversationIdByIdGroupConversation);
-    const [idClick, setIdClick] = useState(null);
-    let idGroup = null;
 
     useEffect(() => {
         dispatch(fetchConversations(_userInfoSelector._id));
@@ -41,29 +39,27 @@ function GroupChatScreen({ navigation }) {
         }
     }
     useEffect(() => {
-        if(idGroup !== null){
-            dispatch(conversationsListByUserId.actions.clickGroupChat(idGroup));
+        if(conversation){
+            dispatch(conversationsListByUserId.actions.clickGroupChat(0));
+             navigation.navigate('MessageScreen', {
+                id: conversation.id,
+                name: conversation.name,
+                members: conversation.members,
+                image: conversation.imageLinkOfConver,
+                isGroup: conversation.isGroup
+            });
         }
-    },[idGroup])
+    },[conversation])
 
-    const handleSendChat = () => {
-        if (idGroup !== null) {
-            
-            // navigation.navigate('MessageScreen', {
-            //     id: conversation.id,
-            //     name: conversation.name,
-            //     members: conversation.members,
-            //     image: conversation.imageLinkOfConver,
-            // });
-        }
+    const handleSendChat = (idGroup) => {
+        dispatch(conversationsListByUserId.actions.clickGroupChat(idGroup));
     };
 
     function getGroupItem({ item: group }) {
         return (
             <TouchableOpacity
                 onPress={() => {
-                    idGroup = group.id
-                    handleSendChat();
+                    handleSendChat(group.id);
                 }}
                 styles={{ flex: 1 }}
             >
@@ -81,7 +77,7 @@ function GroupChatScreen({ navigation }) {
 
     return (
         <View>
-            <FlatList data={listGroupChat} keyExtractor={(group) => group.id.toString()} renderItem={getGroupItem} />
+            <FlatList data={listGroupChat} keyExtractor={(group) => group.id.toString()+"_"} renderItem={getGroupItem} />
         </View>
     );
 }

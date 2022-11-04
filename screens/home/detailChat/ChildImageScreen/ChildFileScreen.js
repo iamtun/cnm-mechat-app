@@ -4,10 +4,22 @@ import { useSelector } from 'react-redux';
 import { getFileMessage } from '../../../../redux/selector';
 import { TouchableOpacity } from 'react-native';
 import { iconExtends, icons, handleFileExtension, handleFileName } from '../../../../utils/filePathConfig';
+import { Linking } from 'react-native';
 
 function ChildImageScreen() {
     const allFile = useSelector(getFileMessage);
     let listFile = [];
+    
+    console.log(allFile);
+    const handleOpenFile = async (fileUri) => {
+        const supported = await Linking.canOpenURL(fileUri);
+
+        if (supported) {
+            await Linking.openURL(fileUri);
+        } else {
+            Alert.alert(`Don't know how to open this URL: ${url}`);
+        }
+    };
 
     for (let file of allFile) {
         if (file != null) {
@@ -17,6 +29,7 @@ function ChildImageScreen() {
             listFile.push({
                 fileEx: fileEx,
                 fileName: fileName,
+                fileUri: file
             });
         }
     }
@@ -28,9 +41,9 @@ function ChildImageScreen() {
                     <FlatList
                         key={'#'}
                         data={listFile}
-                        keyExtractor={(item, index) => '#' + index.toString()}
+                        keyExtractor={(index) => '#' + index.toString()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.file}>
+                            <TouchableOpacity style={styles.file} onPress={() => {handleOpenFile(item.fileUri)}}>
                                 <Image
                                     source={iconExtends.includes(item.fileEx) ? icons[item.fileEx] : icons['blank']}
                                     style={styles.icon}
@@ -41,7 +54,9 @@ function ChildImageScreen() {
                     />
                 </View>
             ) : (
-                <Text>Chưa có file</Text>
+                <View style ={{width:"100%", height: "100%", alignItems:'center', justifyContent:"center"}}>
+                    <Text style={{fontSize: 16}}>Chưa có file</Text>
+                </View>
             )}
         </>
     );

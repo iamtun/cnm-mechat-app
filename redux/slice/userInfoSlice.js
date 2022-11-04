@@ -25,15 +25,12 @@ const userInfoSlice = createSlice({
             })
             .addCase(fetchUpdateAvatarUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật ảnh đại diện thành công!');
             })
             .addCase(fetchUpdateBackgroundUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật ảnh bìa thành công!');
             })
             .addCase(fetchUpdateInfoUsers.fulfilled, (state, action) => {
                 state.data = action.payload;
-                Alert.alert('Thông báo', 'Cập nhật thông tin thành công!');
             })
             .addCase(fetchUserByID.fulfilled, (state, action) => {
                 state.data = action.payload;
@@ -53,14 +50,14 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         //call socket
         socket.emit('addUser', _id);
 
-      try {
-        const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
-        const userInfo = await res.json();
+        try {
+            const res = await fetch(`${config.LINK_API_V2}/users/${_id}`);
+            const userInfo = await res.json();
 
-        return userInfo.data;
-      } catch (err) {
-        console.log(`[fetch userInfo]: ${err}`);
-      }
+            return userInfo.data;
+        } catch (err) {
+            console.log(`[fetch userInfo]: ${err}`);
+        }
     }
 });
 /**
@@ -158,7 +155,7 @@ export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) =
         try {
             const res = await fetch(`${config.LINK_API_V2}/users/${id}`);
             const userInfoByID = await res.json();
-            console.log("userInfoByID.data", userInfoByID);
+            console.log('userInfoByID.data', userInfoByID);
             return userInfoByID.data;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);

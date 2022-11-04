@@ -26,6 +26,7 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
         const { _id } = jwtDecode(token);
         const res = await fetch(`${config.LINK_API_V2}/conversations/${_id}`);
         const conversations = await res.json();
+
         return conversations.data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time));
     } catch (err) {
         console.log(`[fetchConversations]: ${err}`);

@@ -232,7 +232,6 @@ export const getImageMessage = createSelector(getMessageByIdConversationSelector
     
     if (messages.length) {
         const imageMessages = messages.map((message) => (message?.imageLink ? message.imageLink : null));
-        console.log("imageMessages", imageMessages);
 
         return imageMessages;
     }
@@ -241,7 +240,6 @@ export const getImageMessage = createSelector(getMessageByIdConversationSelector
 export const getFileMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
     if (messages.length) {
         const fileMessages = messages.map((message) => (message?.fileLink ? message.fileLink : null));
-        console.log("fileMessages", fileMessages);
 
         return fileMessages;
     }

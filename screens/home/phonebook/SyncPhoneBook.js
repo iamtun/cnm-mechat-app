@@ -7,7 +7,6 @@ import { useState } from 'react';
 import { Alert, FlatList, Platform } from 'react-native';
 import SearchItem from '../../../components/SearchBar/SearchItem';
 import { StyleSheet, Text, View } from 'react-native';
-
 function SyncPhoneBook({ navigation }) {
     const users = useSelector(userListSelector);
     const me = useSelector(userInfoSelector);
