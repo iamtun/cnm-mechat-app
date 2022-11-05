@@ -11,6 +11,7 @@ import { userInfoSelector } from '../../../redux/selector';
 
 export default function DetailChat({ route, navigation }) {
     const { isGroup, members, name, image } = route.params;
+    console.log("image", image);
     const userInfo = useSelector(userInfoSelector)
 
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];

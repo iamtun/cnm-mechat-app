@@ -2,6 +2,7 @@ import { ListItem, Avatar } from 'react-native-elements';
 import { Text, View, FlatList, TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+
 import { useEffect } from 'react';
 
 import {
@@ -11,7 +12,6 @@ import {
 } from '../../../redux/selector';
 import { fetchConversations } from '../../../redux/slice/conversationSlice';
 import conversationsListByUserId from '../../../redux/slice/conversationSlice';
-import { useState } from 'react';
 
 function GroupChatScreen({ navigation }) {
     let listGroupChat = [];

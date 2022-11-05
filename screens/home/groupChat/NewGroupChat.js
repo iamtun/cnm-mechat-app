@@ -1,25 +1,195 @@
-import { View, Text, StyleSheet, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, FlatList, Pressable } from 'react-native';
 import Header from '../../../components/Header';
-import Icon from 'react-native-vector-icons/Ionicons';
 import React from 'react';
 import { useState } from 'react';
-import { TouchableOpacity } from 'react-native';
+import { ListItem, Avatar } from 'react-native-elements';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-function NewGroupChat() {
+import {
+    conversationsListSelector,
+    getFriendsByUserSelector,
+    userIdSelector,
+    userInfoSelector,
+    usersRemainingSelector,
+} from '../../../redux/selector';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { Alert } from 'react-native';
+import { fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
+import useDebounce from '../../../hooks/useDebounce';
+import filterSlice from '../../../redux/slice/filterSlice';
+
+function NewGroupChat({ navigation }) {
+    const dispatch = useDispatch();
+
+    // info me
+    const userID = useSelector(userInfoSelector);
+    const { _id } = userID;
+
+    // info group
+    const group = useSelector(conversationsListSelector);
+
+    //text search
     const [searchInput, setSearchInput] = useState(null);
+    const debounceSearch = useDebounce(searchInput, 500);
+
+    // text name group
+    const [nameGroup, setNameGroup] = useState(null);
+
+    // is create group
+    const [isCreateGroup, setIsCreateGroup] = useState(false);
+    const debounceGroup = useDebounce(isCreateGroup, 2000);
+
+    // list all friends
+    const friends = useSelector(getFriendsByUserSelector);
+    const [data, setData] = useState([]);
+    let listFriends = [];
+
+    //list id click
+    const [idFriend, setIdFriend] = useState([]);
+
+    // search
+    useEffect(() => {
+        dispatch(filterSlice.actions.searchFilterChange(searchInput));
+    }, [debounceSearch]);
+
+    const userSearching = useSelector(usersRemainingSelector);
+    console.log('userSearching', userSearching);
+
+    // set first load
+    useEffect(() => {
+        if (userSearching && userSearching !== 1) {
+            for (let item of userSearching) {
+                listFriends.push({
+                    _id: item._id,
+                    fullName: item.fullName,
+                    avatarLink: item.avatarLink,
+                    isChecked: idFriend.includes(item._id) ? true : false,
+                });
+            }
+        } else if (userSearching === 1 || userSearching === false) {
+            for (let item of friends) {
+                listFriends.push({
+                    _id: item._id,
+                    fullName: item.fullName,
+                    avatarLink: item.avatarLink,
+                    isChecked: idFriend.includes(item._id) ? true : false,
+                });
+            }
+        }
+        setData(listFriends);
+    }, [userSearching]);
+
+    // handle select items
+    const handleChange = (id) => {
+        let listFriendsTmp = [];
+        let listIdSelect = [...idFriend];
+
+        let newData = data.map((item) => {
+            if (id === item._id) {
+                return { ...item, isChecked: !item.isChecked };
+            }
+            return item;
+        });
+
+        listFriendsTmp = newData;
+
+        listFriendsTmp.map((item) => {
+            if (id === item._id) {
+                if (item.isChecked) {
+                    listIdSelect = [...idFriend, item._id];
+                } else {
+                    listIdSelect.splice(idFriend.indexOf(item._id), 1);
+                }
+            }
+        });
+        setData(newData);
+        setIdFriend(listIdSelect);
+    };
+
+    //create group
+    const createGroup = () => {
+        if (idFriend.length < 2) {
+            Alert.alert('Vui lòng chọn 2 thành viên trở lên');
+        } else if (nameGroup == null || nameGroup == '') {
+            Alert.alert('Vui lòng nhập tên nhóm');
+        } else {
+            const data = {
+                members: idFriend,
+                createdBy: _id,
+                name: nameGroup,
+            };
+            console.log('Data', data);
+            dispatch(fetchCreateGroupChat(data));
+            // navigation.navigate("HomeScreen");
+            setIsCreateGroup(true);
+        }
+    };
+
+    useEffect(() => {
+        if (isCreateGroup) {
+            navigation.navigate('MessageScreen', {
+                id: group._id,
+                isGroup: group.isGroup,
+                members: group.members,
+                name: group.name,
+                image: group.imageLink,
+            });
+        }
+    }, [debounceGroup]);
+
+    // render item
+    function getFriendItem({ item: friend }) {
+        return (
+            <TouchableOpacity
+                onPress={() => {
+                    handleChange(friend._id);
+                }}
+                styles={{ flex: 1 }}
+            >
+                <ListItem key={friend._id} bottomDivider>
+                    <Avatar rounded size={50} source={{ uri: friend.avatarLink }} />
+                    <ListItem.Content>
+                        <ListItem.Title>{friend.fullName}</ListItem.Title>
+                    </ListItem.Content>
+                    <Icon
+                        style={{ marginLeft: 10 }}
+                        name={friend.isChecked ? 'md-radio-button-on-outline' : 'radio-button-off-outline'}
+                        size={25}
+                        color="#6BC185"
+                    />
+                </ListItem>
+            </TouchableOpacity>
+        );
+    }
+
+    // ui
     return (
         <>
             <Header />
+            <View style={styles.header}>
+                <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
+                </TouchableOpacity>
+                <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tạo nhóm</Text>
+            </View>
             <View style={styles.container}>
                 <View style={styles.frameNameGroup}>
                     <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
-                    <TextInput style={{ fontSize: 18 }} placeholder="Đặt tên nhóm"></TextInput>
+                    <TextInput
+                        value={nameGroup}
+                        style={{ fontSize: 18 }}
+                        onChangeText={(value) => {
+                            setNameGroup(value);
+                        }}
+                        placeholder="Đặt tên nhóm"
+                    ></TextInput>
                 </View>
                 <View style={styles.searchBar}>
                     <Icon style={{ marginLeft: 10 }} name="search-outline" size={22} color="black" />
                     <View style={styles.inputSearch}>
                         <TextInput
-                            style={{ marginLeft: 5 , width: "100%"}}
+                            style={{ marginLeft: 5, width: '100%' }}
                             placeholder="Tìm tên hoặc số điện thoại"
                             value={searchInput}
                             onChangeText={(value) => {
@@ -28,22 +198,37 @@ function NewGroupChat() {
                         />
                     </View>
                 </View>
-                <View style ={{width: "100%", height:500, marginTop: 10}}>
 
+                <View style={{ width: '100%', height: '56%', marginTop: 10 }}>
+                    <Text style={{ marginLeft: 15, fontSize: 16, width: '70%', fontWeight: 'bold' }}>Danh bạ</Text>
+                    <FlatList
+                        data={data}
+                        keyExtractor={(friend) => friend._id.toString() + '_'}
+                        renderItem={getFriendItem}
+                    />
                 </View>
-                <TouchableOpacity style={styles.successRegister}>
-                    <Icon style={{ marginRight: 10 }} name="create-outline"  size={22} />
-                    <Text >Tạo nhóm</Text>
+                <TouchableOpacity style={styles.successRegister} onPress={createGroup}>
+                    <Icon style={{ marginRight: 10 }} name="create-outline" size={22} />
+                    <Text>Tạo nhóm</Text>
                 </TouchableOpacity>
             </View>
         </>
     );
 }
+
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: 'white',
         width: '100%',
         height: '100%',
         alignItems: 'center',
+    },
+    header: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        width: '100%',
+        height: 50,
+        backgroundColor: '#3475F5',
     },
     frameNameGroup: {
         padding: 5,
@@ -68,14 +253,14 @@ const styles = StyleSheet.create({
     },
     successRegister: {
         marginTop: 10,
-        backgroundColor: "#1BA9FF",
+        backgroundColor: '#1BA9FF',
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 15,
         width: '90%',
         height: 50,
-        marginBottom: 0
+        marginBottom: 0,
     },
 });
 export default NewGroupChat;
