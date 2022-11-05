@@ -1,19 +1,12 @@
-import { Linking } from 'react-native';
 import { TouchableOpacity } from 'react-native';
-import { View, StyleSheet, Text, Image } from 'react-native';
+import { StyleSheet, Text, Image } from 'react-native';
 import { iconExtends, icons, handleFileExtension, handleFileName } from '../../../../utils/filePathConfig';
-function FileMessage({ fileUri }) {
+function FileMessage({ fileUri, navigation }) {
     const fileEx = handleFileExtension(fileUri);
     const fileName = handleFileName(fileUri);
 
-    const handleOpenFile = async () => {
-        const supported = await Linking.canOpenURL(fileUri);
-
-        if (supported) {
-            await Linking.openURL(fileUri);
-        } else {
-            Alert.alert(`Don't know how to open this URL: ${url}`);
-        }
+    const handleOpenFile = () => {
+        navigation.navigate('ViewFileScreen', {link: fileUri});
     };
 
     return (

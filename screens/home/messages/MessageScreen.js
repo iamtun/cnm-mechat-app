@@ -40,7 +40,7 @@ function MessageScreen({ route, navigation }) {
         });
     }, []);
 
-    const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} /> : null);
+    const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} navigation={navigation}/> : null);
 
     const handleFetchMessageScrollTop = () => {
         const numberMessage = messages.length;

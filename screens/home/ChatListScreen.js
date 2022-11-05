@@ -32,6 +32,7 @@ function ChatListScreen({ navigation }) {
             ) : (
                 <FlatList
                     data={conversations}
+                    initialNumToRender={50}
                     renderItem={({ item }) => (
                         <ChatItem
                             id={item.id}
