@@ -11,7 +11,7 @@ import ActionMessage from './ActionMessage';
 import FileMessage from './FileMessage';
 import ImageMessage from './ImageMessage';
 
-function MessageItem({ message, id }) {
+function MessageItem({ message, id, navigation }) {
     const { _id } = useSelector(userInfoSelector);
     const isMe = message.user.id === _id;
     const dispatch = useDispatch();
@@ -74,7 +74,7 @@ function MessageItem({ message, id }) {
                                             />
                                         )
                                     ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} />
+                                        <FileMessage fileUri={message.fileLink} navigation={navigation}/>
                                     ) : (
                                         <Text style={[styles.message]}>{message.content}</Text>
                                     )}

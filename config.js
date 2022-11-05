@@ -1,7 +1,7 @@
 import { LINK_API_V4, LINK_API_LOCALHOST } from '@env';
 import { io } from 'socket.io-client';
 
-console.log('API', LINK_API_V4);
+console.log('API ->', LINK_API_V4);
 export default {
     LINK_API_V4,
     LINK_API_LOCALHOST

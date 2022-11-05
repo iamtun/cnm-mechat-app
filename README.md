@@ -100,7 +100,7 @@
 
 -   Sử dụng ở component cha
     ```js
-    <TextInputPrimary ref={phoneNumber} placeholder="Nhập số điện thoại" />
+        <TextInputPrimary ref={phoneNumber} placeholder="Nhập số điện thoại" />
     ```
 
 ### Hướng dẫn fix lỗi idb trên thư viện firebase
@@ -108,13 +108,13 @@
 -   Tạo file `metro.config.js`
 
 ```js
-const { getDefaultConfig } = require('expo/metro-config');
+    const { getDefaultConfig } = require('expo/metro-config');
 
-const defaultConfig = getDefaultConfig(__dirname);
+    const defaultConfig = getDefaultConfig(__dirname);
 
-defaultConfig.resolver.assetExts.push('cjs');
+    defaultConfig.resolver.assetExts.push('cjs');
 
-module.exports = defaultConfig;
+    module.exports = defaultConfig;
 ```
 
 ### Xóa cảnh báo:
@@ -122,9 +122,9 @@ module.exports = defaultConfig;
 `EventEmitter.removeListener('change', ...): Method has been deprecated. Please instead use remove() on the subscription returned by EventEmitter.addListener.`
 
 ```js
-import { LogBox } from 'react-native';
+    import { LogBox } from 'react-native';
 
-LogBox.ignoreLogs(['EventEmitter.removeListener']);
+    LogBox.ignoreLogs(['EventEmitter.removeListener']);
 ```
 
 ### Cách sử dụng env trong react-native
@@ -142,16 +142,31 @@ LogBox.ignoreLogs(['EventEmitter.removeListener']);
         };
     };
 ```
-- Sử dụng
+
+-   Sử dụng
+
 ```js
-    //tạo file config để import env
-    import {API_USERS} from "@env"
+//tạo file config để import env
+    import { API_USERS } from '@env';
 
     export default {
-        API_USERS
-    }
+        API_USERS,
+    };
 
     //import config khi cần chạy biến môi trường
-    import config from "./config"
+    import config from './config';
     console.log(config.API_USERS); //localhost:3000/users
+```
+
+### View file with uri
+
+-   Cài đặt thư viện `npm i react-native-webview`
+-   Tạo một màn hình mới:
+
+```js
+    <View style={{ width: '100%', height: '100%' }}>
+        <View style={{ width: '100%', height: '100%' }}>
+            <WebView source={{ uri: link }} onLoad={console.log('loaded!')} />
+        </View>
+    </View>
 ```

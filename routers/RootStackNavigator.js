@@ -18,6 +18,7 @@ import SendCallVoice from '../screens/home/call/SendCallVoice';
 import ReceiveCallVoice from '../screens/home/call/ReceiveCallVoice';
 import ImageScreen from '../screens/home/detailChat/ImageScreen';
 import NewGroupChat from '../screens/home/groupChat/NewGroupChat';
+import ViewFileScreen from '../screens/home/messages/ViewFileScreen';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -49,6 +50,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="ReceiveCallVoice" component={ReceiveCallVoice} />
                 <Stack.Screen name="ImageScreen" component={ImageScreen} />
                 <Stack.Screen name="NewGroupChat" component={NewGroupChat} />
+                <Stack.Screen name='ViewFileScreen' component={ViewFileScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );
