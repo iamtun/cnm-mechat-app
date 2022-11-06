@@ -38,7 +38,6 @@ export const createFormData = (images, key) => {
         };
     })
    
-    console.log(_images);
     const formData = new FormData();
     //console.log(image);
     _images.forEach(image => {

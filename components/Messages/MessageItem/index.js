@@ -95,7 +95,7 @@ function MessageItem({ message, id, navigation }) {
                                             />
                                         )
                                     ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} />
+                                        <FileMessage fileUri={message.fileLink} navigation={navigation}/>
                                     ) : (
                                         <Text style={[styles.message]}>{message.content}</Text>
                                     )}

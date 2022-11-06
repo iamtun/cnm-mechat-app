@@ -22,6 +22,9 @@ const conversationsListByUserId = createSlice({
             })
             .addCase(fetchConversations.pending, (state, action) => {
                 state.loading = true;
+            })
+            .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
+                state.data = action.payload;
             });
     },
 });
@@ -42,4 +45,19 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
     }
 });
 
+export const fetchCreateGroupChat = createAsyncThunk('conversations/fetchCreateGroupChat', async (data) => {
+    try {
+        const res = await fetch(`${config.LINK_API_V4}/conversations/create-conversation`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
+        const groupChat = await res.json();
+        return groupChat;
+    } catch (err) {
+        console.log(`err fetch group: ${err}`);
+    }
+})
 export default conversationsListByUserId;

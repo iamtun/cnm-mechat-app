@@ -10,8 +10,7 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUpdateInfoUsers } from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { useEffect } from 'react';
-import { fetchUserByPhone } from '../../../redux/slice/userInfoSlice';
+
 
 export default function InfoSelf({ route, navigation }) {
 

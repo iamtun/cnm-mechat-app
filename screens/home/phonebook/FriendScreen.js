@@ -1,11 +1,11 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { AlphabetList } from 'react-native-section-alphabet-list';
-import { Text, View } from 'react-native';
+import { TouchableOpacity } from 'react-native';
+import { Text, View , } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getConversationIdByIdFriendSelector, getFriendsByUserSelector } from '../../../redux/selector';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity } from 'react-native';
 import friendListSlice from '../../../redux/slice/friendSlice';
 
 function FriendScreen({ navigation }) {
