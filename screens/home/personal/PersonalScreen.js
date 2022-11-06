@@ -97,7 +97,6 @@ function PersonalScreen({ route, navigation }) {
                     userID: infoSelf._id,
                     avatarLink: result.uri,
                 };
-                console.log("avatarLink", data);
                 dispatch(fetchUpdateAvatarUsers(data));
             } else {
                 const data = {

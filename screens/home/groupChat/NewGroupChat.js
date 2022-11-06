@@ -54,7 +54,6 @@ function NewGroupChat({ navigation }) {
     }, [debounceSearch]);
 
     const userSearching = useSelector(usersRemainingSelector);
-    console.log('userSearching', userSearching);
 
     // set first load
     useEffect(() => {
@@ -119,7 +118,6 @@ function NewGroupChat({ navigation }) {
                 createdBy: _id,
                 name: nameGroup,
             };
-            console.log('Data', data);
             dispatch(fetchCreateGroupChat(data));
             // navigation.navigate("HomeScreen");
             setIsCreateGroup(true);
@@ -178,7 +176,7 @@ function NewGroupChat({ navigation }) {
                     <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
                     <TextInput
                         value={nameGroup}
-                        style={{ fontSize: 18 }}
+                        style={{ fontSize: 18 , width :"90%", height:"100%"}}
                         onChangeText={(value) => {
                             setNameGroup(value);
                         }}
@@ -187,9 +185,9 @@ function NewGroupChat({ navigation }) {
                 </View>
                 <View style={styles.searchBar}>
                     <Icon style={{ marginLeft: 10 }} name="search-outline" size={22} color="black" />
-                    <View style={styles.inputSearch}>
+                    <View style={{width: "90%"}}>
                         <TextInput
-                            style={{ marginLeft: 5, width: '100%' }}
+                            style={{ marginLeft: 5, width: "100%", height:"100%"}}
                             placeholder="Tìm tên hoặc số điện thoại"
                             value={searchInput}
                             onChangeText={(value) => {

@@ -55,7 +55,6 @@ export const fetchCreateGroupChat = createAsyncThunk('conversations/fetchCreateG
             body: JSON.stringify(data),
         });
         const groupChat = await res.json();
-        console.log("---groupChat",groupChat);
         return groupChat;
     } catch (err) {
         console.log(`err fetch group: ${err}`);
