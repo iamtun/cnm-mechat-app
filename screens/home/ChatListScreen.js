@@ -19,8 +19,8 @@ function ChatListScreen({ navigation }) {
 
     useEffect(() => {
         //init
-        // if(conversations.length === 0)
-        dispatch(fetchConversations());
+        if(conversations.length === 0)
+            dispatch(fetchConversations());
     }, [isFocus]);
 
     return (

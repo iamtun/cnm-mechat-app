@@ -16,6 +16,9 @@ const userInfoSlice = createSlice({
         refreshToLogout: (state, action) => {
             state.loading = 0;
         },
+        receiveFriendListFromSocket: (state, action) => {
+            state.data.friends = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
