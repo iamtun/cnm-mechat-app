@@ -3,13 +3,16 @@ import config, { socket } from '../../config';
 
 const friendListSlice = createSlice({
     name: 'friends',
-    initialState: { data: [], friendId: null, userId: null, phoneNumbers: [] },
+    initialState: { data: [], friendId: null, userId: null, phoneNumbers: [], friendOnline: [] },
     reducers: {
         clickSendChat: (state, action) => {
             state.friendId = action.payload;
         },
         friendRequestReceiverSocket: (state, action) => {
             state.data.push(action.payload);
+        },
+        receiveFriendOnlineWithSocket: (state, action) => {
+            state.friendOnline = action.payload;
         }
     },
     extraReducers: (builder) => {

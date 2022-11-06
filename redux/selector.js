@@ -15,17 +15,22 @@ export const userInfoLoadingSelector = (state) => state.info.loading;
 
 export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
+export const friendOnlineSelector = (state) => state.friends.friendOnline;
 
 export const conversationsListSelector = (state) => state.conversations.data;
 export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 /**
  * get friend list then user info changed
+ * update status user online by socket
  */
-export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, (user, users) => {
+export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, friendOnlineSelector ,(user, users, friendOnline) => {
+    // console.log('selector -> ', friendOnline);
     if (users && user?.friends) {
         const friends = users.filter((_user) => user.friends.includes(_user._id));
-        return friends;
+
+        const _friends = friends.map((friend) => friendOnline.includes(friend._id) ? {...friend, isOnline: true} : {...friend, isOnline: false})
+        return _friends;
     }
     return null;
 });
