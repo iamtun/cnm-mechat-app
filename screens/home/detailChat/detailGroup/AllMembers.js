@@ -12,7 +12,6 @@ import Header from '../../../../components/Header';
 function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
     const { createdBy, members, isGroup, idConversation } = route.params;
-    console.log('idConversation', idConversation);
     useEffect(() => {
         dispatch(conversationsListByUserId.actions.getMembers(members));
     });

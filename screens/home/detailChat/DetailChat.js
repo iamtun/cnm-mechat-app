@@ -30,10 +30,9 @@ export default function DetailChat({ route, navigation }) {
     };
 
     const handleAddMembers = () => {
-        navigation.navigate('NewGroupChat', { isCreate: false });
+        navigation.navigate('NewGroupChat', { isCreate: false , members: members});
     };
 
-    console.log('userInfo._id', userInfo._id);
     const outGroup = () => {
         const data = {
             idConversation: idConversation,

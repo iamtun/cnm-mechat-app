@@ -42,7 +42,11 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
         const { _id } = jwtDecode(token);
         const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`);
         const conversations = await res.json();
-        if (conversations?.error) return null;
+
+        if (conversations?.error) {
+            console.warn(conversations);
+            return null;
+        };
         return conversations.data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time));
     } catch (err) {
         console.log(`[fetchConversations]: ${err}`);
@@ -97,7 +101,6 @@ export const fetchOutGroup =  createAsyncThunk('conversations/fetchOutGroup', as
             body: JSON.stringify({userId}),
         });
         const outGroup = await res.json();
-        console.log("outGroup", outGroup);
     } catch (err) {
         console.log(`err fetch out group: ${err}`);
     }

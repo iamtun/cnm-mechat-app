@@ -3,33 +3,39 @@ import config, { socket } from '../../config';
 
 const friendListSlice = createSlice({
     name: 'friends',
-    initialState: { data: [], friendId: null, userId: null, phoneNumbers: [] },
+    initialState: { data: [], friendId: null, userId: null, phoneNumbers: [], friendOnline: [] },
     reducers: {
         clickSendChat: (state, action) => {
             state.friendId = action.payload;
         },
         friendRequestReceiverSocket: (state, action) => {
             state.data.push(action.payload);
-        }
+        },
+        receiveFriendOnlineWithSocket: (state, action) => {
+            state.friendOnline = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchFriendsRequest.fulfilled, (state, action) => {
-                if(action.payload){
-                    socket.emit("send_friend_request", {request: action.payload.data});
-                }
-                else 
-                    console.warn('exists request!');
+                if (action.payload) {
+                    socket.emit('send_friend_request', { request: action.payload.data });
+                } else console.warn('exists request!');
             })
             .addCase(fetchLoadFriendsRequest.fulfilled, (state, action) => {
                 state.data = action.payload;
             })
             .addCase(fetchListFriendRequestSent.fulfilled, (state, action) => {
                 //state.data = action.payload;
-            }).addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
-                const id = action.payload;
-                const index = state.data.findIndex((request) => request.idFriendRequest === id);
+            })
+            .addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
+                const { friendRequestID, listFriendsReceiver, listFriendsSender, idReceiver, idSender} = action.payload;
+                const index = state.data.findIndex((request) => request.idFriendRequest === friendRequestID);
                 state.data.splice(index, 1);
+
+                if(friendRequestID, listFriendsReceiver && listFriendsSender && idReceiver && idSender) {
+                    socket.emit('accept_friend_request', ({listFriendsReceiver, listFriendsSender, idReceiver, idSender}));
+                }
             });
     },
 });
@@ -45,11 +51,10 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
         });
         const friendRequest = await res.json();
         // console.log("---friendRequest",friendRequest);
-        if(friendRequest?.data)
-            return friendRequest;
+        if (friendRequest?.data) return friendRequest;
         return null;
     } catch (err) {
-        console.log(`err fetch users: ${err}`);
+        console.warn(`[fetchFriendsRequest]: ${err}`);
     }
 });
 
@@ -61,7 +66,7 @@ export const fetchLoadFriendsRequest = createAsyncThunk('friends/fetchLoadFriend
             // console.log("----allFriendRequest",allFriendRequest);
             return allFriendRequest.data;
         } catch (err) {
-            console.log(`[fetch messages]: ${err}`);
+            console.warn(`[fetchLoadFriendsRequest]: ${err}`);
         }
     }
 });
@@ -80,10 +85,10 @@ export const fetchHandleFriendsRequest = createAsyncThunk('friends/fetchHandleFr
             body: JSON.stringify({ status, senderID, receiverID }),
         });
         const user = await res.json();
-
-        return user.friendRequestID;
+        console.log('result accept', user);
+        return user;
     } catch (err) {
-        console.log(`err fetch users: ${err}`);
+        console.warn(`[fetchHandleFriendsRequest]: ${err}`);
     }
 });
 
@@ -102,7 +107,7 @@ export const fetchBackFriendRequest = createAsyncThunk('friends/fetchBackFriendR
         const dataBackFriendsRequest = res.json();
         return dataBackFriendsRequest.data;
     } catch (err) {
-        console.log(`err fetch users: ${err}`);
+        console.warn(`[fetchBackFriendRequest]: ${err}`);
     }
 });
 
@@ -113,7 +118,7 @@ export const fetchListFriendRequestSent = createAsyncThunk('friends/fetchListFri
             const allFriendRequestSent = await res.json();
             return allFriendRequestSent.data;
         } catch (err) {
-            console.log(`[fetch messages]: ${err}`);
+            console.warn(`[fetchListFriendRequestSent]: ${err}`);
         }
     }
 });

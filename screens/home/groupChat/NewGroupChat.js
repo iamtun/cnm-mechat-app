@@ -20,8 +20,9 @@ import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
 
 function NewGroupChat({ route, navigation }) {
-    const  isCreate = route.params.isCreate;
+    const  {isCreate, members} = route.params;
     const dispatch = useDispatch();
+    console.log(members);
 
     // info me
     const userID = useSelector(userInfoSelector);
@@ -47,8 +48,9 @@ function NewGroupChat({ route, navigation }) {
     let listFriends = [];
 
     //list id click
-    const [idFriend, setIdFriend] = useState([]);
-
+    const [idFriend, setIdFriend] = useState(members);
+    console.log("idFriend", idFriend);
+    
     // search
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchInput));

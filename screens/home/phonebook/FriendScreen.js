@@ -23,6 +23,7 @@ function FriendScreen({ navigation }) {
                     avatar: friends[i].avatarLink,
                     bio: friends[i].bio,
                     key: friends[i]._id,
+                    online: friends[i].isOnline,
                 });
             }
         }
@@ -56,7 +57,7 @@ function FriendScreen({ navigation }) {
                 <ListItem key={item.key} bottomDivider>
                     <Avatar rounded size={70} source={{ uri: item.avatar }} />
                     <ListItem.Content>
-                        <ListItem.Subtitle>{item.value}</ListItem.Subtitle>
+                        <ListItem.Subtitle>{item.value} {item.online ? <Icon name='ellipse' size={14} color="#38A3A5"/> : null}</ListItem.Subtitle>
                         <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
                     </ListItem.Content>
                     <TouchableOpacity>

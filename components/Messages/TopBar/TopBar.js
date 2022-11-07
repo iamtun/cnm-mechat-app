@@ -1,7 +1,11 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+import { friendOnlineSelector } from '../../../redux/selector';
+
 function TopBar({idConversation, isGroup, members, createdBy, image, name, memberGroup, navigation }) {
+    const friendOnline = useSelector(friendOnlineSelector);
+
     const handleClickArrowLeftIcon = () => {
         navigation.navigate('HomeScreen');
     };
@@ -18,7 +22,11 @@ function TopBar({idConversation, isGroup, members, createdBy, image, name, membe
             <View style={[styles.leftBar]}>
                 <Icon name="arrow-back-outline" size={30} color="#fff" onPress={handleClickArrowLeftIcon} />
                 <View style={styles.group}>
-                    <Text style={styles.nameText}>{name}</Text>
+                    <Text style={styles.nameText}>
+                    {!isGroup &&
+                            friendOnline.includes(members[0]) &&
+                            friendOnline.includes(members[1]) && <Icon name="ellipse" size={14} color="#38A3A5" />}{' '}{name} 
+                    </Text>
                     {memberGroup && <Text style={{ color: '#fff' }}>{`${memberGroup} người`}</Text>}
                 </View>
             </View>
@@ -38,7 +46,7 @@ function TopBar({idConversation, isGroup, members, createdBy, image, name, membe
                         </TouchableOpacity>
                     </>
                 )}
-                <TouchableOpacity
+                 <TouchableOpacity
                     onPress={() =>
                         navigation.navigate('DetailChat', {
                             idConversation,
