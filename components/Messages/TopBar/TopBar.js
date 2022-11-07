@@ -1,57 +1,62 @@
+import { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 // import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Icon from "react-native-vector-icons/Ionicons";
-function TopBar({isGroup,members ,image,name, memberGroup, navigation }) {
+import Icon from 'react-native-vector-icons/Ionicons';
+import { useSelector } from 'react-redux';
+import { friendOnlineSelector } from '../../../redux/selector';
+function TopBar({ isGroup, members, image, name, memberGroup, navigation }) {
+    const friendOnline = useSelector(friendOnlineSelector);
 
-  const handleClickArrowLeftIcon = () => {
-    navigation.navigate("HomeScreen");
-  };
+    const handleClickArrowLeftIcon = () => {
+        navigation.navigate('HomeScreen');
+    };
 
     const _sendCallVoice = () => {
         navigation.navigate('SendCallVoice');
     };
 
-  const _receiveCallVoice = () => {
-    navigation.navigate("ReceiveCallVoice");
-  };
-  return (
-    <View style={[styles.topBar, styles.row]}>
-      <View style={[styles.leftBar]}>
-        <Icon
-          name="arrow-back-outline"
-          size={30}
-          color="#fff"
-          onPress={handleClickArrowLeftIcon}
-        />
-        <View style={styles.group}>
-          <Text style={styles.nameText}>{name}</Text>
-          {memberGroup && (
-            <Text style={{ color: "#fff" }}>{`${memberGroup} người`}</Text>
-          )}
+    const _receiveCallVoice = () => {
+        navigation.navigate('ReceiveCallVoice');
+    };
+    return (
+        <View style={[styles.topBar, styles.row]}>
+            <View style={[styles.leftBar]}>
+                <Icon name="arrow-back-outline" size={30} color="#fff" onPress={handleClickArrowLeftIcon} />
+                <View style={styles.group}>
+                    <Text style={styles.nameText}>
+                    {!isGroup &&
+                            friendOnline.includes(members[0]) &&
+                            friendOnline.includes(members[1]) && <Icon name="ellipse" size={14} color="#38A3A5" />}{' '}{name} 
+                    </Text>
+                    {memberGroup && <Text style={{ color: '#fff' }}>{`${memberGroup} người`}</Text>}
+                </View>
+            </View>
+            <View style={[styles.rightBar, styles.row]}>
+                {memberGroup ? (
+                    <>
+                        <Icon name="video-outline" size={24} style={styles.icon} />
+                        <Icon name="magnify" size={24} style={styles.icon} />
+                    </>
+                ) : (
+                    <>
+                        <TouchableOpacity onPress={_sendCallVoice}>
+                            <Icon name="call-outline" size={24} style={styles.icon} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={_receiveCallVoice}>
+                            <Icon name="videocam-outline" size={24} style={styles.icon} />
+                        </TouchableOpacity>
+                    </>
+                )}
+                <TouchableOpacity
+                    onPress={() =>
+                        navigation.navigate('DetailChat', { isGroup, members: members, name: name, image: image })
+                    }
+                >
+                    <Icon name="list-outline" size={24} style={styles.icon} />
+                </TouchableOpacity>
+            </View>
         </View>
-      </View>
-      <View style={[styles.rightBar, styles.row]}>
-        {memberGroup ? (
-          <>
-            <Icon name="video-outline" size={24} style={styles.icon} />
-            <Icon name="magnify" size={24} style={styles.icon} />
-          </>
-        ) : (
-          <>
-            <TouchableOpacity onPress={_sendCallVoice}>
-              <Icon name="call-outline" size={24} style={styles.icon} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={_receiveCallVoice}>
-              <Icon name="videocam-outline" size={24} style={styles.icon} />
-            </TouchableOpacity>
-          </>
-        )}
-        <TouchableOpacity onPress={() => navigation.navigate("DetailChat",{isGroup, members: members, name: name, image: image})}>
-          <Icon name="list-outline" size={24} style={styles.icon} />
-        </TouchableOpacity>
-      </View>
-    </View>
-  );
+    );
 }
 
 const styles = StyleSheet.create({

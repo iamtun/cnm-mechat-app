@@ -31,18 +31,18 @@ function NewFriendScreen({ navigation }) {
     // get all request friends
     const allFriendsRequest = useSelector(friendListSelector);
 
-    for(let newFriend of allFriendsRequest){
-        if(newFriend.senderId !== _id && newFriend.receiverId === _id){
-            listFriendRequest.push({
-                content: newFriend.content,
-                fullName: newFriend.fullName,
-                idFriendRequest: newFriend.idFriendRequest,
-                imageLink: newFriend.imageLink,
-                phoneNumber: newFriend.phoneNumber,
-                senderId: newFriend.senderId,
-            })
-        }
-    }
+    // for(let newFriend of allFriendsRequest){
+    //     if(newFriend.senderId !== _id && newFriend.receiverId === _id){
+    //         listFriendRequest.push({
+    //             content: newFriend.content,
+    //             fullName: newFriend.fullName,
+    //             idFriendRequest: newFriend.idFriendRequest,
+    //             imageLink: newFriend.imageLink,
+    //             phoneNumber: newFriend.phoneNumber,
+    //             senderId: newFriend.senderId,
+    //         })
+    //     }
+    // }
 
     //handle request friends
     const _handleRequestFriend = (idRequest, idSender, isAccept) => {
@@ -93,7 +93,7 @@ function NewFriendScreen({ navigation }) {
 
             <View>
                 <FlatList
-                    data={listFriendRequest}
+                    data={allFriendsRequest}
                     keyExtractor={(user) => user.senderId.toString() + '*'}
                     renderItem={getNewFriends}
                 />

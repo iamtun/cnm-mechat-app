@@ -15,16 +15,18 @@ const userInfoSlice = createSlice({
         },
         refreshToLogout: (state, action) => {
             state.loading = 0;
+        },
+        receiveFriendListFromSocket: (state, action) => {
+            state.data.friends = action.payload;
         }
     },
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserInfo.fulfilled, (state, action) => {
-
                 state.data = action.payload;
                 state.loading = 2;
-            }).addCase(fetchUserInfo.pending, (state, action) => {
-
+            })
+            .addCase(fetchUserInfo.pending, (state, action) => {
                 state.loading = 1;
             })
             .addCase(fetchUserByPhone.fulfilled, (state, action) => {
@@ -55,11 +57,11 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         const { _id } = info;
 
         //call socket
-        socket.emit('addUser', _id);
+        socket.emit('status_user', _id);
 
-      try {
-        const res = await fetch(`${config.LINK_API_V4}/users/${_id}`);
-        const userInfo = await res.json();
+        try {
+            const res = await fetch(`${config.LINK_API_V4}/users/${_id}`);
+            const userInfo = await res.json();
 
             return userInfo.data;
         } catch (err) {
@@ -107,7 +109,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
     try {
         let dataForm;
         dataForm = createFormDataUpdate(data.avatarLink, data.key);
-        console.log("dataForm", dataForm);
+        console.log('dataForm', dataForm);
         const res = await fetch(`${config.LINK_API_V4}/users/update-avatar/${data.userID}`, {
             method: 'POST',
             headers: {
