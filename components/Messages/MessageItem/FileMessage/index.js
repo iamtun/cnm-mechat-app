@@ -1,12 +1,25 @@
 import { TouchableOpacity } from 'react-native';
+import { Linking } from 'react-native';
+import { Platform } from 'react-native';
 import { StyleSheet, Text, Image } from 'react-native';
 import { iconExtends, icons, handleFileExtension, handleFileName } from '../../../../utils/filePathConfig';
 function FileMessage({ fileUri, navigation }) {
     const fileEx = handleFileExtension(fileUri);
     const fileName = handleFileName(fileUri);
 
-    const handleOpenFile = () => {
-        navigation.navigate('ViewFileScreen', {link: fileUri});
+    const handleOpenFile = async() => {
+        if(Platform.OS === 'ios')
+            navigation.navigate('ViewFileScreen', {link: fileUri});
+        else {
+            const supported = await Linking.canOpenURL(fileUri);
+
+            if (supported) {
+                await Linking.openURL(fileUri);
+            } else {
+                Alert.alert(`Don't know how to open this URL: ${url}`);
+            }
+        }
+       
     };
 
     return (

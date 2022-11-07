@@ -20,6 +20,7 @@ export const friendOnlineSelector = (state) => state.friends.friendOnline;
 export const conversationsListSelector = (state) => state.conversations.data;
 export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
+export const conversationMembersSelector = (state) => state.conversations.members;
 /**
  * get friend list then user info changed
  * update status user online by socket
@@ -141,7 +142,7 @@ export const getConversationIdByIdGroupConversation = createSelector(
     conversationsListSelector,
     (conversationId, conversations) => {
         const conversation = conversations.filter(
-            (_conversation) => _conversation.isGroup && _conversation.id===conversationId,
+            (_conversation) => _conversation.isGroup && _conversation.id === conversationId,
         );
 
         if (conversation.length > 0) {
@@ -238,7 +239,6 @@ export const getUserRegister = createSelector(userListSelector, searchTextSelect
 });
 
 export const getImageMessage = createSelector(getMessageByIdConversationSelector, (messages) => {
-    
     if (messages.length) {
         const imageMessages = messages.map((message) => (message?.imageLink ? message.imageLink : null));
 
@@ -253,3 +253,32 @@ export const getFileMessage = createSelector(getMessageByIdConversationSelector,
         return fileMessages;
     }
 });
+
+export const getFriendsWithMembers = createSelector(
+    getFriendsByUserSelector,
+    conversationMembersSelector,
+    userListSelector,
+    (friends, members, users) => {
+        // const membersFilter = members.map((people) => {
+        //     console.log("people", people);
+        //     const _isFriend = friends.map((_friend) =>
+        //         _friend._id === people ? { ..._friend} : { ..._friend, isFriend: !_friend.isFriend },
+        //     );
+
+        //     return friends.filter;
+        // });
+        // console.log("membersFilter", membersFilter);
+        // return membersFilter.map((member, index) => member[index.toString()]);
+        const _members = users.filter((user) => members.includes(user._id));
+        // const _members = friends.filter((_friend) =>
+        //     members.includes(_friend._id) ? _friend : { ..._friend, isFriend: !_friend.isFriend },
+        // );
+        const _friends = friends.map((friend) => friend._id)
+        const friendWithMember = _members.map((member) => {
+            return _friends.includes(member._id) ? { ...member, isFriend: true } : { ...member, isFriend: false };
+        });
+
+       return friendWithMember;
+       
+    },
+);

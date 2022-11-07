@@ -1,12 +1,10 @@
-import { useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-// import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useSelector } from 'react-redux';
 import { friendOnlineSelector } from '../../../redux/selector';
-function TopBar({ isGroup, members, image, name, memberGroup, navigation }) {
-    const friendOnline = useSelector(friendOnlineSelector);
 
+function TopBar({idConversation, isGroup, members, createdBy, image, name, memberGroup, navigation }) {
+    const friendOnline = useSelector(friendOnlineSelector);
     const handleClickArrowLeftIcon = () => {
         navigation.navigate('HomeScreen');
     };
@@ -47,9 +45,16 @@ function TopBar({ isGroup, members, image, name, memberGroup, navigation }) {
                         </TouchableOpacity>
                     </>
                 )}
-                <TouchableOpacity
+                 <TouchableOpacity
                     onPress={() =>
-                        navigation.navigate('DetailChat', { isGroup, members: members, name: name, image: image })
+                        navigation.navigate('DetailChat', {
+                            idConversation,
+                            createdBy,
+                            isGroup: isGroup,
+                            members: members,
+                            name: name,
+                            image: image,
+                        })
                     }
                 >
                     <Icon name="list-outline" size={24} style={styles.icon} />

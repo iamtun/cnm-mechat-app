@@ -3,13 +3,13 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import MenuItem from '../SearchBar/Menu/MenuItem';
 
-function ChatItem({id, isGroup,members, name, image, message, time, navigation }) {
+function ChatItem({id, createdBy, isGroup, members, name, image, message, time, navigation }) {
   const [isVisible, setIsVisible] = useState(false);
   return (
     <TouchableOpacity
       style={styles.body}
       onPress={() => {
-        navigation.navigate("MessageScreen", { id, isGroup, members, name ,image});
+        navigation.navigate("MessageScreen", { id, createdBy, isGroup, members, name ,image});
       }}
       onLongPress={() => setIsVisible(true)}
     >

@@ -43,7 +43,7 @@ function SearchBar({ navigation }) {
     };
 
     const openAddNewGroup = () => {
-        navigation.navigate('NewGroupChat');
+        navigation.navigate('NewGroupChat', {isCreate: true, members: []});
     };
 
     //ui

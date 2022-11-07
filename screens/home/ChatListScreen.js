@@ -16,7 +16,7 @@ function ChatListScreen({ navigation }) {
     const conversationLoading = useSelector(conversationListLoadingSelector);
     const conversations = useSelector(conversationsListSelector);
     const isFocus = useIsFocused();
-
+    
     useEffect(() => {
         //init
         if(conversations.length === 0)
@@ -44,6 +44,7 @@ function ChatListScreen({ navigation }) {
                             time={moment(item.time).fromNow()}
                             navigation={navigation}
                             key={item.id}
+                            createdBy = {item.createdBy}
                         />
                     )}
                 />
