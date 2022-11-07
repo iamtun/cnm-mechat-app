@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Icon from 'react-native-vector-icons/Ionicons';
 
-import conversationsListByUserId from '../../../../redux/slice/conversationSlice';
+import conversationsSlice from '../../../../redux/slice/conversationSlice';
 import { getFriendsWithMembers } from '../../../../redux/selector';
 import SearchItem from '../../../../components/SearchBar/SearchItem';
 import Header from '../../../../components/Header';
@@ -13,7 +13,7 @@ function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
     const { createdBy, members, isGroup, idConversation } = route.params;
     useEffect(() => {
-        dispatch(conversationsListByUserId.actions.getMembers(members));
+        dispatch(conversationsSlice.actions.getMembers(members));
     });
 
     const memberFriends = useSelector(getFriendsWithMembers);

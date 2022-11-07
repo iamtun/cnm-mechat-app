@@ -3,48 +3,47 @@ import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
 import MenuItem from '../SearchBar/Menu/MenuItem';
 
-function ChatItem({id, createdBy, isGroup, members, name, image, message, time, navigation }) {
-  const [isVisible, setIsVisible] = useState(false);
-  return (
-    <TouchableOpacity
-      style={styles.body}
-      onPress={() => {
-        navigation.navigate("MessageScreen", { id, createdBy, isGroup, members, name ,image});
-      }}
-      onLongPress={() => setIsVisible(true)}
-    >
-      <View style={styles.left}>
-        <View style={styles.imageView}>
-          {image ? (
-            <Image source={{ uri: image }} style={styles.image} />
-          ) : (
-            <Image
-              source={require("../../assets/no-avatar.png")}
-              style={styles.image}
-            />
-          )}
-        </View>
-        <Tooltip
-          isVisible={isVisible}
-          content={<MenuItem icon="delete-forever" title="Xóa" color="red" />}
-          placement={"bottom"}
-          onClose={() => setIsVisible(false)}
-          contentStyle={{ width: 100 }}
-          showChildInTooltip={false} //No duplicate item
-          {...(Platform.OS === "ios"
-            ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
-            : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
+function ChatItem({ id, createdBy, isGroup, members, name, image, message, time, navigation }) {
+    const [isVisible, setIsVisible] = useState(false);
+    return (
+        <TouchableOpacity
+            style={styles.body}
+            onPress={() => {
+                navigation.navigate('MessageScreen', { id, createdBy, isGroup, members, name, image });
+            }}
+            onLongPress={() => setIsVisible(true)}
         >
-          <Text style={styles.nameText}>{name}</Text>
-          <Text style={styles.messageText}>{message}</Text>
-        </Tooltip>
-      </View>
-      <View>
-        {/* Thời gian được tính theo thời gian gửi tin nhắn cuối cùng */}
-        <Text>{time}</Text>
-      </View>
-    </TouchableOpacity>
-  );
+            <View style={styles.left}>
+                <View style={styles.imageView}>
+                    {image ? (
+                        <Image source={{ uri: image }} style={styles.image} />
+                    ) : (
+                        <Image source={require('../../assets/no-avatar.png')} style={styles.image} />
+                    )}
+                </View>
+                <Tooltip
+                    isVisible={isVisible}
+                    content={<MenuItem icon="delete-forever" title="Xóa" color="red" />}
+                    placement={'bottom'}
+                    onClose={() => setIsVisible(false)}
+                    contentStyle={{ width: 100 }}
+                    showChildInTooltip={false} //No duplicate item
+                    {...(Platform.OS === 'ios'
+                        ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
+                        : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
+                >
+                    <Text style={styles.nameText}>{name}</Text>
+                    <Text style={styles.messageText}>
+                        {message.length > 20 ? message.slice(0, 20) + '...' : message}
+                    </Text>
+                </Tooltip>
+            </View>
+            <View>
+                {/* Thời gian được tính theo thời gian gửi tin nhắn cuối cùng */}
+                <Text>{time}</Text>
+            </View>
+        </TouchableOpacity>
+    );
 }
 
 const styles = StyleSheet.create({
