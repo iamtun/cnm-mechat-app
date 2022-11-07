@@ -1,16 +1,16 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Modal, TextInput } from 'react-native';
 import React from 'react';
 import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
+import { useState, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Icon from 'react-native-vector-icons/Ionicons';
 import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
-import { useDispatch, useSelector } from 'react-redux';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { useState } from 'react';
-import { useEffect } from 'react';
-import { fetchOutGroup } from '../../../redux/slice/conversationSlice';
+import { fetchChangeNameGroup, fetchOutGroup } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
@@ -19,6 +19,8 @@ export default function DetailChat({ route, navigation }) {
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
     const [isOutGroup, setIsOutGroup] = useState(false);
     const debounce = useDebounce(isOutGroup, 1000);
+    const [modalVisible, setModalVisible] = useState(false);
+    const [newNameGroup, setNewNameGroup] = useState(name);
 
     const dispatch = useDispatch();
 
@@ -30,9 +32,10 @@ export default function DetailChat({ route, navigation }) {
     };
 
     const handleAddMembers = () => {
-        navigation.navigate('NewGroupChat', { isCreate: false , members: members});
+        navigation.navigate('NewGroupChat', { isCreate: false, members: members, idConversation });
     };
 
+    //out group
     const outGroup = () => {
         const data = {
             idConversation: idConversation,
@@ -44,6 +47,19 @@ export default function DetailChat({ route, navigation }) {
         setIsOutGroup(true);
     };
 
+    // change name group
+    const changeNameGroup= () => {
+        const data = {
+            idConversation: idConversation,
+            newName: newNameGroup,
+            userId: userInfo._id
+        }
+        console.log(data);
+        dispatch(fetchChangeNameGroup(data))
+
+        setNewNameGroup("")
+        setModalVisible(!modalVisible)
+    }
     useEffect(() => {
         if (isOutGroup) {
             navigation.navigate('HomeScreen');
@@ -53,6 +69,44 @@ export default function DetailChat({ route, navigation }) {
         <>
             <Header />
             <View style={styles.container}>
+                <Modal
+                    animationType="slide"
+                    transparent={true}
+                    visible={modalVisible}
+                    onRequestClose={() => {
+                        setModalVisible(!modalVisible);
+                    }}
+                >
+                    <View style={styles.centeredView}>
+                        <View style={styles.modalView}>
+                            <View style={styles.frameNameGroup}>
+                                <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
+                                <TextInput
+                                    value={newNameGroup}
+                                    style={{ fontSize: 18, width: '90%', height: '100%' }}
+                                    onChangeText={(value) => {
+                                        setNewNameGroup(value);
+                                    }}
+                                    placeholder="Đặt tên nhóm"
+                                ></TextInput>
+                            </View>
+                            <View style={styles.handle}>
+                                <TouchableOpacity
+                                    style={styles.buttonRemove}
+                                    onPress={() => setModalVisible(!modalVisible)}
+                                >
+                                    <Text>Hủy</Text>
+                                </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={styles.buttonAdd}
+                                    onPress={() => changeNameGroup()}
+                                >
+                                    <Text style={{ color: 'white' }}>Đồng ý</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </View>
+                </Modal>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={() => navigation.goBack()}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
@@ -62,7 +116,16 @@ export default function DetailChat({ route, navigation }) {
                 <View style={styles.infoUser}>
                     <View style={styles.avatar}>
                         <Avatar rounded size={90} source={{ uri: image }}></Avatar>
-                        <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
+                        {isGroup ? (
+                            <View style={{ flexDirection: 'row' }}>
+                                <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
+                                <TouchableOpacity style={styles.editName} onPress={() => setModalVisible(true)}>
+                                    <Icon name="pencil-outline" color="black" size={18} />
+                                </TouchableOpacity>
+                            </View>
+                        ) : (
+                            <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
+                        )}
                     </View>
                     <View style={styles.feature}>
                         <DetailFeature nameIcon="search-outline" nameFeature="Tìm tin nhắn"></DetailFeature>
@@ -164,4 +227,61 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 10,
     },
+    editName: {
+        marginLeft: 10,
+        marginTop: 15,
+        backgroundColor: '#E5E5E5',
+        width: 25,
+        height: 25,
+        borderRadius: 50,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalView: {
+        margin: 20,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        padding: 25,
+        alignItems: 'center',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5,
+    },
+    frameNameGroup: {
+        padding: 5,
+        height: 60,
+        borderBottomColor: '#CCE8FF',
+        alignItems: 'center',
+        borderBottomWidth: 2,
+        flexDirection: 'row',
+        width: '100%',
+    },
+    handle: {
+        flexDirection: 'row',
+        marginTop: 20,
+        marginLeft: 150,
+    },
+    buttonRemove: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 70,
+        height: 40,
+        borderRadius: 15,
+        borderWidth: 2,
+        borderColor: '#33B0E0',
+        marginRight: 30,
+    },
+    buttonAdd: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: 70,
+        height: 40,
+        borderRadius: 15,
+        backgroundColor: '#3475F5',
+    }
 });

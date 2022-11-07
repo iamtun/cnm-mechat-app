@@ -5,7 +5,6 @@ import { friendOnlineSelector } from '../../../redux/selector';
 
 function TopBar({idConversation, isGroup, members, createdBy, image, name, memberGroup, navigation }) {
     const friendOnline = useSelector(friendOnlineSelector);
-
     const handleClickArrowLeftIcon = () => {
         navigation.navigate('HomeScreen');
     };

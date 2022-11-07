@@ -15,14 +15,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
-import { fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
+import { fetchAddMembers, fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
 
 function NewGroupChat({ route, navigation }) {
-    const  {isCreate, members} = route.params;
+    const { isCreate, members, idConversation } = route.params;
     const dispatch = useDispatch();
-    console.log(members);
 
     // info me
     const userID = useSelector(userInfoSelector);
@@ -48,9 +47,8 @@ function NewGroupChat({ route, navigation }) {
     let listFriends = [];
 
     //list id click
-    const [idFriend, setIdFriend] = useState(members);
-    console.log("idFriend", idFriend);
-    
+    const [idFriend, setIdFriend] = useState([]);
+
     // search
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchInput));
@@ -66,7 +64,7 @@ function NewGroupChat({ route, navigation }) {
                     _id: item._id,
                     fullName: item.fullName,
                     avatarLink: item.avatarLink,
-                    isChecked: idFriend.includes(item._id) ? true : false,
+                    isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
                 });
             }
         } else if (userSearching === 1 || userSearching === false) {
@@ -75,10 +73,11 @@ function NewGroupChat({ route, navigation }) {
                     _id: item._id,
                     fullName: item.fullName,
                     avatarLink: item.avatarLink,
-                    isChecked: idFriend.includes(item._id) ? true : false,
+                    isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
                 });
             }
         }
+
         setData(listFriends);
     }, [userSearching]);
 
@@ -127,6 +126,18 @@ function NewGroupChat({ route, navigation }) {
         }
     };
 
+    // add member
+    const handleAddMembers = () => {
+        const data = {
+            idConversation: idConversation,
+            newMemberID : idFriend,
+            memberAddID: _id
+        }
+
+        dispatch(fetchAddMembers(data))
+        setIsCreateGroup(true);
+    }
+
     useEffect(() => {
         if (isCreateGroup) {
             navigation.navigate('MessageScreen', {
@@ -139,11 +150,11 @@ function NewGroupChat({ route, navigation }) {
             });
         }
     }, [debounceGroup]);
-
     // render item
     function getFriendItem({ item: friend }) {
         return (
             <TouchableOpacity
+                disabled={members.includes(friend._id) ? true: false}
                 onPress={() => {
                     handleChange(friend._id);
                 }}
@@ -153,6 +164,7 @@ function NewGroupChat({ route, navigation }) {
                     <Avatar rounded size={50} source={{ uri: friend.avatarLink }} />
                     <ListItem.Content>
                         <ListItem.Title>{friend.fullName}</ListItem.Title>
+                        {members.includes(friend._id) ? <ListItem.Subtitle>Đã tham gia</ListItem.Subtitle> : null}
                     </ListItem.Content>
                     <Icon
                         style={{ marginLeft: 10 }}
@@ -219,14 +231,14 @@ function NewGroupChat({ route, navigation }) {
                         keyExtractor={(friend) => friend._id.toString() + '_'}
                         renderItem={getFriendItem}
                     />
-                </View> 
+                </View>
                 {isCreate ? (
                     <TouchableOpacity style={styles.successRegister} onPress={createGroup}>
                         <Icon style={{ marginRight: 10 }} name="create-outline" size={22} />
                         <Text>Tạo nhóm</Text>
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity style={styles.addMembers}>
+                    <TouchableOpacity style={styles.addMembers} onPress ={handleAddMembers}>
                         <Icon style={{ marginRight: 10 }} name="person-add-outline" size={22} color="white" />
                         <Text style={{ color: 'white', fontSize: 18 }}>Thêm</Text>
                     </TouchableOpacity>

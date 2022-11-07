@@ -64,7 +64,6 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image, name, phonN
             mainId: _userInfoSelector._id,
         };
 
-        console.log(data);
         dispatch(fetchRemoveMember(data));
     };
     return (

@@ -29,6 +29,12 @@ const conversationsListByUserId = createSlice({
             })
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
                 state.data = action.payload;
+            })
+            .addCase(fetchAddMembers.fulfilled, (state, action) => {
+                state.data = action.payload;
+            })
+            .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
+                state.data = action.payload;
             });
     },
 });
@@ -82,7 +88,6 @@ export const fetchRemoveMember =  createAsyncThunk('conversations/fetchRemoveMem
             body: JSON.stringify({memberId, mainId}),
         });
         const memberRemove = await res.json();
-        console.log("memberRemove", memberRemove);
     } catch (err) {
         console.log(`err fetch remove members: ${err}`);
     }
@@ -105,5 +110,45 @@ export const fetchOutGroup =  createAsyncThunk('conversations/fetchOutGroup', as
         console.log(`err fetch out group: ${err}`);
     }
 })
+
+
+export const fetchAddMembers =  createAsyncThunk('conversations/fetchAddMembers', async (data) => {
+    try {
+        const {idConversation} = data;
+        const {newMemberID,memberAddID} = data;
+
+        const res = await fetch(`${config.LINK_API_V4}/conversations/add-member-conversation/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({newMemberID,memberAddID}),
+        });
+        const addMembers = await res.json();
+        return addMembers;
+    } catch (err) {
+        console.log(`err fetch add members: ${err}`);
+    }
+})
+
+export const fetchChangeNameGroup = createAsyncThunk(
+    'conversations/fetchChangeNameGroup',
+    async (data) => {
+        const { idConversation } = data;
+        const { newName, userId } = data;
+
+        const response = await fetch(`${config.LINK_API_V4}/conversations/change-name/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newName, userId }),
+        });
+
+        const jsonData = await response.json();
+        console.log(jsonData);
+        return jsonData;
+    },
+);
 
 export default conversationsListByUserId;
