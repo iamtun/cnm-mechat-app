@@ -19,7 +19,8 @@ import { fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
 
-function NewGroupChat({ navigation }) {
+function NewGroupChat({ route, navigation }) {
+    const  isCreate = route.params.isCreate;
     const dispatch = useDispatch();
 
     // info me
@@ -132,6 +133,7 @@ function NewGroupChat({ navigation }) {
                 members: group.members,
                 name: group.name,
                 image: group.imageLink,
+                createdBy: group.createdBy,
             });
         }
     }, [debounceGroup]);
@@ -169,25 +171,30 @@ function NewGroupChat({ navigation }) {
                 <TouchableOpacity onPress={() => navigation.goBack()}>
                     <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                 </TouchableOpacity>
-                <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tạo nhóm</Text>
+                <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>
+                    {isCreate ? 'Tạo nhóm' : 'Thêm thành viên'}{' '}
+                </Text>
             </View>
             <View style={styles.container}>
-                <View style={styles.frameNameGroup}>
-                    <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
-                    <TextInput
-                        value={nameGroup}
-                        style={{ fontSize: 18 , width :"90%", height:"100%"}}
-                        onChangeText={(value) => {
-                            setNameGroup(value);
-                        }}
-                        placeholder="Đặt tên nhóm"
-                    ></TextInput>
-                </View>
+                {isCreate ? (
+                    <View style={styles.frameNameGroup}>
+                        <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
+                        <TextInput
+                            value={nameGroup}
+                            style={{ fontSize: 18, width: '90%', height: '100%' }}
+                            onChangeText={(value) => {
+                                setNameGroup(value);
+                            }}
+                            placeholder="Đặt tên nhóm"
+                        ></TextInput>
+                    </View>
+                ) : null}
+
                 <View style={styles.searchBar}>
                     <Icon style={{ marginLeft: 10 }} name="search-outline" size={22} color="black" />
-                    <View style={{width: "90%"}}>
+                    <View style={{ width: '90%' }}>
                         <TextInput
-                            style={{ marginLeft: 5, width: "100%", height:"100%"}}
+                            style={{ marginLeft: 5, width: '100%', height: '100%' }}
                             placeholder="Tìm tên hoặc số điện thoại"
                             value={searchInput}
                             onChangeText={(value) => {
@@ -197,18 +204,31 @@ function NewGroupChat({ navigation }) {
                     </View>
                 </View>
 
-                <View style={{ width: '100%', height: '56%', marginTop: 10 }}>
+                <View
+                    style={
+                        isCreate
+                            ? { width: '100%', height: '56%', marginTop: 10 }
+                            : { width: '100%', height: '63%', marginTop: 10 }
+                    }
+                >
                     <Text style={{ marginLeft: 15, fontSize: 16, width: '70%', fontWeight: 'bold' }}>Danh bạ</Text>
                     <FlatList
                         data={data}
                         keyExtractor={(friend) => friend._id.toString() + '_'}
                         renderItem={getFriendItem}
                     />
-                </View>
-                <TouchableOpacity style={styles.successRegister} onPress={createGroup}>
-                    <Icon style={{ marginRight: 10 }} name="create-outline" size={22} />
-                    <Text>Tạo nhóm</Text>
-                </TouchableOpacity>
+                </View> 
+                {isCreate ? (
+                    <TouchableOpacity style={styles.successRegister} onPress={createGroup}>
+                        <Icon style={{ marginRight: 10 }} name="create-outline" size={22} />
+                        <Text>Tạo nhóm</Text>
+                    </TouchableOpacity>
+                ) : (
+                    <TouchableOpacity style={styles.addMembers}>
+                        <Icon style={{ marginRight: 10 }} name="person-add-outline" size={22} color="white" />
+                        <Text style={{ color: 'white', fontSize: 18 }}>Thêm</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         </>
     );
@@ -250,6 +270,17 @@ const styles = StyleSheet.create({
         borderColor: '#E5E5E5',
     },
     successRegister: {
+        marginTop: 10,
+        backgroundColor: '#1BA9FF',
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 15,
+        width: '90%',
+        height: 50,
+        marginBottom: 0,
+    },
+    addMembers: {
         marginTop: 10,
         backgroundColor: '#1BA9FF',
         flexDirection: 'row',

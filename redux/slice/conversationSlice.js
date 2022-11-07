@@ -4,11 +4,15 @@ import config from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsListByUserId = createSlice({
     name: 'conversations',
-    initialState: { data: [], conversationId: null, loading: false },
+    initialState: { data: [], members: [],conversationId: null, loading: false },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
         },
+        getMembers: (state, action) => {
+            state.members = action.payload;
+        }
+        
     },
     extraReducers: (builder) => {
         builder
@@ -60,4 +64,43 @@ export const fetchCreateGroupChat = createAsyncThunk('conversations/fetchCreateG
         console.log(`err fetch group: ${err}`);
     }
 })
+
+export const fetchRemoveMember =  createAsyncThunk('conversations/fetchRemoveMember', async (data) => {
+    try {
+        const {idConversation} = data;
+        const {memberId, mainId} = data;
+
+        const res = await fetch(`${config.LINK_API_V4}/conversations/delete-member/${idConversation}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({memberId, mainId}),
+        });
+        const memberRemove = await res.json();
+        console.log("memberRemove", memberRemove);
+    } catch (err) {
+        console.log(`err fetch remove members: ${err}`);
+    }
+})
+
+export const fetchOutGroup =  createAsyncThunk('conversations/fetchOutGroup', async (data) => {
+    try {
+        const {idConversation} = data;
+        const {userId} = data;
+
+        const res = await fetch(`${config.LINK_API_V4}/conversations/out-conversation/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({userId}),
+        });
+        const outGroup = await res.json();
+        console.log("outGroup", outGroup);
+    } catch (err) {
+        console.log(`err fetch out group: ${err}`);
+    }
+})
+
 export default conversationsListByUserId;

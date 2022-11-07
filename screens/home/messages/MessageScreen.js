@@ -15,7 +15,7 @@ import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '..
 import GlobalStyle from '../../../styles/GlobalStyle';
 
 function MessageScreen({ route, navigation }) {
-    const { id, isGroup, members, name, image } = route.params;
+    const { id, isGroup, members, name, image, createdBy } = route.params;
     const dispatch = useDispatch();
     // const isFocus = useIsFocused();
 
@@ -40,7 +40,7 @@ function MessageScreen({ route, navigation }) {
         });
     }, []);
 
-    const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} navigation={navigation}/> : null);
+    const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} navigation={navigation} /> : null);
 
     const handleFetchMessageScrollTop = () => {
         const numberMessage = messages.length;
@@ -57,7 +57,15 @@ function MessageScreen({ route, navigation }) {
                 keyboardVerticalOffset={Platform.OS === 'ios' ? 20 : 10}
             >
                 <View style={styles.body}>
-                    <TopBar isGroup={isGroup} members={members} name={name} image={image} navigation={navigation} />
+                    <TopBar
+                        idConversation={id}
+                        createdBy={createdBy}
+                        isGroup={isGroup}
+                        members={members}
+                        name={name}
+                        image={image}
+                        navigation={navigation}
+                    />
                     {isLoading ? (
                         <FlatList
                             data={messages}

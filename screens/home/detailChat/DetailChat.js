@@ -8,22 +8,48 @@ import Header from '../../../components/Header';
 import { useDispatch, useSelector } from 'react-redux';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
+import { useState } from 'react';
+import { useEffect } from 'react';
+import { fetchOutGroup } from '../../../redux/slice/conversationSlice';
+import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
-    const { isGroup, members, name, image } = route.params;
-    const userInfo = useSelector(userInfoSelector)
-
+    const { isGroup, members, name, image, createdBy, idConversation } = route.params;
+    const userInfo = useSelector(userInfoSelector);
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
+    const [isOutGroup, setIsOutGroup] = useState(false);
+    const debounce = useDebounce(isOutGroup, 1000);
 
     const dispatch = useDispatch();
 
     const handleClickInfo = () => {
-        if(!isGroup){
+        if (!isGroup) {
             dispatch(userInfoSlice.actions.clickSearchItem(idFriend));
-            navigation.navigate("PersonalScreen",{isMe: false})
+            navigation.navigate('PersonalScreen', { isMe: false });
         }
     };
-    
+
+    const handleAddMembers = () => {
+        navigation.navigate('NewGroupChat', { isCreate: false });
+    };
+
+    console.log('userInfo._id', userInfo._id);
+    const outGroup = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: userInfo._id,
+        };
+
+        console.log(data);
+        dispatch(fetchOutGroup(data));
+        setIsOutGroup(true);
+    };
+
+    useEffect(() => {
+        if (isOutGroup) {
+            navigation.navigate('HomeScreen');
+        }
+    }, [debounce]);
     return (
         <>
             <Header />
@@ -43,6 +69,7 @@ export default function DetailChat({ route, navigation }) {
                         <DetailFeature nameIcon="search-outline" nameFeature="Tìm tin nhắn"></DetailFeature>
                         {isGroup ? (
                             <DetailFeature
+                                onPress={handleAddMembers}
                                 nameIcon="person-add-outline"
                                 nameFeature="Thêm hành viên"
                             ></DetailFeature>
@@ -58,15 +85,36 @@ export default function DetailChat({ route, navigation }) {
                         <DetailFeature nameIcon="notifications-outline" nameFeature="Tắt thông báo"></DetailFeature>
                     </View>
                 </View>
-                <TouchableOpacity style={styles.photo} onPress ={() => {navigation.navigate("ImageScreen")}}>
+                <TouchableOpacity
+                    style={styles.photo}
+                    onPress={() => {
+                        navigation.navigate('ImageScreen');
+                    }}
+                >
                     <Icon name="images-outline" color="black" size={20}></Icon>
                     <Text style={{ marginLeft: 10 }}>Ảnh,file,video đã gửi</Text>
                 </TouchableOpacity>
                 {isGroup ? (
-                    <TouchableOpacity style={styles.photo} >
-                        <Icon name="people-outline" color="black" size={20}></Icon>
-                        <Text style={{ marginLeft: 10 }}>Xem thành viên</Text>
-                    </TouchableOpacity>
+                    <>
+                        <TouchableOpacity
+                            style={styles.photo}
+                            onPress={() =>
+                                navigation.navigate('AllMembers', {
+                                    idConversation,
+                                    createdBy,
+                                    isGroup,
+                                    members: members,
+                                })
+                            }
+                        >
+                            <Icon name="people-outline" color="black" size={20}></Icon>
+                            <Text style={{ marginLeft: 10 }}>Xem thành viên</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.photo} onPress={outGroup}>
+                            <Icon name="enter-outline" color="red" size={20}></Icon>
+                            <Text style={{ marginLeft: 10, color: 'red' }}>Rời nhóm</Text>
+                        </TouchableOpacity>
+                    </>
                 ) : (
                     <TouchableOpacity style={styles.photo}>
                         <Icon name="remove-circle-outline" color="black" size={20}></Icon>
