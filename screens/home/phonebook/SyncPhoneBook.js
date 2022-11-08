@@ -33,7 +33,7 @@ function SyncPhoneBook({ navigation }) {
                 }
             }
         } else {
-            console.warn('no permission!');
+            Alert.alert('Thông báo','Bạn đã từ chối cho chúng tôi truy cập danh bạ lần đầu nên chúng tôi sẽ không yêu cầu quyền nữa!')
         }
 
         return phones;
@@ -55,7 +55,12 @@ function SyncPhoneBook({ navigation }) {
             const phones = await getPhoneNumbersByDevice();
             if (phones?.length > 0) {
                 const _friends = users.filter(
-                    (user) => phones.includes(user.phoneNumber) && !me.friends.includes(user._id),
+                    (user) => {
+                        if(!(me.phoneNumber === user.phoneNumber)) {
+                            return phones.includes(user.phoneNumber) && !me.friends.includes(user._id);
+                        }
+                        return false;
+                    },
                 );
                 setFriends(_friends);
             } else {

@@ -18,6 +18,7 @@ export const friendIdSelector = (state) => state.friends.friendId;
 export const friendOnlineSelector = (state) => state.friends.friendOnline;
 
 export const conversationsListSelector = (state) => state.conversations.data;
+export const newGroupChatSelector = (state) => state.conversations.newGroup;
 export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 export const conversationMembersSelector = (state) => state.conversations.members;
@@ -25,16 +26,23 @@ export const conversationMembersSelector = (state) => state.conversations.member
  * get friend list then user info changed
  * update status user online by socket
  */
-export const getFriendsByUserSelector = createSelector(userInfoSelector, userListSelector, friendOnlineSelector ,(user, users, friendOnline) => {
-    // console.log('selector -> ', friendOnline);
-    if (users && user?.friends) {
-        const friends = users.filter((_user) => user.friends.includes(_user._id));
+export const getFriendsByUserSelector = createSelector(
+    userInfoSelector,
+    userListSelector,
+    friendOnlineSelector,
+    (user, users, friendOnline) => {
+        // console.log('selector -> ', friendOnline);
+        if (users && user?.friends) {
+            const friends = users.filter((_user) => user.friends.includes(_user._id));
 
-        const _friends = friends.map((friend) => friendOnline.includes(friend._id) ? {...friend, isOnline: true} : {...friend, isOnline: false})
-        return _friends;
-    }
-    return null;
-});
+            const _friends = friends.map((friend) =>
+                friendOnline.includes(friend._id) ? { ...friend, isOnline: true } : { ...friend, isOnline: false },
+            );
+            return _friends;
+        }
+        return null;
+    },
+);
 
 /**
  * user searching to get friend list
@@ -159,7 +167,7 @@ export const getMessageByIdConversationSelector = createSelector(
     (userInfo, users, messages) => {
         try {
             const _messages = messages.map((message) => {
-                const user = users.filter((_user) => _user._id === message.senderID)[0];
+                const user = users.find((_user) => _user._id === message.senderID);
                 return message.deleteBy.includes(userInfo._id)
                     ? null
                     : {
@@ -172,16 +180,16 @@ export const getMessageByIdConversationSelector = createSelector(
                               ? moment(message.createdAt).format('DD/MM/YYYY hh:mm')
                               : moment(message.createdAt).format('hh:mm'),
                           user: {
-                              id: user._id,
-                              name: message.action ? null : user.fullName,
-                              avatar: message.action ? null : user.avatarLink,
+                              id: user?._id,
+                              name: message.action ? null : user?.fullName,
+                              avatar: message.action ? null : user?.avatarLink,
                           },
                       };
             });
 
             return _messages; //data receive reversed
         } catch (err) {
-            console.log('selector get message ', err);
+            console.log('getMessageByIdConversationSelector ->', err);
         }
     },
 );
@@ -273,12 +281,11 @@ export const getFriendsWithMembers = createSelector(
         // const _members = friends.filter((_friend) =>
         //     members.includes(_friend._id) ? _friend : { ..._friend, isFriend: !_friend.isFriend },
         // );
-        const _friends = friends.map((friend) => friend._id)
+        const _friends = friends.map((friend) => friend._id);
         const friendWithMember = _members.map((member) => {
             return _friends.includes(member._id) ? { ...member, isFriend: true } : { ...member, isFriend: false };
         });
 
-       return friendWithMember;
-       
+        return friendWithMember;
     },
 );

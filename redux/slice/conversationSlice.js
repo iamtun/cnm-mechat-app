@@ -1,18 +1,53 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import config, {createFormDataUpdateAvatarGroup} from '../../config';
+import config, { socket ,createFormDataUpdateAvatarGroup} from '../../config';
 import { getItem } from '../../utils/asyncStorage';
-const conversationsListByUserId = createSlice({
+const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [],conversationId: null, loading: false },
+    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
         },
         getMembers: (state, action) => {
             state.members = action.payload;
-        }
-        
+        },
+        addConversationFromSocket: (state, action) => {
+            const conversationExist = state.data.find((conversation) => conversation.id === action.payload.id);
+            if (!conversationExist && action.payload.isGroup) state.data.unshift(action.payload);
+            else if (!action.payload.isGroup) state.data.unshift(action.payload);
+        },
+        updateLastMessageOfConversation: (state, action) => {
+            const conversationTemp = action.payload;
+
+            //find and update
+            const _conversation = state.data.find(
+                (conversation) => conversation.id === conversationTemp.conversationID,
+            );
+            _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
+            _conversation.time = conversationTemp.createAt;
+
+            //find index and slice
+            const _conversationIndex = state.data.findIndex(
+                (conversation) => conversation.id === conversationTemp.conversationID,
+            );
+
+            //cut
+            state.data.splice(_conversationIndex, 1);
+
+            //insert first
+            state.data.unshift(_conversation);
+        },
+        removeConversationThenRemoveUserInGroup: (state, action) => {
+            //find index and slice
+            const _conversationIndex = state.data.findIndex((conversation) => conversation.id === action.payload);
+
+            //cut
+            state.data.splice(_conversationIndex, 1);
+        },
+        resetConversation: (state, action) => {
+            state.data = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -20,7 +55,7 @@ const conversationsListByUserId = createSlice({
                 if (action.payload) {
                     state.data = action.payload;
                     state.loading = false;
-                }else {
+                } else {
                     console.warn('fetch conversations error!');
                 }
             })
@@ -28,13 +63,25 @@ const conversationsListByUserId = createSlice({
                 state.loading = true;
             })
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.newGroup = action.payload;
+                //console.log('create_group ->',state.data);
+                socket.emit('create_group', { conversation: action.payload });
             })
             .addCase(fetchAddMembers.fulfilled, (state, action) => {
                 state.data = action.payload;
             })
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
                 state.data = action.payload;
+            })
+            .addCase(fetchRemoveMember.fulfilled, (state, action) => {
+                const memberRemove = action.payload;
+                socket.emit('block_user_in_group', { info: memberRemove });
+                //console.log('remove member -> ', memberRemove);
+            })
+            .addCase(fetchOutGroup.fulfilled, (state, action) => {
+                const info = action.payload;
+                //console.log('info out group --->', info);
+                socket.emit('user_out_group', { info });
             });
     },
 });
@@ -46,16 +93,20 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
     try {
         const token = await getItem('user_token');
         const { _id } = jwtDecode(token);
-        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`);
+        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
         const conversations = await res.json();
-
         if (conversations?.error) {
             console.warn(conversations);
             return null;
-        };
+        }
         return conversations.data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time));
     } catch (err) {
-        console.log(`[fetchConversations]: ${err}`);
+        console.warn(`[fetchConversations]: ${err}`);
     }
 });
 
@@ -73,83 +124,90 @@ export const fetchCreateGroupChat = createAsyncThunk('conversations/fetchCreateG
     } catch (err) {
         console.log(`err fetch group: ${err}`);
     }
-})
+});
 
-export const fetchRemoveMember =  createAsyncThunk('conversations/fetchRemoveMember', async (data) => {
+export const fetchRemoveMember = createAsyncThunk('conversations/fetchRemoveMember', async (data) => {
     try {
-        const {idConversation} = data;
-        const {memberId, mainId} = data;
+        const { idConversation } = data;
+        const { memberId, mainId } = data;
 
         const res = await fetch(`${config.LINK_API_V4}/conversations/delete-member/${idConversation}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({memberId, mainId}),
+            body: JSON.stringify({ memberId, mainId }),
         });
         const memberRemove = await res.json();
+        if (memberRemove?.message) {
+            console.warn(memberRemove);
+            return;
+        }
+        return memberRemove;
     } catch (err) {
         console.log(`err fetch remove members: ${err}`);
     }
-})
+});
 
-export const fetchOutGroup =  createAsyncThunk('conversations/fetchOutGroup', async (data) => {
+export const fetchOutGroup = createAsyncThunk('conversations/fetchOutGroup', async (data) => {
     try {
-        const {idConversation} = data;
-        const {userId} = data;
+        const { idConversation } = data;
+        const { userId } = data;
 
         const res = await fetch(`${config.LINK_API_V4}/conversations/out-conversation/${idConversation}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({userId}),
+            body: JSON.stringify({ userId }),
         });
         const outGroup = await res.json();
+        if (outGroup?.message) {
+            console.warn(outGroup);
+            return;
+        }
+        //console.log('out group -->', outGroup);
+        return outGroup;
     } catch (err) {
         console.log(`err fetch out group: ${err}`);
     }
-})
+});
 
-
-export const fetchAddMembers =  createAsyncThunk('conversations/fetchAddMembers', async (data) => {
+export const fetchAddMembers = createAsyncThunk('conversations/fetchAddMembers', async (data) => {
     try {
-        const {idConversation} = data;
-        const {newMemberID,memberAddID} = data;
+        const { idConversation } = data;
+        const { newMemberID, memberAddID } = data;
 
         const res = await fetch(`${config.LINK_API_V4}/conversations/add-member-conversation/${idConversation}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({newMemberID,memberAddID}),
+            body: JSON.stringify({ newMemberID, memberAddID }),
         });
         const addMembers = await res.json();
         return addMembers;
     } catch (err) {
         console.log(`err fetch add members: ${err}`);
     }
-})
+});
 
-export const fetchChangeNameGroup = createAsyncThunk(
-    'conversations/fetchChangeNameGroup',
-    async (data) => {
-        const { idConversation } = data;
-        const { newName, userId } = data;
+export const fetchChangeNameGroup = createAsyncThunk('conversations/fetchChangeNameGroup', async (data) => {
+    const { idConversation } = data;
+    const { newName, userId } = data;
 
-        const response = await fetch(`${config.LINK_API_V4}/conversations/change-name/${idConversation}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ newName, userId }),
-        });
+    const response = await fetch(`${config.LINK_API_V4}/conversations/change-name/${idConversation}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ newName, userId }),
+    });
 
-        const jsonData = await response.json();
-        console.log(jsonData);
-        return jsonData;
-    },
-);
+    const jsonData = await response.json();
+    console.log(jsonData);
+    return jsonData;
+});
 
 
 export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {

@@ -11,7 +11,7 @@ import {
     userInfoSelector,
 } from '../../../redux/selector';
 import { fetchConversations } from '../../../redux/slice/conversationSlice';
-import conversationsListByUserId from '../../../redux/slice/conversationSlice';
+import conversationsSlice from '../../../redux/slice/conversationSlice';
 
 function GroupChatScreen({ navigation }) {
     let listGroupChat = [];
@@ -40,7 +40,7 @@ function GroupChatScreen({ navigation }) {
     }
     useEffect(() => {
         if(conversation){
-            dispatch(conversationsListByUserId.actions.clickGroupChat(0));
+            dispatch(conversationsSlice.actions.clickGroupChat(0));
              navigation.navigate('MessageScreen', {
                 id: conversation.id,
                 name: conversation.name,
@@ -52,7 +52,7 @@ function GroupChatScreen({ navigation }) {
     },[conversation])
 
     const handleSendChat = (idGroup) => {
-        dispatch(conversationsListByUserId.actions.clickGroupChat(idGroup));
+        dispatch(conversationsSlice.actions.clickGroupChat(idGroup));
     };
 
     function getGroupItem({ item: group }) {

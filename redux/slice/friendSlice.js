@@ -29,12 +29,12 @@ const friendListSlice = createSlice({
                 //state.data = action.payload;
             })
             .addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
-                const { friendRequestID, listFriendsReceiver, listFriendsSender, idReceiver, idSender} = action.payload;
+                const { friendRequestID, listFriendsReceiver, listFriendsSender, sender, receiver, conversation} = action.payload;
                 const index = state.data.findIndex((request) => request.idFriendRequest === friendRequestID);
                 state.data.splice(index, 1);
 
-                if(friendRequestID, listFriendsReceiver && listFriendsSender && idReceiver && idSender) {
-                    socket.emit('accept_friend_request', ({listFriendsReceiver, listFriendsSender, idReceiver, idSender}));
+                if(friendRequestID, listFriendsReceiver && listFriendsSender && sender && receiver && conversation) {
+                    socket.emit('accept_friend_request', ({listFriendsReceiver, listFriendsSender, sender, receiver, conversation}));
                 }
             });
     },

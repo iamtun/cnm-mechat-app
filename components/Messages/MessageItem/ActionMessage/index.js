@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     },
     message: {
         backgroundColor: '#fff',
-        maxWidth: '80%',
+        maxWidth: '90%',
         padding: 8,
         borderRadius: 50,
         flexDirection: 'column',
