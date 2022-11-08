@@ -6,6 +6,7 @@ import { removeItem } from '../../utils/asyncStorage';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../redux/selector';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
+import conversationsSlice from '../../redux/slice/conversationSlice';
 
 function ProfileScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
@@ -17,9 +18,10 @@ function ProfileScreen({ navigation }) {
         await removeItem('user_token');
     };
 
-    const logoutScreen = async() => {
-        await remove();
+    const logoutScreen = async () => {
         dispatch(userInfoSlice.actions.refreshToLogout());
+        dispatch(conversationsSlice.actions.resetConversation([]));
+        await remove();
         navigation.navigate('LoginScreen');
     };
 
