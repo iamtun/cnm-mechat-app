@@ -69,3 +69,25 @@ export const createFormDataUpdate = (imageLink, key) => {
 
     return formData;
 };
+
+export const createFormDataUpdateAvatarGroup = (imageLink, key1, userId, key2) => {
+    let uriParts = imageLink.split('.');
+    const path = imageLink.split('/');
+    let fileType = uriParts[uriParts.length - 1];
+    let nameFile = path[path.length - 1];
+    //console.log();
+    const imagePath = ['png', 'jpg', 'jpeg'];
+
+    const image = {
+        uri: imageLink,
+        type: imagePath.includes(fileType) ? `image/${fileType}` : `video/mp4`,
+        name: imagePath.includes(fileType) ? nameFile : nameFile.replace('.mov', '.mp4'),
+    };
+
+    let formData = new FormData();
+    //console.log(image);
+    formData.append(key1, userId);
+    formData.append(key2, image);
+
+    return formData;
+};

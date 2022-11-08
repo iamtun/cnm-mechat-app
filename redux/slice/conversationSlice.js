@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import config from '../../config';
+import config, {createFormDataUpdateAvatarGroup} from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsListByUserId = createSlice({
     name: 'conversations',
@@ -151,4 +151,26 @@ export const fetchChangeNameGroup = createAsyncThunk(
     },
 );
 
+
+export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {
+    try {
+        let dataForm;
+        const idConversation = data.idConversation;
+        dataForm = createFormDataUpdateAvatarGroup(data.imageLink, data.key1, data.userId, data.key2);
+        console.log('dataForm', dataForm);
+        const res = await fetch(`${config.LINK_API_V4}/conversations/change-avatar/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+            body: dataForm,
+        });
+        const avatarGroup = await res.json();
+        console.log("avatarGroup", avatarGroup);
+        return avatarGroup;
+    } catch (err) {
+        console.log(`err fetch avatar group: ${err}`);
+    }
+});
 export default conversationsListByUserId;

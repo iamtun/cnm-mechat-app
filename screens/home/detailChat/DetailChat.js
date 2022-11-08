@@ -4,13 +4,14 @@ import { Avatar } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native';
 import { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
 
 import Icon from 'react-native-vector-icons/Ionicons';
 import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { fetchChangeNameGroup, fetchOutGroup } from '../../../redux/slice/conversationSlice';
+import { fetchChangeNameGroup, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
@@ -48,18 +49,41 @@ export default function DetailChat({ route, navigation }) {
     };
 
     // change name group
-    const changeNameGroup= () => {
+    const changeNameGroup = () => {
         const data = {
             idConversation: idConversation,
             newName: newNameGroup,
-            userId: userInfo._id
-        }
+            userId: userInfo._id,
+        };
         console.log(data);
-        dispatch(fetchChangeNameGroup(data))
+        dispatch(fetchChangeNameGroup(data));
 
-        setNewNameGroup("")
-        setModalVisible(!modalVisible)
-    }
+        setNewNameGroup('');
+        setModalVisible(!modalVisible);
+    };
+
+    //update avartar nhóm
+    const pickImage = async () => {
+        let result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            videoQuality: ImagePicker.UIImagePickerControllerQualityType.High,
+            allowsEditing: false,
+            aspect: [4, 3],
+            quality: 1,
+        });
+
+        if (!result.cancelled) {
+            const data = {
+                key1: 'userId',
+                key2: 'imageLink',
+                userId: userInfo._id,
+                imageLink: result.uri,
+                idConversation: idConversation
+            };
+            dispatch(fetchUpdateAvatarGroup(data));
+        }
+    };
+
     useEffect(() => {
         if (isOutGroup) {
             navigation.navigate('HomeScreen');
@@ -97,10 +121,7 @@ export default function DetailChat({ route, navigation }) {
                                 >
                                     <Text>Hủy</Text>
                                 </TouchableOpacity>
-                                <TouchableOpacity
-                                    style={styles.buttonAdd}
-                                    onPress={() => changeNameGroup()}
-                                >
+                                <TouchableOpacity style={styles.buttonAdd} onPress={() => changeNameGroup()}>
                                     <Text style={{ color: 'white' }}>Đồng ý</Text>
                                 </TouchableOpacity>
                             </View>
@@ -115,7 +136,10 @@ export default function DetailChat({ route, navigation }) {
                 </View>
                 <View style={styles.infoUser}>
                     <View style={styles.avatar}>
-                        <Avatar rounded size={90} source={{ uri: image }}></Avatar>
+                        <TouchableOpacity onPress={pickImage}>
+                            <Avatar rounded size={90} source={{ uri: image }}></Avatar>
+                        </TouchableOpacity>
+
                         {isGroup ? (
                             <View style={{ flexDirection: 'row' }}>
                                 <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
@@ -283,5 +307,5 @@ const styles = StyleSheet.create({
         height: 40,
         borderRadius: 15,
         backgroundColor: '#3475F5',
-    }
+    },
 });
