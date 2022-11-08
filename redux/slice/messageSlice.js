@@ -142,8 +142,8 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
             },
             body: JSON.stringify(message),
         });
-
         const _message = await res.json();
+        console.log('text message -> ', _message);
         return _message;
     }
 });
@@ -165,7 +165,7 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
 
         const _message = await res.json();
         if (_message?._id) {
-    
+            console.log('image message -> ', _message);
             return _message;
         } else {
             return null;
@@ -192,6 +192,7 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
         const _message = await res.json();
         // console.log(_message);
         if (_message?._id) {
+            console.log('file message -> ', _message);
             return _message;
         } else {
             // console.log(_message);

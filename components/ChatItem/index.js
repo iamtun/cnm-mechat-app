@@ -34,7 +34,7 @@ function ChatItem({ id, createdBy, isGroup, members, name, image, message, time,
                 >
                     <Text style={styles.nameText}>{name}</Text>
                     <Text style={styles.messageText}>
-                        {message.length > 20 ? message.slice(0, 20) + '...' : message}
+                        {message?.length > 20 ? message.slice(0, 20) + '...' : message}
                     </Text>
                 </Tooltip>
             </View>

@@ -4,7 +4,7 @@ import config, { socket } from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], conversationId: null, loading: false },
+    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -13,8 +13,37 @@ const conversationsSlice = createSlice({
             state.members = action.payload;
         },
         addConversationFromSocket: (state, action) => {
-            console.log('send_conversation_group', action.payload);
-            state.data.push(action.payload);
+            const conversationExist = state.data.find((conversation) => conversation.id === action.payload.id);
+            if (!conversationExist && action.payload.isGroup) state.data.unshift(action.payload);
+            else if (!action.payload.isGroup) state.data.unshift(action.payload);
+        },
+        updateLastMessageOfConversation: (state, action) => {
+            const conversationTemp = action.payload;
+
+            //find and update
+            const _conversation = state.data.find(
+                (conversation) => conversation.id === conversationTemp.conversationID,
+            );
+            _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
+            _conversation.time = conversationTemp.createAt;
+
+            //find index and slice
+            const _conversationIndex = state.data.findIndex(
+                (conversation) => conversation.id === conversationTemp.conversationID,
+            );
+
+            //cut
+            state.data.splice(_conversationIndex, 1);
+
+            //insert first
+            state.data.unshift(_conversation);
+        },
+        removeConversationThenRemoveUserInGroup: (state, action) => {
+            //find index and slice
+            const _conversationIndex = state.data.findIndex((conversation) => conversation.id === action.payload);
+
+            //cut
+            state.data.splice(_conversationIndex, 1);
         },
         resetConversation: (state, action) => {
             state.data = action.payload;
@@ -34,8 +63,8 @@ const conversationsSlice = createSlice({
                 state.loading = true;
             })
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
-                state.data = action.payload;
-                console.log(state.data);
+                state.newGroup = action.payload;
+                //console.log('create_group ->',state.data);
                 socket.emit('create_group', { conversation: action.payload });
             })
             .addCase(fetchAddMembers.fulfilled, (state, action) => {
@@ -43,6 +72,16 @@ const conversationsSlice = createSlice({
             })
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
                 state.data = action.payload;
+            })
+            .addCase(fetchRemoveMember.fulfilled, (state, action) => {
+                const memberRemove = action.payload;
+                socket.emit('block_user_in_group', { info: memberRemove });
+                //console.log('remove member -> ', memberRemove);
+            })
+            .addCase(fetchOutGroup.fulfilled, (state, action) => {
+                const info = action.payload;
+                //console.log('info out group --->', info);
+                socket.emit('user_out_group', { info });
             });
     },
 });
@@ -54,16 +93,20 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
     try {
         const token = await getItem('user_token');
         const { _id } = jwtDecode(token);
-        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`);
+        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+        });
         const conversations = await res.json();
-
         if (conversations?.error) {
             console.warn(conversations);
             return null;
         }
         return conversations.data.sort((a, b) => Date.parse(b.time) - Date.parse(a.time));
     } catch (err) {
-        console.log(`[fetchConversations]: ${err}`);
+        console.warn(`[fetchConversations]: ${err}`);
     }
 });
 
@@ -96,6 +139,11 @@ export const fetchRemoveMember = createAsyncThunk('conversations/fetchRemoveMemb
             body: JSON.stringify({ memberId, mainId }),
         });
         const memberRemove = await res.json();
+        if (memberRemove?.message) {
+            console.warn(memberRemove);
+            return;
+        }
+        return memberRemove;
     } catch (err) {
         console.log(`err fetch remove members: ${err}`);
     }
@@ -114,6 +162,12 @@ export const fetchOutGroup = createAsyncThunk('conversations/fetchOutGroup', asy
             body: JSON.stringify({ userId }),
         });
         const outGroup = await res.json();
+        if (outGroup?.message) {
+            console.warn(outGroup);
+            return;
+        }
+        //console.log('out group -->', outGroup);
+        return outGroup;
     } catch (err) {
         console.log(`err fetch out group: ${err}`);
     }

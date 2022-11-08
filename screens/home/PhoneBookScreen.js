@@ -23,22 +23,10 @@ function PhoneBookScreen({ navigation }) {
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
 
-        socket.off('send_friends_give_conversation');
-        socket.on('send_friends_give_conversation', (conversation) => {
-            console.log('send_friends_give_conversation', conversation);
-            dispatch(conversationsSlice.actions.addConversationFromSocket(conversation));
-        });
-
         socket.off('receive_friends');
         socket.on('receive_friends', (friends) => {
             console.log('receive_friends', friends);
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
-        });
-
-        socket.off('receive_friends_give_conversation');
-        socket.on('receive_friends_give_conversation', (conversation) => {
-            console.log('receive_friends_give_conversation', conversation);
-            dispatch(conversationsSlice.actions.addConversationFromSocket(conversation));
         });
     }, []);
     return (

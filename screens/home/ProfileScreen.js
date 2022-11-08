@@ -18,10 +18,10 @@ function ProfileScreen({ navigation }) {
         await removeItem('user_token');
     };
 
-    const logoutScreen = async() => {
-        await remove();
+    const logoutScreen = async () => {
         dispatch(userInfoSlice.actions.refreshToLogout());
         dispatch(conversationsSlice.actions.resetConversation([]));
+        await remove();
         navigation.navigate('LoginScreen');
     };
 

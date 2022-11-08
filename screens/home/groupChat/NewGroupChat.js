@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import {
     conversationsListSelector,
     getFriendsByUserSelector,
+    newGroupChatSelector,
     userIdSelector,
     userInfoSelector,
     usersRemainingSelector,
@@ -28,7 +29,7 @@ function NewGroupChat({ route, navigation }) {
     const { _id } = userID;
 
     // info group
-    const group = useSelector(conversationsListSelector);
+    const group = useSelector(newGroupChatSelector);
 
     //text search
     const [searchInput, setSearchInput] = useState(null);
@@ -141,7 +142,7 @@ function NewGroupChat({ route, navigation }) {
     useEffect(() => {
         if (isCreateGroup) {
             navigation.navigate('MessageScreen', {
-                id: group._id,
+                id: group.id,
                 isGroup: group.isGroup,
                 members: group.members,
                 name: group.name,
