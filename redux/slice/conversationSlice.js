@@ -4,7 +4,7 @@ import config, { socket ,createFormDataUpdateAvatarGroup} from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
+    initialState: { data: [], members: [],newNamGroup: [], conversationId: null, loading: false,newGroup: null},
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -68,10 +68,10 @@ const conversationsSlice = createSlice({
                 socket.emit('create_group', { conversation: action.payload });
             })
             .addCase(fetchAddMembers.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.newGroup = action.payload;
             })
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.newNamGroup = action.payload;
             })
             .addCase(fetchRemoveMember.fulfilled, (state, action) => {
                 const memberRemove = action.payload;
@@ -231,4 +231,6 @@ export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdate
         console.log(`err fetch avatar group: ${err}`);
     }
 });
-export default conversationsListByUserId;
+
+
+export default conversationsSlice;

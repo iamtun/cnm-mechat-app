@@ -91,14 +91,19 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image, name, phonN
                     {isGroup ? (
                         isLeader ? (
                             createdBy === id ? null : (
-                                <TouchableOpacity
-                                    style={{ marginLeft: 40 }}
-                                    onPress={() => {
-                                        handleRemoveMember(id);
-                                    }}
-                                >
-                                    <Icon color="red" name="person-remove-outline" size={20} />
-                                </TouchableOpacity>
+                                <View style ={{flexDirection: 'row'}}>
+                                    <TouchableOpacity>
+                                        <Icon name="remove-circle-outline" color="black" size={25}></Icon>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity
+                                    style = {{marginLeft: 20}}
+                                        onPress={() => {
+                                            handleRemoveMember(id);
+                                        }}
+                                    >
+                                        <Icon color="red" name="person-remove-outline" size={25} />
+                                    </TouchableOpacity>
+                                </View>
                             )
                         ) : !isFriend ? (
                             _userInfoSelector._id === id ? null : (
