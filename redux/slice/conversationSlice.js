@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import config, { socket } from '../../config';
+import config, { socket ,createFormDataUpdateAvatarGroup} from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
+    initialState: { data: [], members: [],newNamGroup: [], conversationId: null, loading: false,newGroup: null},
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -68,10 +68,10 @@ const conversationsSlice = createSlice({
                 socket.emit('create_group', { conversation: action.payload });
             })
             .addCase(fetchAddMembers.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.newGroup = action.payload;
             })
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
-                state.data = action.payload;
+                state.newNamGroup = action.payload;
             })
             .addCase(fetchRemoveMember.fulfilled, (state, action) => {
                 const memberRemove = action.payload;
@@ -208,5 +208,29 @@ export const fetchChangeNameGroup = createAsyncThunk('conversations/fetchChangeN
     console.log(jsonData);
     return jsonData;
 });
+
+
+export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {
+    try {
+        let dataForm;
+        const idConversation = data.idConversation;
+        dataForm = createFormDataUpdateAvatarGroup(data.imageLink, data.key1, data.userId, data.key2);
+        console.log('dataForm', dataForm);
+        const res = await fetch(`${config.LINK_API_V4}/conversations/change-avatar/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'multipart/form-data',
+            },
+            body: dataForm,
+        });
+        const avatarGroup = await res.json();
+        console.log("avatarGroup", avatarGroup);
+        return avatarGroup;
+    } catch (err) {
+        console.log(`err fetch avatar group: ${err}`);
+    }
+});
+
 
 export default conversationsSlice;
