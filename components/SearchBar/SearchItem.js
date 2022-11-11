@@ -66,7 +66,7 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image,members, nam
 
         dispatch(fetchRemoveMember(data));
         dispatch(conversationsSlice.actions.getMembers(members));
-        dispatch(fetchConversations(_userInfoSelector._id))
+        // dispatch(fetchConversations(_userInfoSelector._id))
     };
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>

@@ -143,7 +143,7 @@ export const sendMessage = createAsyncThunk('messages/add', async (message) => {
             body: JSON.stringify(message),
         });
         const _message = await res.json();
-        console.log('text message -> ', _message);
+        //console.log('text message -> ', _message);
         return _message;
     }
 });

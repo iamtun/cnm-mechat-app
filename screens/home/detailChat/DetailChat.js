@@ -22,7 +22,7 @@ export default function DetailChat({ route, navigation }) {
     const debounce = useDebounce(isOutGroup, 1000);
     const [modalVisible, setModalVisible] = useState(false);
     const [newNameGroup, setNewNameGroup] = useState(name);
-
+    const [imageUpdate, setImageUpdate] = useState(image);
     const dispatch = useDispatch();
 
     const handleClickInfo = () => {
@@ -58,8 +58,8 @@ export default function DetailChat({ route, navigation }) {
         console.log(data);
         dispatch(fetchChangeNameGroup(data));
 
-        setNewNameGroup('');
         setModalVisible(!modalVisible);
+        setNewNameGroup(data.newName);
     };
 
     //update avartar nhóm
@@ -78,8 +78,9 @@ export default function DetailChat({ route, navigation }) {
                 key2: 'imageLink',
                 userId: userInfo._id,
                 imageLink: result.uri,
-                idConversation: idConversation
+                idConversation: idConversation,
             };
+            setImageUpdate(result.uri);
             dispatch(fetchUpdateAvatarGroup(data));
         }
     };
@@ -97,43 +98,43 @@ export default function DetailChat({ route, navigation }) {
 
     return (
         <>
-            <Header />
-            <View style={styles.container}>
-                <Modal
-                    animationType="slide"
-                    transparent={true}
-                    visible={modalVisible}
-                    onRequestClose={() => {
-                        setModalVisible(!modalVisible);
-                    }}
-                >
-                    <View style={styles.centeredView}>
-                        <View style={styles.modalView}>
-                            <View style={styles.frameNameGroup}>
-                                <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
-                                <TextInput
-                                    value={newNameGroup}
-                                    style={{ fontSize: 18, width: '90%', height: '100%' }}
-                                    onChangeText={(value) => {
-                                        setNewNameGroup(value);
-                                    }}
-                                    placeholder="Đặt tên nhóm"
-                                ></TextInput>
-                            </View>
-                            <View style={styles.handle}>
-                                <TouchableOpacity
-                                    style={styles.buttonRemove}
-                                    onPress={() => setModalVisible(!modalVisible)}
-                                >
-                                    <Text>Hủy</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.buttonAdd} onPress={() => changeNameGroup()}>
-                                    <Text style={{ color: 'white' }}>Đồng ý</Text>
-                                </TouchableOpacity>
-                            </View>
+            <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <View style={styles.frameNameGroup}>
+                            <Icon style={{ marginRight: 10 }} name="pencil" color="black" size={22} />
+                            <TextInput
+                                value={newNameGroup}
+                                style={{ fontSize: 18, width: '90%', height: '100%' }}
+                                onChangeText={(value) => {
+                                    setNewNameGroup(value);
+                                }}
+                                placeholder="Đặt tên nhóm"
+                            ></TextInput>
+                        </View>
+                        <View style={styles.handle}>
+                            <TouchableOpacity
+                                style={styles.buttonRemove}
+                                onPress={() => setModalVisible(!modalVisible)}
+                            >
+                                <Text>Hủy</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity style={styles.buttonAdd} onPress={() => changeNameGroup()}>
+                                <Text style={{ color: 'white' }}>Đồng ý</Text>
+                            </TouchableOpacity>
                         </View>
                     </View>
-                </Modal>
+                </View>
+            </Modal>
+            <Header />
+            <View style={styles.container}>
                 <View style={styles.header}>
                     <TouchableOpacity onPress={handleBack}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
@@ -143,12 +144,12 @@ export default function DetailChat({ route, navigation }) {
                 <View style={styles.infoUser}>
                     <View style={styles.avatar}>
                         <TouchableOpacity onPress={pickImage}>
-                            <Avatar rounded size={90} source={{ uri: image }}></Avatar>
+                            <Avatar rounded size={90} source={{ uri: imageUpdate }}></Avatar>
                         </TouchableOpacity>
 
                         {isGroup ? (
                             <View style={{ flexDirection: 'row' }}>
-                                <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{name}</Text>
+                                <Text style={{ marginTop: 15, fontSize: 18, fontWeight: 'bold' }}>{newNameGroup}</Text>
                                 <TouchableOpacity style={styles.editName} onPress={() => setModalVisible(true)}>
                                     <Icon name="pencil-outline" color="black" size={18} />
                                 </TouchableOpacity>
@@ -268,6 +269,12 @@ const styles = StyleSheet.create({
         borderRadius: 50,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'stretch',
+        bottom: '15%'
     },
     modalView: {
         margin: 20,

@@ -15,7 +15,8 @@ function ChatListScreen({ navigation }) {
     const dispatch = useDispatch();
     const conversationLoading = useSelector(conversationListLoadingSelector);
     const conversations = useSelector(conversationsListSelector);
-        useEffect(() => {
+
+    useEffect(() => {
         //init
         if (conversations.length === 0) dispatch(fetchConversations());
         socket.on('update_last_message', (conversation) => {

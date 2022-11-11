@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import config, { socket ,createFormDataUpdateAvatarGroup} from '../../config';
+import config, { socket, createFormDataUpdateAvatarGroup } from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [],newNamGroup: [], conversationId: null, loading: false,newGroup: null},
+    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -24,6 +24,12 @@ const conversationsSlice = createSlice({
             const _conversation = state.data.find(
                 (conversation) => conversation.id === conversationTemp.conversationID,
             );
+            if(conversationTemp?.name) {
+                _conversation.name = conversationTemp.name;
+            }
+            if(conversationTemp?.imageLink) {
+                _conversation.imageLinkOfConver = conversationTemp.imageLink;
+            }
             _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
             _conversation.time = conversationTemp.createAt;
 
@@ -64,14 +70,19 @@ const conversationsSlice = createSlice({
             })
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
                 state.newGroup = action.payload;
-                //console.log('create_group ->',state.data);
+                state.data.push(action.payload);
+                //console.log('create_group ->', action.payload);
                 socket.emit('create_group', { conversation: action.payload });
             })
             .addCase(fetchAddMembers.fulfilled, (state, action) => {
                 state.newGroup = action.payload;
+                const info = action.payload;
+                socket.emit('add_user_to_group', { info });
             })
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
-                state.newNamGroup = action.payload;
+                const conversation = action.payload;
+                //console.log('change name ---> ', conversation);
+                socket.emit('change_name_group', {conversation});
             })
             .addCase(fetchRemoveMember.fulfilled, (state, action) => {
                 const memberRemove = action.payload;
@@ -85,6 +96,10 @@ const conversationsSlice = createSlice({
                 const info = action.payload;
                 //console.log('info out group --->', info);
                 socket.emit('user_out_group', { info });
+            })
+            .addCase(fetchUpdateAvatarGroup.fulfilled, (state, action) => {
+                const conversation = action.payload;
+                socket.emit('change_avatar_group', { conversation });
             });
     },
 });
@@ -208,17 +223,15 @@ export const fetchChangeNameGroup = createAsyncThunk('conversations/fetchChangeN
     });
 
     const jsonData = await response.json();
-    console.log(jsonData);
     return jsonData;
 });
 
-
-export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {
+export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {
     try {
         let dataForm;
         const idConversation = data.idConversation;
         dataForm = createFormDataUpdateAvatarGroup(data.imageLink, data.key1, data.userId, data.key2);
-        console.log('dataForm', dataForm);
+        //console.log('dataForm', dataForm);
         const res = await fetch(`${config.LINK_API_V4}/conversations/change-avatar/${idConversation}`, {
             method: 'POST',
             headers: {
@@ -228,12 +241,11 @@ export const fetchUpdateAvatarGroup= createAsyncThunk('conversations/fetchUpdate
             body: dataForm,
         });
         const avatarGroup = await res.json();
-        console.log("avatarGroup", avatarGroup);
+        console.log('avatarGroup --->', avatarGroup);
         return avatarGroup;
     } catch (err) {
         console.log(`err fetch avatar group: ${err}`);
     }
 });
-
 
 export default conversationsSlice;

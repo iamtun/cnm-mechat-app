@@ -9,9 +9,8 @@ function TopBar({idConversation, isGroup, members, createdBy, image, name, membe
     const dispatch = useDispatch();
     const _user = useSelector(userInfoSelector)
     const handleClickArrowLeftIcon = () => {
-        dispatch(fetchConversations(_user._id))
+        // dispatch(fetchConversations(_user._id))
         navigation.navigate('HomeScreen');
-
     };
 
     const _sendCallVoice = () => {
