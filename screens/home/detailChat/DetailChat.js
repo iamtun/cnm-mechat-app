@@ -89,6 +89,12 @@ export default function DetailChat({ route, navigation }) {
             navigation.navigate('HomeScreen');
         }
     }, [debounce]);
+
+    // back message screen
+    const handleBack = () => {
+        navigation.navigate('MessageScreen', { idConversation, createdBy, isGroup, members, name, image });
+    }
+
     return (
         <>
             <Header />
@@ -129,7 +135,7 @@ export default function DetailChat({ route, navigation }) {
                     </View>
                 </Modal>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={handleBack}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tùy chọn</Text>
@@ -186,6 +192,8 @@ export default function DetailChat({ route, navigation }) {
                             style={styles.photo}
                             onPress={() =>
                                 navigation.navigate('AllMembers', {
+                                    name,
+                                    image,
                                     idConversation,
                                     createdBy,
                                     isGroup,

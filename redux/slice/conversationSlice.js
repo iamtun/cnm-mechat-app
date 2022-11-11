@@ -75,6 +75,9 @@ const conversationsSlice = createSlice({
             })
             .addCase(fetchRemoveMember.fulfilled, (state, action) => {
                 const memberRemove = action.payload;
+                //remove member
+                const index = state.members.findIndex(mem => mem === memberRemove.idMember);
+                state.members.splice(index, 1);
                 socket.emit('block_user_in_group', { info: memberRemove });
                 //console.log('remove member -> ', memberRemove);
             })
