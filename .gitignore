@@ -13,5 +13,6 @@ web-build/
 #user setting
 .vscode
 .env
+android/
 # macOS
 .DS_Store
