@@ -30,6 +30,9 @@ const conversationsSlice = createSlice({
             if(conversationTemp?.imageLink) {
                 _conversation.imageLinkOfConver = conversationTemp.imageLink;
             }
+            if(conversationTemp?.members) {
+                state.members.members = conversationTemp.members;
+            }
             _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
             _conversation.time = conversationTemp.createAt;
 
