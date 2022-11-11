@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
 import { userInfoSelector, friendListSelector } from '../../redux/selector';
 import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
-import conversationsSlice, { fetchConversations, fetchRemoveMember } from '../../redux/slice/conversationSlice';
+import conversationsSlice, { fetchBlockConversation, fetchConversations, fetchRemoveMember } from '../../redux/slice/conversationSlice';
 function SearchItem({ id, createdBy, idConversation, isGroup, image,members, name, phonNumber, isFriend, isNull, navigation }) {
     const dispatch = useDispatch();
     const [isRequest, setIsRequest] = useState(false);
@@ -68,6 +68,15 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image,members, nam
         dispatch(conversationsSlice.actions.getMembers(members));
         // dispatch(fetchConversations(_userInfoSelector._id))
     };
+
+    //block member send message
+    const handleBlockMember = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: id
+        }
+        dispatch(fetchBlockConversation(data));
+    }
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
             {isNull ? (

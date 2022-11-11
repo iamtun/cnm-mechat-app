@@ -11,7 +11,7 @@ import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { fetchChangeNameGroup, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
+import { fetchChangeNameGroup, fetchDeleteConversations, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
@@ -94,8 +94,17 @@ export default function DetailChat({ route, navigation }) {
     // back message screen
     const handleBack = () => {
         navigation.navigate('MessageScreen', { idConversation, createdBy, isGroup, members, name, image });
-    }
+    };
 
+    // remove conversation
+    const handleRemoveConversation = () => {
+        const data = {
+            idConversation: idConversation, 
+            mainId: createdBy
+        }
+        dispatch(fetchDeleteConversations(data))
+        navigation.navigate("HomeScreen")
+    }
     return (
         <>
             <Modal
@@ -209,6 +218,12 @@ export default function DetailChat({ route, navigation }) {
                             <Icon name="enter-outline" color="red" size={20}></Icon>
                             <Text style={{ marginLeft: 10, color: 'red' }}>Rời nhóm</Text>
                         </TouchableOpacity>
+                        {createdBy == userInfo._id ? (
+                            <TouchableOpacity style={styles.photo} onPress={handleRemoveConversation}>
+                                <Icon name="trash-outline" color="red" size={20}></Icon>
+                                <Text style={{ marginLeft: 10, color: 'red' }}>Giải tán nhóm</Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </>
                 ) : (
                     <TouchableOpacity style={styles.photo}>
@@ -274,7 +289,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
-        bottom: '15%'
+        bottom: '15%',
     },
     modalView: {
         margin: 20,

@@ -24,11 +24,15 @@ const conversationsSlice = createSlice({
             const _conversation = state.data.find(
                 (conversation) => conversation.id === conversationTemp.conversationID,
             );
-            if(conversationTemp?.name) {
+            if (conversationTemp?.name) {
                 _conversation.name = conversationTemp.name;
             }
-            if(conversationTemp?.imageLink) {
+            if (conversationTemp?.imageLink) {
                 _conversation.imageLinkOfConver = conversationTemp.imageLink;
+            }
+            if (conversationTemp?.members) {
+                _conversation.members = conversationTemp.members;
+                state.members = conversationTemp.members;
             }
             _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
             _conversation.time = conversationTemp.createAt;
@@ -82,12 +86,12 @@ const conversationsSlice = createSlice({
             .addCase(fetchChangeNameGroup.fulfilled, (state, action) => {
                 const conversation = action.payload;
                 //console.log('change name ---> ', conversation);
-                socket.emit('change_name_group', {conversation});
+                socket.emit('change_name_group', { conversation });
             })
             .addCase(fetchRemoveMember.fulfilled, (state, action) => {
                 const memberRemove = action.payload;
                 //remove member
-                const index = state.members.findIndex(mem => mem === memberRemove.idMember);
+                const index = state.members.findIndex((mem) => mem === memberRemove.idMember);
                 state.members.splice(index, 1);
                 socket.emit('block_user_in_group', { info: memberRemove });
                 //console.log('remove member -> ', memberRemove);
@@ -100,6 +104,10 @@ const conversationsSlice = createSlice({
             .addCase(fetchUpdateAvatarGroup.fulfilled, (state, action) => {
                 const conversation = action.payload;
                 socket.emit('change_avatar_group', { conversation });
+            })
+            .addCase(fetchDeleteConversations.fulfilled, (state, action) => {
+                const info = action.payload;
+                socket.emit('remove_group', { info });
             });
     },
 });
@@ -248,6 +256,37 @@ export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdat
     }
 });
 
+export const fetchDeleteConversations = createAsyncThunk('conversations/fetchDeleteConversations', async (data) => {
+    const { idConversation } = data;
+    const { mainId } = data;
 
+    const response = await fetch(`${config.LINK_API_V4}/conversations/delete-conversation/${idConversation}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ mainId }),
+    });
+
+    const jsonData = await response.json();
+    console.log('jsonData', jsonData);
+    return jsonData;
+});
+
+export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlockConversation', async (data) => {
+    const { idConversation } = data;
+    const { userId } = data;
+
+    const response = await fetch(`${config.LINK_API_V4}/conversations/block-conversation/${idConversation}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+    });
+
+    const jsonData = await response.json();
+    console.log('jsonData', jsonData);
+});
 
 export default conversationsSlice;

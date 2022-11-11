@@ -10,18 +10,32 @@ import MessageInputBox from '../../../components/Messages/MessageInputBox';
 import MessageItem from '../../../components/Messages/MessageItem';
 import TopBar from '../../../components/Messages/TopBar/TopBar';
 import { socket } from '../../../config';
-import { getMessageByIdConversationSelector, messageLoadingSelector } from '../../../redux/selector';
+import { getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
 import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '../../../redux/slice/messageSlice';
 import GlobalStyle from '../../../styles/GlobalStyle';
+import { useState } from 'react';
 
 function MessageScreen({ route, navigation }) {
-    const { id, isGroup, members, name, image, createdBy } = route.params;
+    const { id, isGroup, members,blockBy, name, image, createdBy } = route.params;
     const dispatch = useDispatch();
+    const [isBlock, setIsBlock] = useState(false);
+
+    console.log("blockBy",blockBy);
     // const isFocus = useIsFocused();
 
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
+    const userInfo = useSelector(userInfoSelector)
+    console.log("userInfo",userInfo._id);
 
+    useEffect(() => {
+        if(blockBy.includes(userInfo._id)){
+            setIsBlock(true);
+        }
+    },[])
+    
+
+    console.log(isBlock);
     useEffect(() => {
         //user join room with socket
         socket.emit('join_room', id);
@@ -82,7 +96,7 @@ function MessageScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                <MessageInputBox conversationId={id} />
+                <MessageInputBox conversationId={id} isBlock ={isBlock} />
             </KeyboardAvoidingView>
         </>
     );

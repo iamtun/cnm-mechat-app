@@ -13,6 +13,7 @@ function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
     const { name, image,createdBy, members, isGroup, idConversation } = route.params;
     let listMembers = [];
+
     useEffect(() => {
         dispatch(conversationsSlice.actions.getMembers(members));
     },[memberFriends]);
@@ -33,6 +34,8 @@ function AllMembers({ route, navigation }) {
         })
     }
     
+    
+
     return (
         <>
             <Header />
