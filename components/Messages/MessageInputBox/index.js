@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import { Alert, Platform } from 'react-native';
+import { Alert, Platform,Text} from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconSticker from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,7 +11,7 @@ import { userInfoSelector } from '../../../redux/selector';
 import { sendFile, sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
 
 import { iconExtends } from '../../../utils/filePathConfig';
-function MessageInputBox({ conversationId }) {
+function MessageInputBox({ conversationId, isBlock }) {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
     const userInfo = useSelector(userInfoSelector);
@@ -121,31 +121,41 @@ function MessageInputBox({ conversationId }) {
 
     return (
         <View style={[styles.body, styles.row]}>
-            <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
-            <View style={styles.inputView}>
-                <TextInput
-                    placeholder="Nhập tin nhắn"
-                    value={message}
-                    style={[styles.input, { paddingTop: Platform.OS === 'ios' ? 25 : 0 }]}
-                    multiline
-                    onChangeText={handleWriteText}
-                />
-            </View>
-            <View style={[styles.row, styles.rightIcons, { justifyContent: isWrite ? 'flex-end' : 'space-around' }]}>
-                {isWrite ? (
-                    <Icon
-                        name="paper-plane-outline"
-                        size={32}
-                        style={[styles.icon, { color: '#3777F3' }]}
-                        onPress={handleSendMessage}
-                    />
-                ) : (
-                    <>
-                        <Icon name="attach-outline" size={32} style={styles.icon} onPress={pickerFile} />
-                        <Icon name="images-outline" size={32} onPress={pickImage} />
-                    </>
-                )}
-            </View>
+            {isBlock ? <Text style={{textAlign:'center', width:"100%"}}>Bạn đã bị chặn tin nhắn</Text> : (
+                <>
+                    <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
+                    <View style={styles.inputView}>
+                        <TextInput
+                            placeholder="Nhập tin nhắn"
+                            value={message}
+                            style={[styles.input, { paddingTop: Platform.OS === 'ios' ? 25 : 0 }]}
+                            multiline
+                            onChangeText={handleWriteText}
+                        />
+                    </View>
+                    <View
+                        style={[
+                            styles.row,
+                            styles.rightIcons,
+                            { justifyContent: isWrite ? 'flex-end' : 'space-around' },
+                        ]}
+                    >
+                        {isWrite ? (
+                            <Icon
+                                name="paper-plane-outline"
+                                size={32}
+                                style={[styles.icon, { color: '#3777F3' }]}
+                                onPress={handleSendMessage}
+                            />
+                        ) : (
+                            <>
+                                <Icon name="attach-outline" size={32} style={styles.icon} onPress={pickerFile} />
+                                <Icon name="images-outline" size={32} onPress={pickImage} />
+                            </>
+                        )}
+                    </View>
+                </>
+            )}
         </View>
     );
 }

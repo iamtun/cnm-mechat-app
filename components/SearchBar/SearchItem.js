@@ -6,11 +6,28 @@ import { useDispatch, useSelector } from 'react-redux';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
 import { userInfoSelector, friendListSelector } from '../../redux/selector';
 import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
-import { fetchRemoveMember } from '../../redux/slice/conversationSlice';
-function SearchItem({ id, createdBy, idConversation, isGroup, image, name, phonNumber, isFriend, isNull, navigation }) {
+import conversationsSlice, {
+    fetchBlockConversation,
+    fetchConversations,
+    fetchRemoveMember,
+} from '../../redux/slice/conversationSlice';
+function SearchItem({
+    id,
+    createdBy,
+    idConversation,
+    isGroup,
+    image,
+    members,
+    name,
+    phonNumber,
+    isFriend,
+    isNull,
+    navigation,
+}) {
     const dispatch = useDispatch();
     const [isRequest, setIsRequest] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
+    const [nameBlock, setNameBlock] = useState('remove-circle-outline');
 
     // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
@@ -65,6 +82,24 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image, name, phonN
         };
 
         dispatch(fetchRemoveMember(data));
+        dispatch(conversationsSlice.actions.getMembers(members));
+        // dispatch(fetchConversations(_userInfoSelector._id))
+    };
+
+    //block member send message
+    const handleBlockMember = () => {
+        if (nameBlock == 'close-circle-outline') {
+            setNameBlock('remove-circle-outline');
+        } else {
+            setNameBlock('close-circle-outline');
+
+            const data = {
+                idConversation: idConversation,
+                userId: id,
+            };
+
+            dispatch(fetchBlockConversation(data));
+        }
     };
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
@@ -91,12 +126,12 @@ function SearchItem({ id, createdBy, idConversation, isGroup, image, name, phonN
                     {isGroup ? (
                         isLeader ? (
                             createdBy === id ? null : (
-                                <View style ={{flexDirection: 'row'}}>
-                                    <TouchableOpacity>
-                                        <Icon name="remove-circle-outline" color="black" size={25}></Icon>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <TouchableOpacity onPress={handleBlockMember}>
+                                        <Icon name={nameBlock} color="black" size={25}></Icon>
                                     </TouchableOpacity>
                                     <TouchableOpacity
-                                    style = {{marginLeft: 20}}
+                                        style={{ marginLeft: 20 }}
                                         onPress={() => {
                                             handleRemoveMember(id);
                                         }}

@@ -7,7 +7,7 @@ export default {
     LINK_API_LOCALHOST
 };
 
-export const socket = io('https://1de6-42-115-94-219.ap.ngrok.io', {
+export const socket = io('https://3a72-42-115-94-219.ap.ngrok.io', {
     transports: ['websocket'],
     //reconnection: true,
     withCredentials: true,

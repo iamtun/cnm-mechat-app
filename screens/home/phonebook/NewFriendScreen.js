@@ -11,7 +11,6 @@ function NewFriendScreen({ navigation }) {
     const userInfo = useSelector(userInfoSelector);
     const { _id } = userInfo;
     const dispatch = useDispatch();
-    let listFriendRequest = [];
 
     const handleClickSyncButton = () => {
         navigation.navigate('SyncPhoneBook');

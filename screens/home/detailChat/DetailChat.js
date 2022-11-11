@@ -11,7 +11,7 @@ import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { fetchChangeNameGroup, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
+import { fetchChangeNameGroup, fetchDeleteConversations, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
@@ -91,6 +91,20 @@ export default function DetailChat({ route, navigation }) {
         }
     }, [debounce]);
 
+    // back message screen
+    const handleBack = () => {
+        navigation.navigate('MessageScreen', { idConversation, createdBy, isGroup, members, name, image });
+    };
+
+    // remove conversation
+    const handleRemoveConversation = () => {
+        const data = {
+            idConversation: idConversation, 
+            mainId: createdBy
+        }
+        dispatch(fetchDeleteConversations(data))
+        navigation.navigate("HomeScreen")
+    }
     return (
         <>
             <Modal
@@ -131,7 +145,7 @@ export default function DetailChat({ route, navigation }) {
             <Header />
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={handleBack}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tùy chọn</Text>
@@ -188,6 +202,8 @@ export default function DetailChat({ route, navigation }) {
                             style={styles.photo}
                             onPress={() =>
                                 navigation.navigate('AllMembers', {
+                                    name,
+                                    image,
                                     idConversation,
                                     createdBy,
                                     isGroup,
@@ -202,6 +218,12 @@ export default function DetailChat({ route, navigation }) {
                             <Icon name="enter-outline" color="red" size={20}></Icon>
                             <Text style={{ marginLeft: 10, color: 'red' }}>Rời nhóm</Text>
                         </TouchableOpacity>
+                        {createdBy == userInfo._id ? (
+                            <TouchableOpacity style={styles.photo} onPress={handleRemoveConversation}>
+                                <Icon name="trash-outline" color="red" size={20}></Icon>
+                                <Text style={{ marginLeft: 10, color: 'red' }}>Giải tán nhóm</Text>
+                            </TouchableOpacity>
+                        ) : null}
                     </>
                 ) : (
                     <TouchableOpacity style={styles.photo}>
@@ -267,7 +289,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'stretch',
-        bottom: '15%'
+        bottom: '15%',
     },
     modalView: {
         margin: 20,

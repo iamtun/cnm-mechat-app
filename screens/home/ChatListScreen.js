@@ -10,11 +10,14 @@ import Header from '../../components/Header';
 import conversationsSlice, { fetchConversations } from '../../redux/slice/conversationSlice';
 import Loading from '../../components/Loading';
 import { socket } from '../../config';
+import { RefreshControl } from 'react-native';
+import { useState } from 'react';
 
 function ChatListScreen({ navigation }) {
     const dispatch = useDispatch();
     const conversationLoading = useSelector(conversationListLoadingSelector);
     const conversations = useSelector(conversationsListSelector);
+    const [refreshing, setRefreshing] = useState(false);
 
     useEffect(() => {
         //init
@@ -44,6 +47,10 @@ function ChatListScreen({ navigation }) {
         });
     }, [conversations]);
 
+    const onRefresh = () => {
+        dispatch(fetchConversations());
+        if(!conversationLoading) setRefreshing(false);
+    }
     return (
         <>
             <Header />
@@ -61,6 +68,7 @@ function ChatListScreen({ navigation }) {
                             name={item.name}
                             image={item.imageLinkOfConver}
                             members={item.members}
+                            blockBy = {item.blockBy}
                             message={item.content ? item.content : item.lastMessage}
                             time={moment(item.time).fromNow()}
                             navigation={navigation}
@@ -68,6 +76,13 @@ function ChatListScreen({ navigation }) {
                             createdBy={item.createdBy}
                         />
                     )}
+
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
                 />
             )}
         </>

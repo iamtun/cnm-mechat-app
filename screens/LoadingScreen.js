@@ -14,7 +14,7 @@ function LoadingScreen({ navigation, route }) {
     let isRegister = route.params?.isRegister;
     const userInfoLoading = useSelector(userInfoLoadingSelector);
     const usersLoading = useSelector(userLoadingSelector);
-    //removeItem("user_token");
+    // removeItem("user_token");
 
     useEffect(() => {
         if (userInfoLoading === 1 || usersLoading === 1) return;

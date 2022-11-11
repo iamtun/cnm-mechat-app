@@ -11,19 +11,37 @@ import Header from '../../../../components/Header';
 
 function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
-    const { createdBy, members, isGroup, idConversation } = route.params;
+    const { name, image,createdBy, members, isGroup, idConversation } = route.params;
+    let listMembers = [];
+
     useEffect(() => {
         dispatch(conversationsSlice.actions.getMembers(members));
-    });
+    },[memberFriends]);
 
     const memberFriends = useSelector(getFriendsWithMembers);
+    for(let mem of memberFriends){
+        listMembers.push(mem._id)
+    } 
+
+    const handleBack = () =>{
+        navigation.navigate('DetailChat', {
+            idConversation,
+            createdBy,
+            isGroup: isGroup,
+            members: listMembers,
+            name: name,
+            image: image,
+        })
+    }
+    
+    
 
     return (
         <>
             <Header />
             <View>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => navigation.goBack()}>
+                    <TouchableOpacity onPress={handleBack}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Danh sách thành viên</Text>
@@ -42,6 +60,7 @@ function AllMembers({ route, navigation }) {
                             isGroup={isGroup}
                             createdBy={createdBy}
                             navigation={navigation}
+                            members = {members}
                         />
                     )}
                 />
