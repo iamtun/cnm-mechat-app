@@ -28,7 +28,7 @@ function LoadingScreen({ navigation, route }) {
                             return;
                         }
                         //loading users success next to loading user info
-                        if (userInfoLoading === 0 && usersLoading === 2) {
+                        if (userInfoLoading === 0) {
                             dispatch(fetchUserInfo(token));
                             return;
                         }
