@@ -7,7 +7,7 @@ function HomeScreen() {
     const dispatch = useDispatch();
     useEffect(() => {
         socket.on('get_users', (users) => {
-            const usersOnline = users.map(user => user.userId);
+            const usersOnline = users.map((user) => user.userId);
             dispatch(friendListSlice.actions.receiveFriendOnlineWithSocket(usersOnline));
         });
     }, []);

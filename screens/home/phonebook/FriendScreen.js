@@ -1,7 +1,7 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { AlphabetList } from 'react-native-section-alphabet-list';
-import { TouchableOpacity,Text} from 'react-native';
+import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getConversationIdByIdFriendSelector, getFriendsByUserSelector } from '../../../redux/selector';
 import { useEffect } from 'react';
@@ -9,12 +9,12 @@ import friendListSlice from '../../../redux/slice/friendSlice';
 
 function FriendScreen({ navigation }) {
     const dispatch = useDispatch();
-    
+
     //selector
     const _conversation = useSelector(getConversationIdByIdFriendSelector);
     const friends = useSelector(getFriendsByUserSelector);
 
-    // data info user 
+    // data info user
     let friendInfo = [];
 
     if (friends) {
@@ -62,7 +62,9 @@ function FriendScreen({ navigation }) {
                 <ListItem key={item.key} bottomDivider>
                     <Avatar rounded size={70} source={{ uri: item.avatar }} />
                     <ListItem.Content>
-                        <ListItem.Subtitle>{item.value} {item.online ? <Icon name='ellipse' size={14} color="#38A3A5"/> : null}</ListItem.Subtitle>
+                        <ListItem.Subtitle>
+                            {item.value} {item.online ? <Icon name="ellipse" size={14} color="#38A3A5" /> : null}
+                        </ListItem.Subtitle>
                         <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
                     </ListItem.Content>
                     <TouchableOpacity>
@@ -80,7 +82,7 @@ function FriendScreen({ navigation }) {
         <>
             <AlphabetList
                 data={friendInfo}
-                key={friendInfo.key+"#"}
+                key={friendInfo.key + '#'}
                 letterItemStyle={{ height: 90 }}
                 renderCustomItem={(item) => getUserItem(item)}
                 renderCustomSectionHeader={(section) => <Text>{section.title}</Text>}

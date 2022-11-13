@@ -267,20 +267,7 @@ export const getFriendsWithMembers = createSelector(
     conversationMembersSelector,
     userListSelector,
     (friends, members, users) => {
-        // const membersFilter = members.map((people) => {
-        //     console.log("people", people);
-        //     const _isFriend = friends.map((_friend) =>
-        //         _friend._id === people ? { ..._friend} : { ..._friend, isFriend: !_friend.isFriend },
-        //     );
-
-        //     return friends.filter;
-        // });
-        // console.log("membersFilter", membersFilter);
-        // return membersFilter.map((member, index) => member[index.toString()]);
         const _members = users.filter((user) => members.includes(user._id));
-        // const _members = friends.filter((_friend) =>
-        //     members.includes(_friend._id) ? _friend : { ..._friend, isFriend: !_friend.isFriend },
-        // );
         const _friends = friends.map((friend) => friend._id);
         const friendWithMember = _members.map((member) => {
             return _friends.includes(member._id) ? { ...member, isFriend: true } : { ...member, isFriend: false };

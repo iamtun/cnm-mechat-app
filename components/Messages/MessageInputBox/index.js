@@ -1,18 +1,16 @@
-import { useRef, useState } from 'react';
-import { Alert, Platform,Text} from 'react-native';
+import { useState } from 'react';
+import { Alert, Platform, Text } from 'react-native';
 import { View, StyleSheet, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import IconSticker from 'react-native-vector-icons/MaterialCommunityIcons';
-import MICon from 'react-native-vector-icons/MaterialIcons';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
 import { sendFile, sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
-
 import { iconExtends } from '../../../utils/filePathConfig';
-import { useEffect } from 'react';
-function MessageInputBox({ conversationId, blockBy}) {
+
+function MessageInputBox({ conversationId, blockBy }) {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
     const userInfo = useSelector(userInfoSelector);
@@ -64,10 +62,11 @@ function MessageInputBox({ conversationId, blockBy}) {
                     //file small 5mb don't send
                     if (fileMB < 5) {
                         return image.uri;
+                    } else {
+                        Alert.alert('Thông báo', 'Ảnh bạn gửi lớn hơn 5MB, vui lòng chọn ảnh khác!');
                     }
                 });
                 const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
-                // console.log(data);
                 dispatch(sendImageMessage(data));
             }
         } else if (Platform.OS === 'android') {
@@ -122,7 +121,9 @@ function MessageInputBox({ conversationId, blockBy}) {
 
     return (
         <View style={[styles.body, styles.row]}>
-            {blockBy?.includes(userInfo._id) ? <Text style={{textAlign:'center', width:"100%"}}>Bạn đã bị chặn nhắn tin</Text> : (
+            {blockBy?.includes(userInfo._id) ? (
+                <Text style={{ textAlign: 'center', width: '100%' }}>Bạn đã bị chặn nhắn tin</Text>
+            ) : (
                 <>
                     <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
                     <View style={styles.inputView}>
@@ -181,7 +182,6 @@ const styles = StyleSheet.create({
         height: '100%',
     },
     input: {
-        //borderWidth: 1,
         width: '100%',
         height: '100%',
         fontSize: 18,

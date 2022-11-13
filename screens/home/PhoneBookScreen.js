@@ -10,7 +10,6 @@ import { useEffect } from 'react';
 import { socket } from '../../config';
 import { useDispatch } from 'react-redux';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
-import conversationsSlice from '../../redux/slice/conversationSlice';
 
 const Tab = createMaterialTopTabNavigator();
 function PhoneBookScreen({ navigation }) {
@@ -30,7 +29,7 @@ function PhoneBookScreen({ navigation }) {
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
     }, []);
-    
+
     // UI
     return (
         <>

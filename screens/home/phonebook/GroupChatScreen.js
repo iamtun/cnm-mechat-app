@@ -19,7 +19,7 @@ function GroupChatScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
     const conversation = useSelector(getConversationIdByIdGroupConversation);
 
-    //fetch conversation 
+    //fetch conversation
     useEffect(() => {
         dispatch(fetchConversations(_userInfoSelector._id));
     }, []);
@@ -41,19 +41,20 @@ function GroupChatScreen({ navigation }) {
             });
         }
     }
+
     // change screen message
     useEffect(() => {
-        if(conversation){
+        if (conversation) {
             dispatch(conversationsSlice.actions.clickGroupChat(0));
-             navigation.navigate('MessageScreen', {
+            navigation.navigate('MessageScreen', {
                 id: conversation.id,
                 name: conversation.name,
                 members: conversation.members,
                 image: conversation.imageLinkOfConver,
-                isGroup: conversation.isGroup
+                isGroup: conversation.isGroup,
             });
         }
-    },[conversation])
+    }, [conversation]);
 
     // click item group change screen
     const handleSendChat = (idGroup) => {
@@ -84,7 +85,11 @@ function GroupChatScreen({ navigation }) {
     //UI
     return (
         <View>
-            <FlatList data={listGroupChat} keyExtractor={(group) => group.id.toString()+"_"} renderItem={getGroupItem} />
+            <FlatList
+                data={listGroupChat}
+                keyExtractor={(group) => group.id.toString() + '_'}
+                renderItem={getGroupItem}
+            />
         </View>
     );
 }
