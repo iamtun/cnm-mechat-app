@@ -1,5 +1,5 @@
 import { View, Text, Image, StyleSheet } from 'react-native';
-import { Video, Audio } from 'expo-av';
+import { Video } from 'expo-av';
 import ImageView from 'react-native-image-viewing';
 import { TouchableOpacity } from 'react-native';
 import { useState } from 'react';
@@ -51,9 +51,11 @@ function ImageMessage({ imageURI, content, images }) {
                         volume={1.0}
                     />
                 ) : (
-                    <TouchableOpacity onPress={() => {
-                        handleViewingImage(imageURI);
-                    }}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            handleViewingImage(imageURI);
+                        }}
+                    >
                         <Image source={{ uri: imageURI }} style={styles.imageMessage} resizeMode="stretch" />
                     </TouchableOpacity>
                 )}

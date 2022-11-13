@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
@@ -24,7 +23,7 @@ function NewFriendScreen({ navigation }) {
             dispatch(friendListSlice.actions.friendRequestReceiverSocket(request));
         });
     }, []);
-    
+
     useEffect(() => {
         dispatch(fetchLoadFriendsRequest(_id));
     }, []);
@@ -43,7 +42,7 @@ function NewFriendScreen({ navigation }) {
         dispatch(fetchHandleFriendsRequest(data));
     };
 
-    // render item new friend 
+    // render item new friend
     function getNewFriends({ item: user }) {
         return (
             <View styles={styles.container}>
@@ -73,7 +72,7 @@ function NewFriendScreen({ navigation }) {
             </View>
         );
     }
-    
+
     // UI
     return (
         <>

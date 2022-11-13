@@ -1,5 +1,5 @@
-import { forwardRef, useState } from 'react';
-import { View, Text, TextInput } from 'react-native';
+import { useState } from 'react';
+import { View, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { StyleSheet } from 'react-native';
 
@@ -7,7 +7,7 @@ function TextInputPrimary({ value, onChange, placeholder, isPass, keyboardType }
     const [isPassState, setIsPassState] = useState(isPass);
     const [nameIcon, setNameIcon] = useState('eye-outline');
 
-    const _handleClickIcon = () => {
+    const handleClickIcon = () => {
         setIsPassState(!isPassState);
         if (nameIcon == 'eye-outline') {
             setNameIcon('eye-off-outline');
@@ -26,7 +26,7 @@ function TextInputPrimary({ value, onChange, placeholder, isPass, keyboardType }
                 onChangeText={onChange}
                 keyboardType={keyboardType}
             />
-            {isPass && <Icon name={nameIcon} color="#000" size={20} onPress={() => _handleClickIcon()} />}
+            {isPass && <Icon name={nameIcon} color="#000" size={20} onPress={() => handleClickIcon()} />}
         </View>
     );
 }

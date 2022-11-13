@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
-import { Alert } from 'react-native';
 import config, { socket, createFormDataUpdate } from '../../config';
 
 const userInfoSlice = createSlice({

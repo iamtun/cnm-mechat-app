@@ -138,6 +138,7 @@ function NewGroupChat({ route, navigation }) {
         dispatch(fetchAddMembers(data))
         setIsCreateGroup(true);
     }
+
     //change screen message
     useEffect(() => {
         console.log(group);
@@ -152,6 +153,7 @@ function NewGroupChat({ route, navigation }) {
             });
         }
     }, [debounceGroup]);
+    
     // render item
     function getFriendItem({ item: friend }) {
         return (

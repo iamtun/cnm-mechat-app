@@ -84,7 +84,7 @@ const messageListSlice = createSlice({
 });
 
 /**
- * get 10 messages by conversation id
+ * get 10 messages first by conversation id
  */
 export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', async ({ id }) => {
     if (id) {

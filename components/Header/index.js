@@ -7,7 +7,7 @@ function Header() {
 const styles = StyleSheet.create({
     body: {
         width: '100%',
-        height: '6%',
+        height: '5%',
         backgroundColor: '#3777F3',
     },
 });

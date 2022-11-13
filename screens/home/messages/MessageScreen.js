@@ -1,7 +1,6 @@
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { View, StyleSheet, Text } from 'react-native';
 import { useEffect } from 'react';
-import { useIsFocused } from '@react-navigation/native';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -13,7 +12,6 @@ import { socket } from '../../../config';
 import { getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
 import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '../../../redux/slice/messageSlice';
 import GlobalStyle from '../../../styles/GlobalStyle';
-import { useState } from 'react';
 
 function MessageScreen({ route, navigation }) {
     const { id, isGroup, members, blockBy, name, image, createdBy } = route.params;
@@ -50,6 +48,7 @@ function MessageScreen({ route, navigation }) {
             dispatch(fetch10NextMessagesById({ id, countMessage: numberMessage }));
         }
     };
+    
     return (
         <>
             <Header />

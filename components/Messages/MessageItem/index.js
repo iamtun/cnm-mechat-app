@@ -1,11 +1,7 @@
-import { PointPropType } from 'deprecated-react-native-prop-types';
-import { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
-import { Tooltip } from 'react-native-elements';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
 import { deleteMessage, recallMessage } from '../../../redux/slice/messageSlice';
-import MenuItem from '../../SearchBar/Menu/MenuItem';
 import ToolTipCustom from '../../SearchBar/Menu/TooltipCustom';
 import ActionMessage from './ActionMessage';
 import FileMessage from './FileMessage';
@@ -63,18 +59,12 @@ function MessageItem({ message, id, navigation }) {
                                     <Text style={styles.username}>{message.user.name}</Text>
                                     {message?.imageLink?.length > 0 ? (
                                         message.imageLink.length === 1 ? (
-                                            <ImageMessage
-                                                imageURI={message.imageLink[0]}
-                                                content={message.content}
-                                            />
+                                            <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
                                         ) : (
-                                            <ImageMessage
-                                                images={message.imageLink}
-                                                content={message.content}
-                                            />
+                                            <ImageMessage images={message.imageLink} content={message.content} />
                                         )
                                     ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} navigation={navigation}/>
+                                        <FileMessage fileUri={message.fileLink} navigation={navigation} />
                                     ) : (
                                         <Text style={[styles.message]}>{message.content}</Text>
                                     )}
@@ -84,18 +74,12 @@ function MessageItem({ message, id, navigation }) {
                                     <Text style={styles.username}>{message.user.name}</Text>
                                     {message?.imageLink?.length > 0 ? (
                                         message.imageLink.length === 1 ? (
-                                            <ImageMessage
-                                                imageURI={message.imageLink[0]}
-                                                content={message.content}
-                                            />
+                                            <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
                                         ) : (
-                                            <ImageMessage
-                                                images={message.imageLink}
-                                                content={message.content}
-                                            />
+                                            <ImageMessage images={message.imageLink} content={message.content} />
                                         )
                                     ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} navigation={navigation}/>
+                                        <FileMessage fileUri={message.fileLink} navigation={navigation} />
                                     ) : (
                                         <Text style={[styles.message]}>{message.content}</Text>
                                     )}
