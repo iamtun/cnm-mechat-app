@@ -289,4 +289,21 @@ export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlock
     console.log('jsonData', jsonData);
 });
 
+
+export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnBlockConversation', async (data) => {
+    const { idConversation } = data;
+    const { userId } = data;
+
+    const response = await fetch(`${config.LINK_API_V4}/conversations/remove-block-conversation/${idConversation}`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+    });
+
+    const jsonData = await response.json();
+    console.log('jsonData unblock', jsonData);
+});
+
 export default conversationsSlice;

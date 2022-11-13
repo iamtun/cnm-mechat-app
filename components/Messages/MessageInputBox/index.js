@@ -11,7 +11,8 @@ import { userInfoSelector } from '../../../redux/selector';
 import { sendFile, sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
 
 import { iconExtends } from '../../../utils/filePathConfig';
-function MessageInputBox({ conversationId, isBlock }) {
+import { useEffect } from 'react';
+function MessageInputBox({ conversationId, blockBy}) {
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
     const userInfo = useSelector(userInfoSelector);
@@ -121,7 +122,7 @@ function MessageInputBox({ conversationId, isBlock }) {
 
     return (
         <View style={[styles.body, styles.row]}>
-            {isBlock ? <Text style={{textAlign:'center', width:"100%"}}>Bạn đã bị chặn tin nhắn</Text> : (
+            {blockBy?.includes(userInfo._id) ? <Text style={{textAlign:'center', width:"100%"}}>Bạn đã bị chặn nhắn tin</Text> : (
                 <>
                     <IconSticker name="sticker-emoji" size={32} style={styles.icon} />
                     <View style={styles.inputView}>

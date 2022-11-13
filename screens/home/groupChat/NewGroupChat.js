@@ -141,6 +141,7 @@ function NewGroupChat({ route, navigation }) {
     }
 
     useEffect(() => {
+        console.log(group);
         if (isCreateGroup) {
             navigation.navigate('MessageScreen', {
                 id: group.id,

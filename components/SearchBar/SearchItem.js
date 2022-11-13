@@ -10,10 +10,13 @@ import conversationsSlice, {
     fetchBlockConversation,
     fetchConversations,
     fetchRemoveMember,
+    fetchUnBlockConversation,
 } from '../../redux/slice/conversationSlice';
+
 function SearchItem({
     id,
     createdBy,
+    blockBy,
     idConversation,
     isGroup,
     image,
@@ -28,11 +31,13 @@ function SearchItem({
     const [isRequest, setIsRequest] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
     const [nameBlock, setNameBlock] = useState('remove-circle-outline');
+    const [isBlock, setIsBlock] = useState(false);
 
     // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
     const allFriendsRequest = useSelector(friendListSelector);
 
+    //set leader
     useEffect(() => {
         if (createdBy === _userInfoSelector._id) {
             setIsLeader(true);
@@ -61,7 +66,6 @@ function SearchItem({
             senderID: _userInfoSelector._id,
         };
         // console.log('Data', data);
-
         dispatch(fetchBackFriendRequest(data));
     };
 
@@ -86,21 +90,38 @@ function SearchItem({
         // dispatch(fetchConversations(_userInfoSelector._id))
     };
 
+    console.log("blockBy", blockBy);
+
     //block member send message
-    const handleBlockMember = () => {
-        if (nameBlock == 'close-circle-outline') {
-            setNameBlock('remove-circle-outline');
-        } else {
-            setNameBlock('close-circle-outline');
+    //còn lỗi lum la
+    const handleBlockMember = (id) => {
+        const data = {
+            idConversation: idConversation,
+            userId: id,
+        };
+        console.log("idđ", id);
+        const idFind =  blockBy.find((data) => {data === id});
+        console.log('blockBy.includes(id)',idFind);
 
-            const data = {
-                idConversation: idConversation,
-                userId: id,
-            };
-
-            dispatch(fetchBlockConversation(data));
-        }
+        // if (blockBy?.includes(id)) {
+        //     setIsBlock(false);
+        //     dispatch(fetchUnBlockConversation(data));
+        // } 
+        // if(!blockBy?.includes(id)) {
+        //     setIsBlock(true);
+        //     dispatch(fetchBlockConversation(data));
+        // }
     };
+
+    //set block
+    useEffect(() => {
+        if (isBlock) {
+            setNameBlock('close-circle-outline');
+        } else {
+            setNameBlock('remove-circle-outline');
+        }
+    }, [isBlock]);
+
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
             {isNull ? (
@@ -127,7 +148,11 @@ function SearchItem({
                         isLeader ? (
                             createdBy === id ? null : (
                                 <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity onPress={handleBlockMember}>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            handleBlockMember(id);
+                                        }}
+                                    >
                                         <Icon name={nameBlock} color="black" size={25}></Icon>
                                     </TouchableOpacity>
                                     <TouchableOpacity

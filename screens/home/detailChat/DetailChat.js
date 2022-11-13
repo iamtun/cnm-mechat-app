@@ -15,7 +15,7 @@ import { fetchChangeNameGroup, fetchDeleteConversations, fetchOutGroup, fetchUpd
 import useDebounce from '../../../hooks/useDebounce';
 
 export default function DetailChat({ route, navigation }) {
-    const { isGroup, members, name, image, createdBy, idConversation } = route.params;
+    const { isGroup, members,blockBy, name, image, createdBy, idConversation } = route.params;
     const userInfo = useSelector(userInfoSelector);
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
     const [isOutGroup, setIsOutGroup] = useState(false);
@@ -204,6 +204,7 @@ export default function DetailChat({ route, navigation }) {
                                 navigation.navigate('AllMembers', {
                                     name,
                                     image,
+                                    blockBy,
                                     idConversation,
                                     createdBy,
                                     isGroup,
