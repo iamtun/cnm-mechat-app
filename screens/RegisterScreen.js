@@ -13,7 +13,8 @@ import useDebounce from '../hooks/useDebounce';
 import { useEffect } from 'react';
 
 function RegisterScreen({ navigation }) {
-    //ui ref
+    
+    //ui state
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [userName, setUserName] = useState(null);
     const [password, setPassword] = useState(null);
@@ -28,6 +29,7 @@ function RegisterScreen({ navigation }) {
     const debouncedPass = useDebounce(password, 500);
     const debouncedPassAgain = useDebounce(passwordAgain, 500);
 
+    // check phone number register
     useEffect(() => {
         if (phoneNumber === '') {
             setErrPhone('Vui lòng nhập số điện thoại');
@@ -40,6 +42,7 @@ function RegisterScreen({ navigation }) {
         }
     }, [debouncedPhone]);
 
+    // check username register
     useEffect(() => {
         if (userName === '') {
             setErrUserName('Vui lòng nhập tên tài khoản');
@@ -48,6 +51,7 @@ function RegisterScreen({ navigation }) {
         }
     }, [debouncedUseName]);
 
+    // check pass word register
     useEffect(() => {
         if (password === '') {
             setErrPass('Vui lòng nhập mật khẩu');
@@ -56,6 +60,7 @@ function RegisterScreen({ navigation }) {
         }
     }, [debouncedPass]);
 
+    // check pass word again register
     useEffect(() => {
         if (passwordAgain === '') {
             setErrPassAgain('Vui lòng nhập lại mật khẩu');
@@ -65,11 +70,12 @@ function RegisterScreen({ navigation }) {
             setErrPassAgain(null);
         }
     }, [debouncedPassAgain]);
-    //firebase
+
+    //firebase captcha
     const recaptchaVerifier = useRef(null);
     const [verificationId, setVerificationId] = useState(null);
 
-    //function
+    //function get OTP with phone number
     const senOTP = async () => {
         let _phoneNumber = '+84' + phoneNumber.slice(1);
         try {
@@ -83,6 +89,7 @@ function RegisterScreen({ navigation }) {
         }
     };
 
+    // function fetch api get user with phone number
     const getUserByPhoneNumber = async () => {
         return await fetch(`${config.LINK_API_V4}/users/get-user-by-phone/${phoneNumber}`)
             .then((res) => res.json())
@@ -95,48 +102,45 @@ function RegisterScreen({ navigation }) {
             });
     };
 
+    //function register with check error, api, senOTP
     const _handleRegister = async () => {
         const userPhone = await getUserByPhoneNumber();
 
-    if (phoneNumber === null) {
-      setPhoneNumber("");
-    }
-    if (userName === null) {
-      setUserName("");
-    }
-    if (password === null) {
-      setPassword("");
-    }
-    if (passwordAgain === null) {
-      setPasswordAgain("");
-    } else if(userPhone){
-      setErrPhone("Số điện thoại đã đăng ký tài khoản")
-    } else if (
-      errPhone != null ||
-      errPass != null ||
-      errUserName != null ||
-      errPassAgain != null
-    ) {
-    } else {
-      senOTP()
-        .then((otp) => {
-          setVerificationId(otp);
-          navigation.navigate("AuthenticationScreen", {
-            verificationId: otp,
-            phoneNumber: phoneNumber,
-            passWord: passwordAgain,
-            fullName: userName,
-            isForgetPass: false,
-            isRegister: true,
-          });
-        })
-        .catch((err) => {
-          console.log("ERRR", err);
-          return;
-        });
-    }
-  };
+        if (phoneNumber === null) {
+            setPhoneNumber('');
+        }
+        if (userName === null) {
+            setUserName('');
+        }
+        if (password === null) {
+            setPassword('');
+        }
+        if (passwordAgain === null) {
+            setPasswordAgain('');
+        } else if (userPhone) {
+            setErrPhone('Số điện thoại đã đăng ký tài khoản');
+        } else if (errPhone != null || errPass != null || errUserName != null || errPassAgain != null) {
+        } else {
+            senOTP()
+                .then((otp) => {
+                    setVerificationId(otp);
+                    navigation.navigate('AuthenticationScreen', {
+                        verificationId: otp,
+                        phoneNumber: phoneNumber,
+                        passWord: passwordAgain,
+                        fullName: userName,
+                        isForgetPass: false,
+                        isRegister: true,
+                    });
+                })
+                .catch((err) => {
+                    console.log('ERRR', err);
+                    return;
+                });
+        }
+    };
 
+    // UI
     return (
         <View style={GlobalStyle.container}>
             <FirebaseRecaptchaVerifierModal

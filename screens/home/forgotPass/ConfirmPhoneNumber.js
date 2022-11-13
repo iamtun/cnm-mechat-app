@@ -17,13 +17,16 @@ import useDebounce from '../../../hooks/useDebounce';
 import { useEffect } from 'react';
 
 function ConfirmPhoneNumber({ navigation }) {
+    //use state
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [errPhone, setErrPhone] = useState(null);
-    const debouncedPhone = useDebounce(phoneNumber, 500);
-    const phoneNumberForgotRef = useRef(null);
-    const recaptchaVerifier = useRef(null);
     const [verificationId, setVerificationId] = useState(null);
 
+    const recaptchaVerifier = useRef(null);
+
+    const debouncedPhone = useDebounce(phoneNumber, 500);
+
+    // check error phone number
     useEffect(() => {
         if (phoneNumber === '') {
             setErrPhone('Vui lòng nhập số điện thoại');
@@ -36,6 +39,7 @@ function ConfirmPhoneNumber({ navigation }) {
         }
     }, [debouncedPhone]);
 
+    //send OTP
     const senOTP = async () => {
         let _phoneNumber = '+84' + phoneNumber.slice(1);
 
@@ -50,6 +54,7 @@ function ConfirmPhoneNumber({ navigation }) {
         }
     };
 
+    //get user with phone number
     const getUserByPhoneNumber = async () => {
         return await fetch(`${config.LINK_API_V4}/users/get-user-by-phone/${phoneNumber}`)
             .then((res) => res.json())
@@ -62,6 +67,7 @@ function ConfirmPhoneNumber({ navigation }) {
             });
     };
 
+    // button forget pass
     const _handleForgotPass = async () => {
         const userPhone = await getUserByPhoneNumber();
         if (phoneNumber === null) {
@@ -86,6 +92,7 @@ function ConfirmPhoneNumber({ navigation }) {
         }
     };
 
+    //UI
     return (
         <View style={GlobalStyle.container}>
             <FirebaseRecaptchaVerifierModal

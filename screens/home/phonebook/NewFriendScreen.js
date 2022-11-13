@@ -8,10 +8,12 @@ import { friendListSelector, userInfoSelector } from '../../../redux/selector';
 import friendListSlice, { fetchHandleFriendsRequest, fetchLoadFriendsRequest } from '../../../redux/slice/friendSlice';
 
 function NewFriendScreen({ navigation }) {
-    const userInfo = useSelector(userInfoSelector);
-    const { _id } = userInfo;
     const dispatch = useDispatch();
 
+    // selector user info
+    const userInfo = useSelector(userInfoSelector);
+    const { _id } = userInfo;
+    // change screen sync phone book
     const handleClickSyncButton = () => {
         navigation.navigate('SyncPhoneBook');
     };
@@ -22,7 +24,7 @@ function NewFriendScreen({ navigation }) {
             dispatch(friendListSlice.actions.friendRequestReceiverSocket(request));
         });
     }, []);
-
+    
     useEffect(() => {
         dispatch(fetchLoadFriendsRequest(_id));
     }, []);
@@ -39,9 +41,9 @@ function NewFriendScreen({ navigation }) {
             receiverID: _id,
         };
         dispatch(fetchHandleFriendsRequest(data));
-        //dispatch(fetchLoadFriendsRequest(_id));
     };
 
+    // render item new friend 
     function getNewFriends({ item: user }) {
         return (
             <View styles={styles.container}>
@@ -71,6 +73,8 @@ function NewFriendScreen({ navigation }) {
             </View>
         );
     }
+    
+    // UI
     return (
         <>
             <TouchableOpacity style={styles.syncButton} onPress={handleClickSyncButton}>

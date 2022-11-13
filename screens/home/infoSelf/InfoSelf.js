@@ -11,16 +11,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchUpdateInfoUsers } from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
 
-
 export default function InfoSelf({ route, navigation }) {
+    const dispatch = useDispatch();
+    let isRegister = route.params?.isRegister;
 
-  const userInfo = useSelector(userInfoSelector);
-  const dispatch = useDispatch();
-  let isRegister = route.params?.isRegister;
+    //selector
+    const userInfo = useSelector(userInfoSelector);
 
-    // useEffect(() => {
-    //   dispatch(fetchUserByPhone(phoneNumber));
-    // }, []);
     //use state
     const [selectedDate, setSelectedDate] = useState(userInfo.birthday);
     const [textName, setTextName] = useState(userInfo.fullName);
@@ -33,7 +30,7 @@ export default function InfoSelf({ route, navigation }) {
         { label: 'Nữ', value: '1' },
     ];
 
-    //update
+    //data info new
     const data = {
         userID: userInfo._id,
         fullName: textName,
@@ -42,11 +39,13 @@ export default function InfoSelf({ route, navigation }) {
         bio: textBio,
     };
 
-  const _handleUpdateInfo = () => {
-    dispatch(fetchUpdateInfoUsers(data));
-    navigation.navigate("PersonalScreen",{isMe:true,isRegister: isRegister})
-  };
+    // update info
+    const _handleUpdateInfo = () => {
+        dispatch(fetchUpdateInfoUsers(data));
+        navigation.navigate('PersonalScreen', { isMe: true, isRegister: isRegister });
+    };
 
+    //UI
     return (
         <>
             <Header />

@@ -15,10 +15,13 @@ import { useState } from 'react';
 
 function ChatListScreen({ navigation }) {
     const dispatch = useDispatch();
+
+    // use selector
     const conversationLoading = useSelector(conversationListLoadingSelector);
     const conversations = useSelector(conversationsListSelector);
     const [refreshing, setRefreshing] = useState(false);
 
+    // socket
     useEffect(() => {
         //init
         if (conversations.length === 0) dispatch(fetchConversations());
@@ -30,6 +33,7 @@ function ChatListScreen({ navigation }) {
         });
     }, []);
 
+    // socket
     useEffect(() => {
         //listening socket
         socket.off('send_friends_give_conversation');
@@ -47,10 +51,13 @@ function ChatListScreen({ navigation }) {
         });
     }, [conversations]);
 
+    // loading conversation
     const onRefresh = () => {
         dispatch(fetchConversations());
         if(!conversationLoading) setRefreshing(false);
     }
+
+    // UI
     return (
         <>
             <Header />

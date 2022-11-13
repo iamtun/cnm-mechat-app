@@ -23,7 +23,6 @@ function MessageScreen({ route, navigation }) {
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
     const userInfo = useSelector(userInfoSelector);
-    console.log('userInfo', userInfo._id);
 
     useEffect(() => {
         //user join room with socket

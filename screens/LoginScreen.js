@@ -24,6 +24,7 @@ function LoginScreen({ navigation }) {
     const debouncedPhone = useDebounce(phoneNumber, 500);
     const debouncedPass = useDebounce(password, 500);
 
+    // check phone number
     useEffect(() => {
         if (phoneNumber === '') {
             setErrPhone('Vui lòng nhập số điện thoại');
@@ -36,6 +37,7 @@ function LoginScreen({ navigation }) {
         }
     }, [debouncedPhone]);
 
+    // check pass
     useEffect(() => {
         if (password === '') {
             setErrPass('Vui lòng nhập mật khẩu');
@@ -43,7 +45,8 @@ function LoginScreen({ navigation }) {
             setErrPass(null);
         }
     }, [debouncedPass]);
-    // function
+
+    // function fetch sign with api
     const sign = () => {
         return fetch(`${config.LINK_API_V4}/auths/login`, {
             method: 'POST',
@@ -66,35 +69,13 @@ function LoginScreen({ navigation }) {
             });
     };
 
+    // function change screen register
     const clickRegister = () => {
         navigation.navigate('RegisterScreen');
     };
 
-    // const _handleLogin = () => {
-    //   if (phoneNumberLoginRef.current == null || passLoginRef.current == null) {
-    //     Alert.alert("Vui lòng nhập đầy đủ thông tin");
-    //   } else {
-    //     sign()
-    //       .then((token) => {
-    //         senOTP()
-    //           .then((otp) => {
-    //             setVerificationId(otp);
-    //             navigation.navigate("AuthenticationScreen", {
-    //               verificationId: otp,
-    //               token: token,
-    //             });
-    //           })
-    //           .catch((err) => {
-    //             return;
-    //           });
-    //       })
-    //       .catch((err) => {
-
-    //       });
-    //   }
-    // };
-
-    const _handleLoginTemp = () => {
+    // function login with check error and api
+    const _handleLogin = () => {
         if (phoneNumber === null) {
             setPhoneNumber('');
         }
@@ -124,6 +105,7 @@ function LoginScreen({ navigation }) {
         }
     };
 
+    // UI
     return (
         <View style={GlobalStyle.container}>
             {/*  logo  */}
@@ -171,7 +153,7 @@ function LoginScreen({ navigation }) {
                     </Text>
                 </View>
 
-                <ButtonPrimary title="Đăng nhập" onPress={_handleLoginTemp} />
+                <ButtonPrimary title="Đăng nhập" onPress={_handleLogin} />
             </View>
             {Platform.OS === 'ios' ? (
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={40} />

@@ -90,37 +90,46 @@ function SearchItem({
         // dispatch(fetchConversations(_userInfoSelector._id))
     };
 
-    console.log("blockBy", blockBy);
+    // console.log('blockBy', blockBy);
 
     //block member send message
     //còn lỗi lum la
-    const handleBlockMember = (id) => {
-        const data = {
-            idConversation: idConversation,
-            userId: id,
-        };
-        console.log("idđ", id);
-        const idFind =  blockBy.find((data) => {data === id});
-        console.log('blockBy.includes(id)',idFind);
+    // ở đây không fectch api thì block by không cập nhật lại
+    // nếu block không cập nhật lại thì sai
 
-        // if (blockBy?.includes(id)) {
-        //     setIsBlock(false);
-        //     dispatch(fetchUnBlockConversation(data));
-        // } 
-        // if(!blockBy?.includes(id)) {
-        //     setIsBlock(true);
-        //     dispatch(fetchBlockConversation(data));
-        // }
-    };
+    // const handleBlockMember = (id) => {
+    //     // if(nameBlock == "remove-circle-outline"){
+    //     //     setNameBlock('close-circle-outline');
+    //     // } else{
+    //     //     setNameBlock('remove-circle-outline');
+    //     // }
+    //     const data = {
+    //         idConversation: idConversation,
+    //         userId: id,
+    //     };
+    //     // console.log("idđ", id);
+    //     // const idFind =  blockBy.find((data) => {data === id});
+    //     // console.log('blockBy.includes(id)',idFind);
+    //     if (blockBy) {
+    //         if (blockBy?.includes(id)) {
+    //             setNameBlock('remove-circle-outline');
+    //             dispatch(fetchUnBlockConversation(data));
+    //         } else {
+    //             setNameBlock('close-circle-outline');
+    //             dispatch(fetchBlockConversation(data));
+    //         }
+    //     }
+    // };
 
-    //set block
-    useEffect(() => {
-        if (isBlock) {
-            setNameBlock('close-circle-outline');
-        } else {
-            setNameBlock('remove-circle-outline');
-        }
-    }, [isBlock]);
+    // console.log('isBlock', isBlock);
+    // //set block
+    // useEffect(() => {
+    //     if (blockBy?.includes(id)) {
+    //         setNameBlock('close-circle-outline');
+    //     } else {
+    //         setNameBlock('remove-circle-outline');
+    //     }
+    // }, []);
 
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>

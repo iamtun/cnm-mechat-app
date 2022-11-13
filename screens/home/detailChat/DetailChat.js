@@ -11,20 +11,30 @@ import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
-import { fetchChangeNameGroup, fetchDeleteConversations, fetchOutGroup, fetchUpdateAvatarGroup } from '../../../redux/slice/conversationSlice';
+import {
+    fetchChangeNameGroup,
+    fetchDeleteConversations,
+    fetchOutGroup,
+    fetchUpdateAvatarGroup,
+} from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
+import { Alert } from 'react-native';
 
 export default function DetailChat({ route, navigation }) {
-    const { isGroup, members,blockBy, name, image, createdBy, idConversation } = route.params;
+    const dispatch = useDispatch();
     const userInfo = useSelector(userInfoSelector);
+
+    const { isGroup, members, blockBy, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
+    //use state
     const [isOutGroup, setIsOutGroup] = useState(false);
-    const debounce = useDebounce(isOutGroup, 1000);
     const [modalVisible, setModalVisible] = useState(false);
     const [newNameGroup, setNewNameGroup] = useState(name);
     const [imageUpdate, setImageUpdate] = useState(image);
-    const dispatch = useDispatch();
 
+    const debounce = useDebounce(isOutGroup, 1000);
+
+    //click info chat
     const handleClickInfo = () => {
         if (!isGroup) {
             dispatch(userInfoSlice.actions.clickSearchItem(idFriend));
@@ -32,6 +42,7 @@ export default function DetailChat({ route, navigation }) {
         }
     };
 
+    // add member
     const handleAddMembers = () => {
         navigation.navigate('NewGroupChat', { isCreate: false, members: members, idConversation });
     };
@@ -62,7 +73,7 @@ export default function DetailChat({ route, navigation }) {
         setNewNameGroup(data.newName);
     };
 
-    //update avartar nhóm
+    //update avartar group
     const pickImage = async () => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -85,6 +96,7 @@ export default function DetailChat({ route, navigation }) {
         }
     };
 
+    //change  screen home
     useEffect(() => {
         if (isOutGroup) {
             navigation.navigate('HomeScreen');
@@ -99,12 +111,44 @@ export default function DetailChat({ route, navigation }) {
     // remove conversation
     const handleRemoveConversation = () => {
         const data = {
-            idConversation: idConversation, 
-            mainId: createdBy
-        }
-        dispatch(fetchDeleteConversations(data))
-        navigation.navigate("HomeScreen")
-    }
+            idConversation: idConversation,
+            mainId: createdBy,
+        };
+        dispatch(fetchDeleteConversations(data));
+        navigation.navigate('HomeScreen');
+    };
+
+    //Question out group
+    const showConfirmDialogOutGroup = () => {
+        Alert.alert('Thoát nhóm', 'Bạn có muốn thoát khỏi nhóm này?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    outGroup();
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
+
+      //Question remove group
+      const showConfirmDialogRemove = () => {
+        Alert.alert('Giải tán nhóm', 'Bạn có muốn giải tán nhóm ?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    handleRemoveConversation();
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
+
+    //UI
     return (
         <>
             <Modal
@@ -215,12 +259,12 @@ export default function DetailChat({ route, navigation }) {
                             <Icon name="people-outline" color="black" size={20}></Icon>
                             <Text style={{ marginLeft: 10 }}>Xem thành viên</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.photo} onPress={outGroup}>
+                        <TouchableOpacity style={styles.photo} onPress={showConfirmDialogOutGroup}>
                             <Icon name="enter-outline" color="red" size={20}></Icon>
                             <Text style={{ marginLeft: 10, color: 'red' }}>Rời nhóm</Text>
                         </TouchableOpacity>
                         {createdBy == userInfo._id ? (
-                            <TouchableOpacity style={styles.photo} onPress={handleRemoveConversation}>
+                            <TouchableOpacity style={styles.photo} onPress={showConfirmDialogRemove}>
                                 <Icon name="trash-outline" color="red" size={20}></Icon>
                                 <Text style={{ marginLeft: 10, color: 'red' }}>Giải tán nhóm</Text>
                             </TouchableOpacity>

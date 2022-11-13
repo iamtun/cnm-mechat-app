@@ -14,16 +14,20 @@ function AllMembers({ route, navigation }) {
     const { name, blockBy, image, createdBy, members, isGroup, idConversation } = route.params;
     let listMembers = [];
 
+    //selector
+    const memberFriends = useSelector(getFriendsWithMembers);
+
+    // get id all members
     useEffect(() => {
         dispatch(conversationsSlice.actions.getMembers(members));
     }, [memberFriends]);
 
-    const memberFriends = useSelector(getFriendsWithMembers);
-
+    // assignment list members
     for (let mem of memberFriends) {
         listMembers.push(mem._id);
     }
 
+    // back screen
     const handleBack = () => {
         navigation.navigate('DetailChat', {
             idConversation,
@@ -35,6 +39,7 @@ function AllMembers({ route, navigation }) {
         });
     };
 
+    // UI
     return (
         <>
             <Header />

@@ -14,17 +14,20 @@ import { fetchConversations } from '../../../redux/slice/conversationSlice';
 import conversationsSlice from '../../../redux/slice/conversationSlice';
 
 function GroupChatScreen({ navigation }) {
-    let listGroupChat = [];
-    const _userInfoSelector = useSelector(userInfoSelector);
     const dispatch = useDispatch();
+    // use selector
+    const _userInfoSelector = useSelector(userInfoSelector);
     const conversation = useSelector(getConversationIdByIdGroupConversation);
 
+    //fetch conversation 
     useEffect(() => {
         dispatch(fetchConversations(_userInfoSelector._id));
     }, []);
 
     const groupChat = useSelector(conversationsListSelector);
 
+    // data info group
+    let listGroupChat = [];
     for (let group of groupChat) {
         if (group.isGroup) {
             listGroupChat.push({
@@ -38,6 +41,7 @@ function GroupChatScreen({ navigation }) {
             });
         }
     }
+    // change screen message
     useEffect(() => {
         if(conversation){
             dispatch(conversationsSlice.actions.clickGroupChat(0));
@@ -51,10 +55,12 @@ function GroupChatScreen({ navigation }) {
         }
     },[conversation])
 
+    // click item group change screen
     const handleSendChat = (idGroup) => {
         dispatch(conversationsSlice.actions.clickGroupChat(idGroup));
     };
 
+    //render item group
     function getGroupItem({ item: group }) {
         return (
             <TouchableOpacity
@@ -75,6 +81,7 @@ function GroupChatScreen({ navigation }) {
         );
     }
 
+    //UI
     return (
         <View>
             <FlatList data={listGroupChat} keyExtractor={(group) => group.id.toString()+"_"} renderItem={getGroupItem} />
