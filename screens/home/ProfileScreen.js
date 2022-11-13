@@ -8,45 +8,46 @@ import { userInfoSelector } from '../../redux/selector';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
 import conversationsSlice from '../../redux/slice/conversationSlice';
 
+
+const settings = [
+    {
+        name: 'Cập nhật thông tin cá nhân',
+        icon: require('../../assets/pencil.png'),
+        key: 'lCUTs2',
+    },
+    {
+        name: 'Display',
+        icon: require('../../assets/display.png'),
+        key: 'TXdL0c',
+    },
+    {
+        name: 'Chuyển tài khoản',
+        icon: require('../../assets/change.png'),
+        key: 'zqsiEw',
+    },
+    {
+        name: 'Đăng xuất',
+        icon: require('../../assets/logout.png'),
+        key: 'iaT1Ex',
+    },
+];
+
 function ProfileScreen({ navigation }) {
     const _userInfoSelector = useSelector(userInfoSelector);
 
     const { fullName, phoneNumber, avatarLink } = _userInfoSelector;
 
     const dispatch = useDispatch();
-    const remove = async () => {
-        await removeItem('user_token');
-    };
+
+    console.log('go!');
 
     const logoutScreen = async () => {
+        await removeItem('user_token');
+        navigation.navigate('LoginScreen');
         dispatch(userInfoSlice.actions.refreshToLogout());
         dispatch(conversationsSlice.actions.resetConversation([]));
-        await remove();
-        navigation.navigate('LoginScreen');
     };
 
-    const settings = [
-        {
-            name: 'Cập nhật thông tin cá nhân',
-            icon: require('../../assets/pencil.png'),
-            key: 'lCUTs2',
-        },
-        {
-            name: 'Display',
-            icon: require('../../assets/display.png'),
-            key: 'TXdL0c',
-        },
-        {
-            name: 'Chuyển tài khoản',
-            icon: require('../../assets/change.png'),
-            key: 'zqsiEw',
-        },
-        {
-            name: 'Đăng xuất',
-            icon: require('../../assets/logout.png'),
-            key: 'iaT1Ex',
-        },
-    ];
 
     const showConfirmDialog = () => {
         Alert.alert('ĐĂNG XUẤT', 'Bạn có muốn đăng xuất?', [
@@ -61,6 +62,7 @@ function ProfileScreen({ navigation }) {
             },
         ]);
     };
+
     function getUserItem({ item: settings }) {
         return (
             <TouchableOpacity
