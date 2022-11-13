@@ -16,26 +16,14 @@ import GlobalStyle from '../../../styles/GlobalStyle';
 import { useState } from 'react';
 
 function MessageScreen({ route, navigation }) {
-    const { id, isGroup, members,blockBy, name, image, createdBy } = route.params;
+    const { id, isGroup, members, blockBy, name, image, createdBy } = route.params;
     const dispatch = useDispatch();
-    const [isBlock, setIsBlock] = useState(false);
 
-    console.log("blockBy",blockBy);
     // const isFocus = useIsFocused();
-
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
-    const userInfo = useSelector(userInfoSelector)
-    console.log("userInfo",userInfo._id);
+    const userInfo = useSelector(userInfoSelector);
 
-    useEffect(() => {
-        if(blockBy.includes(userInfo._id)){
-            setIsBlock(true);
-        }
-    },[])
-    
-
-    console.log(isBlock);
     useEffect(() => {
         //user join room with socket
         socket.emit('join_room', id);
@@ -72,6 +60,7 @@ function MessageScreen({ route, navigation }) {
             >
                 <View style={styles.body}>
                     <TopBar
+                        blockBy={blockBy}
                         idConversation={id}
                         createdBy={createdBy}
                         isGroup={isGroup}
@@ -96,7 +85,7 @@ function MessageScreen({ route, navigation }) {
                         </View>
                     )}
                 </View>
-                <MessageInputBox conversationId={id} isBlock ={isBlock} />
+                <MessageInputBox conversationId={id} blockBy={blockBy} />
             </KeyboardAvoidingView>
         </>
     );

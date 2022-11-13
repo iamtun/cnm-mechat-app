@@ -11,19 +11,24 @@ import Header from '../../../../components/Header';
 
 function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
-    const { name, image,createdBy, members, isGroup, idConversation } = route.params;
+    const { name, blockBy, image, createdBy, members, isGroup, idConversation } = route.params;
     let listMembers = [];
 
+    //selector
+    const memberFriends = useSelector(getFriendsWithMembers);
+
+    // get id all members
     useEffect(() => {
         dispatch(conversationsSlice.actions.getMembers(members));
-    },[memberFriends]);
+    }, [memberFriends]);
 
-    const memberFriends = useSelector(getFriendsWithMembers);
-    for(let mem of memberFriends){
-        listMembers.push(mem._id)
-    } 
+    // assignment list members
+    for (let mem of memberFriends) {
+        listMembers.push(mem._id);
+    }
 
-    const handleBack = () =>{
+    // back screen
+    const handleBack = () => {
         navigation.navigate('DetailChat', {
             idConversation,
             createdBy,
@@ -31,11 +36,10 @@ function AllMembers({ route, navigation }) {
             members: listMembers,
             name: name,
             image: image,
-        })
-    }
-    
-    
+        });
+    };
 
+    // UI
     return (
         <>
             <Header />
@@ -51,6 +55,7 @@ function AllMembers({ route, navigation }) {
                     data={memberFriends}
                     renderItem={({ item }) => (
                         <SearchItem
+                            blockBy={blockBy}
                             idConversation={idConversation}
                             id={item._id}
                             name={item.fullName}
@@ -60,7 +65,7 @@ function AllMembers({ route, navigation }) {
                             isGroup={isGroup}
                             createdBy={createdBy}
                             navigation={navigation}
-                            members = {members}
+                            members={members}
                         />
                     )}
                 />

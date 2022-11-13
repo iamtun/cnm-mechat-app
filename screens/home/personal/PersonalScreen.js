@@ -19,15 +19,18 @@ import { useState } from 'react';
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
-    const [isMe, setIsMe] = useState(route.params.isMe);
-    const infoSelf = useSelector(userInfoSelector);
-
     const dispatch = useDispatch();
-    let infoMe = [];
+    
+    const [isMe, setIsMe] = useState(route.params.isMe);
     let isRegister = route.params?.isRegister;
 
-    let userInfo;
+    // selector
+    const infoSelf = useSelector(userInfoSelector);
+    const conversation = useSelector(getConversationIdByIdFriendSelector);
 
+    //data info user
+    let userInfo;
+    let infoMe = [];
     if (isMe) {
         userInfo = infoSelf;
         infoMe.push({
@@ -54,10 +57,9 @@ function PersonalScreen({ route, navigation }) {
         });
     }
 
-    const conversation = useSelector(getConversationIdByIdFriendSelector);
-
+    //change screen message
     useEffect(() => {
-        if(conversation){
+        if (conversation) {
             dispatch(friendListSlice.actions.clickSendChat(null));
             navigation.navigate('MessageScreen', {
                 id: conversation.id,
@@ -66,21 +68,24 @@ function PersonalScreen({ route, navigation }) {
                 image: conversation.imageLinkOfConver,
             });
         }
-        //first run
     }, [conversation]);
 
+    //sen chat
     const handleSendChat = () => {
         dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
     };
 
+    // update info
     const _handleUpdateInfo = () => {
         navigation.navigate('InfoSelf');
     };
 
+    // register success
     const _successRegister = () => {
         navigation.navigate('LoadingScreen');
     };
 
+    //Click change avatar or background
     const pickImage = async (isAvatar) => {
         let result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -110,6 +115,7 @@ function PersonalScreen({ route, navigation }) {
         }
     };
 
+    //UI
     return (
         <>
             <Header />

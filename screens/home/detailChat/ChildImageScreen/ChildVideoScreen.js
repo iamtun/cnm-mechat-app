@@ -21,7 +21,7 @@ function ChildImageScreen() {
             }
         }
     }
-
+    //UI
     return (
         <>
             {listVideo.length > 0 ? (

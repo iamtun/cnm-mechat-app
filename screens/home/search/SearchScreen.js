@@ -11,14 +11,21 @@ import filterSlice from '../../../redux/slice/filterSlice';
 import { useEffect } from 'react';
 import useDebounce from '../../../hooks/useDebounce';
 export default function SearchScreen({ navigation }) {
+
     const dispatch = useDispatch();
+    // selector search
+    const userSearching = useSelector(usersRemainingSelector);
+
+    // use state
     const [searchInput, setSearchInput] = useState(null);
     const debounce = useDebounce(searchInput, 500)
+
+    // dispatch action search
     useEffect(() => {
         dispatch(filterSlice.actions.searchFilterChange(searchInput));
     }, [debounce]);
-    const userSearching = useSelector(usersRemainingSelector);
 
+    // UI
     return (
         <>
             <Header />

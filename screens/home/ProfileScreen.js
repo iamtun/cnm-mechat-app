@@ -8,20 +8,10 @@ import { userInfoSelector } from '../../redux/selector';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
 import conversationsSlice from '../../redux/slice/conversationSlice';
 
-
+// set icon in profile
 const settings = [
     {
-        name: 'Cập nhật thông tin cá nhân',
-        icon: require('../../assets/pencil.png'),
-        key: 'lCUTs2',
-    },
-    {
-        name: 'Display',
-        icon: require('../../assets/display.png'),
-        key: 'TXdL0c',
-    },
-    {
-        name: 'Chuyển tài khoản',
+        name: 'Đổi mật khẩu',
         icon: require('../../assets/change.png'),
         key: 'zqsiEw',
     },
@@ -33,14 +23,15 @@ const settings = [
 ];
 
 function ProfileScreen({ navigation }) {
-    const _userInfoSelector = useSelector(userInfoSelector);
-
-    const { fullName, phoneNumber, avatarLink } = _userInfoSelector;
-
     const dispatch = useDispatch();
 
-    console.log('go!');
+    // selector user info
+    const _userInfoSelector = useSelector(userInfoSelector);
 
+    // variable with user info
+    const { fullName, phoneNumber, avatarLink } = _userInfoSelector;
+
+    // logout
     const logoutScreen = async () => {
         await removeItem('user_token');
         navigation.navigate('LoginScreen');
@@ -48,7 +39,7 @@ function ProfileScreen({ navigation }) {
         dispatch(conversationsSlice.actions.resetConversation([]));
     };
 
-
+    //Question logout
     const showConfirmDialog = () => {
         Alert.alert('ĐĂNG XUẤT', 'Bạn có muốn đăng xuất?', [
             {
@@ -63,6 +54,7 @@ function ProfileScreen({ navigation }) {
         ]);
     };
 
+    // Render UI Item
     function getUserItem({ item: settings }) {
         return (
             <TouchableOpacity
@@ -85,6 +77,7 @@ function ProfileScreen({ navigation }) {
         );
     }
 
+    // UI
     return (
         <View style={styles.container}>
             <Header />

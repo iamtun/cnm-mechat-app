@@ -9,7 +9,8 @@ import { Linking } from 'react-native';
 function ChildImageScreen() {
     const allFile = useSelector(getFileMessage);
     let listFile = [];
-
+    
+    // Open file 
     const handleOpenFile = async (fileUri) => {
         const supported = await Linking.canOpenURL(fileUri);
 
@@ -33,6 +34,7 @@ function ChildImageScreen() {
         }
     }
 
+    //UI
     return (
         <>
             {listFile.length > 0 ? (

@@ -18,14 +18,16 @@ function ReplacePassWord({ route, navigation }) {
 
     const phoneNumber = route.params.phoneNumber;
 
+    // use state
     const [password, setPassword] = useState(null);
     const [passwordAgain, setPasswordAgain] = useState(null);
-
     const [errPass, setErrPass] = useState(null);
     const [errPassAgain, setErrPassAgain] = useState(null);
+
     const debouncedPass = useDebounce(password, 500);
     const debouncedPassAgain = useDebounce(passwordAgain, 500);
 
+    //check error pass
     useEffect(() => {
         if (password === '') {
             setErrPass('Vui lòng nhập mật khẩu mới');
@@ -34,6 +36,7 @@ function ReplacePassWord({ route, navigation }) {
         }
     }, [debouncedPass]);
 
+    // check error pass again
     useEffect(() => {
         if (passwordAgain === '') {
             setErrPassAgain('Vui lòng nhập lại mật khẩu');
@@ -44,6 +47,7 @@ function ReplacePassWord({ route, navigation }) {
         }
     }, [debouncedPassAgain]);
 
+    //button forgot pass
     const _handleForgotPass = () => {
         if (password === null) {
             setPassword('');
@@ -58,6 +62,8 @@ function ReplacePassWord({ route, navigation }) {
             navigation.navigate('LoginScreen');
         }
     };
+
+    // UI
     return (
         <View style={GlobalStyle.container}>
             {/* logo */}

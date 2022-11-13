@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { friendOnlineSelector, userInfoSelector } from '../../../redux/selector';
 import { fetchConversations } from '../../../redux/slice/conversationSlice';
 
-function TopBar({idConversation, isGroup, members, createdBy, image, name, memberGroup, navigation }) {
+function TopBar({idConversation, isGroup, blockBy,members, createdBy, image, name, memberGroup, navigation }) {
     const friendOnline = useSelector(friendOnlineSelector);
     const dispatch = useDispatch();
     const _user = useSelector(userInfoSelector)
@@ -54,6 +54,7 @@ function TopBar({idConversation, isGroup, members, createdBy, image, name, membe
                         navigation.navigate('DetailChat', {
                             idConversation,
                             createdBy,
+                            blockBy,
                             isGroup: isGroup,
                             members: members,
                             name: name,

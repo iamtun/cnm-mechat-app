@@ -1,19 +1,21 @@
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { AlphabetList } from 'react-native-section-alphabet-list';
-import { TouchableOpacity } from 'react-native';
-import { Text, View , } from 'react-native';
+import { TouchableOpacity,Text} from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getConversationIdByIdFriendSelector, getFriendsByUserSelector } from '../../../redux/selector';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import friendListSlice from '../../../redux/slice/friendSlice';
 
 function FriendScreen({ navigation }) {
-    // data
-    let friendInfo = [];
+    const dispatch = useDispatch();
+    
+    //selector
     const _conversation = useSelector(getConversationIdByIdFriendSelector);
     const friends = useSelector(getFriendsByUserSelector);
-    const dispatch = useDispatch();
+
+    // data info user 
+    let friendInfo = [];
 
     if (friends) {
         if (friends.length != 0) {
@@ -29,6 +31,7 @@ function FriendScreen({ navigation }) {
         }
     }
 
+    //Change screen message with id conversation
     useEffect(() => {
         getUserItem;
         if (_conversation) {
@@ -42,10 +45,12 @@ function FriendScreen({ navigation }) {
         }
     }, [_conversation]);
 
+    // click change screen chat
     const handleSendChat = (id) => {
         dispatch(friendListSlice.actions.clickSendChat(id));
     };
 
+    // render ui item
     function getUserItem(item) {
         return (
             <TouchableOpacity
@@ -70,7 +75,7 @@ function FriendScreen({ navigation }) {
             </TouchableOpacity>
         );
     }
-
+    //UI
     return (
         <>
             <AlphabetList

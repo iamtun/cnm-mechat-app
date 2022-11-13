@@ -10,17 +10,20 @@ import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
 import { firebaseConfig } from '../utils/firebase';
 function AuthenticationScreen({ route, navigation }) {
+    // firebase captcha
     const recaptchaVerifier = useRef(null);
 
-  //data receiver from login screen
-  let confirm = route.params.verificationId;
-  let isRegister = route.params.isRegister;
-  const phoneNumber = route.params.phoneNumber;
-  const isForgetPass = route.params.isForgetPass;
+    //data receiver from login screen
+    let confirm = route.params.verificationId;
+    let isRegister = route.params.isRegister;
+    const phoneNumber = route.params.phoneNumber;
+    const isForgetPass = route.params.isForgetPass;
 
+    // variable check forget pass
     let passWord;
     let fullName;
 
+    // check forget pass
     if (isForgetPass == false) {
         passWord = route.params.passWord;
         fullName = route.params.fullName;
@@ -32,6 +35,7 @@ function AuthenticationScreen({ route, navigation }) {
     const [code, setCode] = useState('');
     const [isBack, setIsBack] = useState(false);
 
+    // loop time back opt
     useEffect(() => {
         const interval = setInterval(() => {
             setCounter((prev) => setCounter(prev - 1));
@@ -49,6 +53,7 @@ function AuthenticationScreen({ route, navigation }) {
         setCode(value);
     };
 
+    //sen otp for phone number
     const sendOtp = async () => {
         let _phoneNumber = '+84' + phoneNumber.slice(1);
         try {
@@ -62,6 +67,8 @@ function AuthenticationScreen({ route, navigation }) {
         }
     };
 
+    // back otp 
+    // còn lỗi nhẹ nhẹ chưa fix
     const sendBackOTP = () => {
         setCounter(60);
         setIsBack(true);
@@ -74,6 +81,8 @@ function AuthenticationScreen({ route, navigation }) {
                 return;
             });
     };
+
+    // fetch api register
     const register = () => {
         return fetch(`${config.LINK_API_V4}/auths/signup`, {
             method: 'POST',
@@ -95,30 +104,29 @@ function AuthenticationScreen({ route, navigation }) {
             });
     };
 
-  const OtpVerify = () => {
-    const credential = firebase.auth.PhoneAuthProvider.credential(
-      confirm,
-      code
-    );
-    firebase
-      .auth()
-      .signInWithCredential(credential)
-      .then(() => {
-        setCode("");
-        isForgetPass
-          ? navigation.navigate("ReplacePassWord", {
-              phoneNumber: phoneNumber,
+    // authentication OTP
+    const OtpVerify = () => {
+        const credential = firebase.auth.PhoneAuthProvider.credential(confirm, code);
+        firebase
+            .auth()
+            .signInWithCredential(credential)
+            .then(() => {
+                setCode('');
+                isForgetPass
+                    ? navigation.navigate('ReplacePassWord', {
+                          phoneNumber: phoneNumber,
+                      })
+                    : register().then((token) => {
+                          setItem('user_token', token);
+                          navigation.navigate('LoadingScreen', { isRegister: isRegister });
+                      });
             })
-          : register().then((token) => {
-              setItem("user_token", token);
-              navigation.navigate("LoadingScreen",{isRegister: isRegister});
+            .catch((err) => {
+                Alert.alert('Mã không tồn tại hoặc quá hạn');
             });
-      })
-      .catch((err) => {
-        Alert.alert("Mã không tồn tại hoặc quá hạn");
-      });
-  };
+    };
 
+    // UI
     return (
         <View style={GlobalStyle.container}>
             <FirebaseRecaptchaVerifierModal

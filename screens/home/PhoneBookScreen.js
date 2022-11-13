@@ -16,6 +16,7 @@ const Tab = createMaterialTopTabNavigator();
 function PhoneBookScreen({ navigation }) {
     const dispatch = useDispatch();
 
+    // socket
     useEffect(() => {
         socket.off('send_friends');
         socket.on('send_friends', (friends) => {
@@ -29,6 +30,8 @@ function PhoneBookScreen({ navigation }) {
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
     }, []);
+    
+    // UI
     return (
         <>
             <Header />

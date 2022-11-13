@@ -31,7 +31,6 @@ function NewGroupChat({ route, navigation }) {
     // info group
     const group = useSelector(newGroupChatSelector);
 
-    //
     //text search
     const [searchInput, setSearchInput] = useState(null);
     const debounceSearch = useDebounce(searchInput, 500);
@@ -139,8 +138,9 @@ function NewGroupChat({ route, navigation }) {
         dispatch(fetchAddMembers(data))
         setIsCreateGroup(true);
     }
-
+    //change screen message
     useEffect(() => {
+        console.log(group);
         if (isCreateGroup) {
             navigation.navigate('MessageScreen', {
                 id: group.id,
