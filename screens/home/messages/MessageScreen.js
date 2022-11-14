@@ -9,18 +9,17 @@ import MessageInputBox from '../../../components/Messages/MessageInputBox';
 import MessageItem from '../../../components/Messages/MessageItem';
 import TopBar from '../../../components/Messages/TopBar/TopBar';
 import { socket } from '../../../config';
-import { getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
+import { conversationBlockBySelector, getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
 import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '../../../redux/slice/messageSlice';
 import GlobalStyle from '../../../styles/GlobalStyle';
 
 function MessageScreen({ route, navigation }) {
-    const { id, isGroup, members, blockBy, name, image, createdBy } = route.params;
     const dispatch = useDispatch();
+    const { id, isGroup, members, blockBy, name, image, createdBy } = route.params;
 
     // const isFocus = useIsFocused();
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
-    const userInfo = useSelector(userInfoSelector);
 
     useEffect(() => {
         //user join room with socket

@@ -1,14 +1,20 @@
 import { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
+import { useDispatch } from 'react-redux';
+import conversationsSlice from '../../redux/slice/conversationSlice';
 import MenuItem from '../SearchBar/Menu/MenuItem';
 
 function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, message, time, navigation }) {
     const [isVisible, setIsVisible] = useState(false);
+    const dispatch = useDispatch();
+
     return (
         <TouchableOpacity
             style={styles.body}
             onPress={() => {
+                dispatch(conversationsSlice.actions.clickGroupChat(id));
+                dispatch(conversationsSlice.actions.getBlockBy(blockBy))
                 navigation.navigate('MessageScreen', { id, blockBy, createdBy, isGroup, members, name, image });
             }}
             onLongPress={() => setIsVisible(true)}

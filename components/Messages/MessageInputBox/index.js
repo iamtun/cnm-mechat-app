@@ -11,11 +11,11 @@ import { sendFile, sendImageMessage, sendMessage } from '../../../redux/slice/me
 import { iconExtends } from '../../../utils/filePathConfig';
 
 function MessageInputBox({ conversationId, blockBy }) {
+    const dispatch = useDispatch();
+
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
     const userInfo = useSelector(userInfoSelector);
-
-    const dispatch = useDispatch();
 
     const handleWriteText = (value) => {
         setMessage(value);

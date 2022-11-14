@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
-import { userInfoSelector } from '../../../redux/selector';
+import { conversationBlockBySelector, userInfoSelector } from '../../../redux/selector';
 import {
     fetchChangeNameGroup,
     fetchDeleteConversations,
@@ -22,10 +22,13 @@ import { Alert } from 'react-native';
 
 export default function DetailChat({ route, navigation }) {
     const dispatch = useDispatch();
-    const userInfo = useSelector(userInfoSelector);
 
-    const { isGroup, members, blockBy, name, image, createdBy, idConversation } = route.params;
+    const userInfo = useSelector(userInfoSelector);
+    const listBlockBy= useSelector(conversationBlockBySelector);
+
+    const { isGroup, members, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
+    
     //use state
     const [isOutGroup, setIsOutGroup] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -102,12 +105,7 @@ export default function DetailChat({ route, navigation }) {
             navigation.navigate('HomeScreen');
         }
     }, [debounce]);
-
-    // back message screen
-    const handleBack = () => {
-        navigation.navigate('MessageScreen', { idConversation, createdBy, isGroup, members, name, image });
-    };
-
+    
     // remove conversation
     const handleRemoveConversation = () => {
         const data = {
@@ -133,8 +131,8 @@ export default function DetailChat({ route, navigation }) {
         ]);
     };
 
-      //Question remove group
-      const showConfirmDialogRemove = () => {
+    //Question remove group
+    const showConfirmDialogRemove = () => {
         Alert.alert('Giải tán nhóm', 'Bạn có muốn giải tán nhóm ?', [
             {
                 text: 'Có',
@@ -189,7 +187,7 @@ export default function DetailChat({ route, navigation }) {
             <Header />
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={handleBack}>
+                    <TouchableOpacity onPress={() => {navigation.goBack()}}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tùy chọn</Text>
@@ -248,7 +246,7 @@ export default function DetailChat({ route, navigation }) {
                                 navigation.navigate('AllMembers', {
                                     name,
                                     image,
-                                    blockBy,
+                                    listBlockBy,
                                     idConversation,
                                     createdBy,
                                     isGroup,

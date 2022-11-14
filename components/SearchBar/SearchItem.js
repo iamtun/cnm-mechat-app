@@ -8,15 +8,15 @@ import { userInfoSelector, friendListSelector } from '../../redux/selector';
 import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
 import conversationsSlice, {
     fetchBlockConversation,
-    fetchConversations,
     fetchRemoveMember,
     fetchUnBlockConversation,
 } from '../../redux/slice/conversationSlice';
+import { Alert } from 'react-native';
 
 function SearchItem({
     id,
     createdBy,
-    blockBy,
+    isBlock,
     idConversation,
     isGroup,
     image,
@@ -30,8 +30,6 @@ function SearchItem({
     const dispatch = useDispatch();
     const [isRequest, setIsRequest] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
-    const [nameBlock, setNameBlock] = useState('remove-circle-outline');
-    const [isBlock, setIsBlock] = useState(false);
 
     // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
@@ -42,12 +40,11 @@ function SearchItem({
         if (createdBy === _userInfoSelector._id) {
             setIsLeader(true);
         }
-    }, [_userInfoSelector._id]);
-
+    }, []);
+    
     // request make friend
     const _handleSendRequest = () => {
         //Set data for send require make friend
-
         const data = {
             senderID: _userInfoSelector._id,
             receiverID: id,
@@ -87,49 +84,40 @@ function SearchItem({
 
         dispatch(fetchRemoveMember(data));
         dispatch(conversationsSlice.actions.getMembers(members));
-        // dispatch(fetchConversations(_userInfoSelector._id))
     };
 
-    // console.log('blockBy', blockBy);
+     //Question remove member
+     const showConfirmDialogRemove = (id) => {
+        Alert.alert('Xóa thành viên', 'Bạn có muốn xóa thành viên này ra khỏi nhóm ?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    handleRemoveMember(id);
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
 
-    //block member send message
-    //còn lỗi lum la
-    // ở đây không fectch api thì block by không cập nhật lại
-    // nếu block không cập nhật lại thì sai
+    const handleBlockMember = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: id,
+        };
+    
+        dispatch(fetchBlockConversation(data));
+    };
 
-    // const handleBlockMember = (id) => {
-    //     // if(nameBlock == "remove-circle-outline"){
-    //     //     setNameBlock('close-circle-outline');
-    //     // } else{
-    //     //     setNameBlock('remove-circle-outline');
-    //     // }
-    //     const data = {
-    //         idConversation: idConversation,
-    //         userId: id,
-    //     };
-    //     // console.log("idđ", id);
-    //     // const idFind =  blockBy.find((data) => {data === id});
-    //     // console.log('blockBy.includes(id)',idFind);
-    //     if (blockBy) {
-    //         if (blockBy?.includes(id)) {
-    //             setNameBlock('remove-circle-outline');
-    //             dispatch(fetchUnBlockConversation(data));
-    //         } else {
-    //             setNameBlock('close-circle-outline');
-    //             dispatch(fetchBlockConversation(data));
-    //         }
-    //     }
-    // };
-
-    // console.log('isBlock', isBlock);
-    // //set block
-    // useEffect(() => {
-    //     if (blockBy?.includes(id)) {
-    //         setNameBlock('close-circle-outline');
-    //     } else {
-    //         setNameBlock('remove-circle-outline');
-    //     }
-    // }, []);
+    const handleUnBlockMember = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: id,
+        };
+    
+        dispatch(fetchUnBlockConversation(data));
+    }
 
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
@@ -158,16 +146,14 @@ function SearchItem({
                             createdBy === id ? null : (
                                 <View style={{ flexDirection: 'row' }}>
                                     <TouchableOpacity
-                                        onPress={() => {
-                                            handleBlockMember(id);
-                                        }}
+                                        onPress={isBlock ? handleUnBlockMember : handleBlockMember}
                                     >
-                                        <Icon name={nameBlock} color="black" size={25}></Icon>
+                                        <Icon name={isBlock ? "close-circle-outline": "remove-circle-outline"} color="black" size={25}></Icon>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginLeft: 20 }}
                                         onPress={() => {
-                                            handleRemoveMember(id);
+                                            showConfirmDialogRemove(id);
                                         }}
                                     >
                                         <Icon color="red" name="person-remove-outline" size={25} />
