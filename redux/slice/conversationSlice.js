@@ -4,13 +4,16 @@ import config, { socket, createFormDataUpdateAvatarGroup } from '../../config';
 import { getItem } from '../../utils/asyncStorage';
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], conversationId: null, loading: false, newGroup: null },
+    initialState: { data: [], members: [], blockBy: [], conversationId: null, loading: false, newGroup: null },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
         },
         getMembers: (state, action) => {
             state.members = action.payload;
+        },
+        getBlockBy:(state, action) => {
+            state.blockBy = action.payload;
         },
         addConversationFromSocket: (state, action) => {
             const conversationExist = state.data.find((conversation) => conversation.id === action.payload.id);
@@ -108,6 +111,32 @@ const conversationsSlice = createSlice({
             .addCase(fetchDeleteConversations.fulfilled, (state, action) => {
                 const info = action.payload;
                 socket.emit('remove_group', { info });
+            })
+            .addCase(fetchBlockConversation.fulfilled, (state, action) => {
+                const blockByFetch = action.payload;
+                state.blockBy = blockByFetch.blockBy;
+                //find and assign
+                const conversationById = state.data.find(item => item.id === state.conversationId);
+                conversationById.blockBy = blockByFetch.blockBy;
+
+                //find index and cut and update
+                const index = state.data.findIndex(item => item.id === state.conversationId);
+                state.data.splice(index, 1);
+                state.data.unshift(conversationById);
+
+            })
+            .addCase(fetchUnBlockConversation.fulfilled, (state, action) => {
+                const unBlockByFetch = action.payload;
+                state.blockBy = unBlockByFetch.blockBy;
+
+                //find and assign
+                const conversationById = state.data.find(item => item.id === state.conversationId);
+                conversationById.blockBy = unBlockByFetch.blockBy;
+
+                //find index and cut and update
+                const index = state.data.findIndex(item => item.id === state.conversationId);
+                state.data.splice(index, 1);
+                state.data.unshift(conversationById);
             });
     },
 });
@@ -286,7 +315,7 @@ export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlock
     });
 
     const jsonData = await response.json();
-    console.log('jsonData', jsonData);
+    return jsonData;
 });
 
 
@@ -303,7 +332,7 @@ export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnB
     });
 
     const jsonData = await response.json();
-    console.log('jsonData unblock', jsonData);
+    return jsonData;
 });
 
 export default conversationsSlice;

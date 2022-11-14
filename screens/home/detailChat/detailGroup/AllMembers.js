@@ -11,33 +11,22 @@ import Header from '../../../../components/Header';
 
 function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
-    const { name, blockBy, image, createdBy, members, isGroup, idConversation } = route.params;
+    
+    const { createdBy, members, isGroup, idConversation } = route.params;
     let listMembers = [];
-
-    //selector
-    const memberFriends = useSelector(getFriendsWithMembers);
 
     // get id all members
     useEffect(() => {
         dispatch(conversationsSlice.actions.getMembers(members));
     }, [memberFriends]);
 
+    //selector
+    const memberFriends = useSelector(getFriendsWithMembers);
+
     // assignment list members
     for (let mem of memberFriends) {
         listMembers.push(mem._id);
     }
-
-    // back screen
-    const handleBack = () => {
-        navigation.navigate('DetailChat', {
-            idConversation,
-            createdBy,
-            isGroup: isGroup,
-            members: listMembers,
-            name: name,
-            image: image,
-        });
-    };
 
     // UI
     return (
@@ -45,7 +34,7 @@ function AllMembers({ route, navigation }) {
             <Header />
             <View>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={handleBack}>
+                    <TouchableOpacity onPress={() => {navigation.goBack()}}>
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Danh sách thành viên</Text>
@@ -55,7 +44,7 @@ function AllMembers({ route, navigation }) {
                     data={memberFriends}
                     renderItem={({ item }) => (
                         <SearchItem
-                            blockBy={blockBy}
+                            isBlock={item.isBlock}
                             idConversation={idConversation}
                             id={item._id}
                             name={item.fullName}
