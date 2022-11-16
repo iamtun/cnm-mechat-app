@@ -77,7 +77,7 @@ function AuthenticationScreen({ route, navigation }) {
                 confirm = otp;
             })
             .catch((err) => {
-                console.log('ERRR', err);
+                console.log('Error ->', err);
                 return;
             });
     };

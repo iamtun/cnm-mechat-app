@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { conversationBlockBySelector, friendOnlineSelector, userInfoSelector } from '../../../redux/selector';
 import { fetchConversations } from '../../../redux/slice/conversationSlice';
 
-function TopBar({idConversation, isGroup,members, createdBy, image, name, memberGroup, navigation }) {
+function TopBar({ idConversation, isGroup, members, createdBy, image, name, memberGroup, navigation }) {
     const friendOnline = useSelector(friendOnlineSelector);
 
     const handleClickArrowLeftIcon = () => {
@@ -21,13 +21,14 @@ function TopBar({idConversation, isGroup,members, createdBy, image, name, member
     return (
         <View style={[styles.topBar, styles.row]}>
             <View style={[styles.leftBar]}>
-                <Icon name="arrow-back-outline" size={30} color="#fff" onPress={handleClickArrowLeftIcon} />
+                <Icon
+                    name="arrow-back-outline"
+                    color="white"
+                    size={20}
+                    onPress={handleClickArrowLeftIcon}
+                />
                 <View style={styles.group}>
-                    <Text style={styles.nameText}>
-                    {!isGroup &&
-                            friendOnline.includes(members[0]) &&
-                            friendOnline.includes(members[1]) && <Icon name="ellipse" size={14} color="#38A3A5" />}{name} 
-                    </Text>
+                    <Text style={styles.nameText}>{name}</Text>
                     {memberGroup && <Text style={{ color: '#fff' }}>{`${memberGroup} người`}</Text>}
                 </View>
             </View>
@@ -42,12 +43,18 @@ function TopBar({idConversation, isGroup,members, createdBy, image, name, member
                         <TouchableOpacity onPress={_sendCallVoice}>
                             <Icon name="call-outline" size={24} style={styles.icon} />
                         </TouchableOpacity>
-                        <TouchableOpacity onPress={_receiveCallVoice}>
+                        <TouchableOpacity
+                            onPress={_receiveCallVoice}
+                            style={{ flexDirection: 'row', alignItems: 'center' }}
+                        >
                             <Icon name="videocam-outline" size={24} style={styles.icon} />
+                            {!isGroup && friendOnline.includes(members[0]) && friendOnline.includes(members[1]) && (
+                                <Icon name="ellipse" size={12} color="#38A3A5" />
+                            )}
                         </TouchableOpacity>
                     </>
                 )}
-                 <TouchableOpacity
+                <TouchableOpacity
                     onPress={() =>
                         navigation.navigate('DetailChat', {
                             idConversation,

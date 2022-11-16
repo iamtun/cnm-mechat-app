@@ -9,13 +9,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
 import { sendFile, sendImageMessage, sendMessage } from '../../../redux/slice/messageSlice';
 import { iconExtends } from '../../../utils/filePathConfig';
+import { useEffect } from 'react';
+import { socket } from '../../../config';
 
 function MessageInputBox({ conversationId, blockBy }) {
     const dispatch = useDispatch();
 
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
+    const [block, setBlock] = useState(blockBy);
     const userInfo = useSelector(userInfoSelector);
+
+    useEffect(() => {
+        //block input realtime
+        socket.on('blocked_message_user', (data) => {
+            setBlock(data.blockBy);
+        });
+    }, []);
 
     const handleWriteText = (value) => {
         setMessage(value);
@@ -121,7 +131,7 @@ function MessageInputBox({ conversationId, blockBy }) {
 
     return (
         <View style={[styles.body, styles.row]}>
-            {blockBy?.includes(userInfo._id) ? (
+            {block?.includes(userInfo._id) ? (
                 <Text style={{ textAlign: 'center', width: '100%' }}>Bạn đã bị chặn nhắn tin</Text>
             ) : (
                 <>

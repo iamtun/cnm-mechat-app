@@ -165,7 +165,7 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
 
         const _message = await res.json();
         if (_message?._id) {
-            console.log('image message -> ', _message);
+            //console.log('image message -> ', _message);
             return _message;
         } else {
             return null;
@@ -205,7 +205,7 @@ export const recallMessage = createAsyncThunk('message/recall', async (id) => {
         try {
             const res = await fetch(`${config.LINK_API_V4}/messages/recall/${id}`);
             const message = await res.json();
-            console.log("message", message);
+            //console.log("message", message);
             return message;
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
