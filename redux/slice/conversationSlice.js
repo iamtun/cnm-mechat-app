@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
 import config, { socket, createFormDataUpdateAvatarGroup } from '../../config';
 import { getItem } from '../../utils/asyncStorage';
+
 const conversationsSlice = createSlice({
     name: 'conversations',
     initialState: { data: [], members: [], blockBy: [], conversationId: null, loading: false, newGroup: null },
@@ -12,7 +13,7 @@ const conversationsSlice = createSlice({
         getMembers: (state, action) => {
             state.members = action.payload;
         },
-        getBlockBy:(state, action) => {
+        getBlockBy: (state, action) => {
             state.blockBy = action.payload;
         },
         addConversationFromSocket: (state, action) => {
@@ -61,6 +62,10 @@ const conversationsSlice = createSlice({
         resetConversation: (state, action) => {
             state.data = action.payload;
         },
+        updateBlockChat: (state, action) => {
+            const dataBlock = action.payload;
+            handleUpdateBlockChat(state, dataBlock, 'socket');
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -77,7 +82,7 @@ const conversationsSlice = createSlice({
             })
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
                 state.newGroup = action.payload;
-                state.data.push(action.payload);
+                state.data.unshift(action.payload);
                 //console.log('create_group ->', action.payload);
                 socket.emit('create_group', { conversation: action.payload });
             })
@@ -114,32 +119,33 @@ const conversationsSlice = createSlice({
             })
             .addCase(fetchBlockConversation.fulfilled, (state, action) => {
                 const blockByFetch = action.payload;
-                state.blockBy = blockByFetch.blockBy;
-                //find and assign
-                const conversationById = state.data.find(item => item.id === state.conversationId);
-                conversationById.blockBy = blockByFetch.blockBy;
+                //console.log(blockByFetch);
+                socket.emit('block_message_user_in_group', { info: blockByFetch });
 
-                //find index and cut and update
-                const index = state.data.findIndex(item => item.id === state.conversationId);
-                state.data.splice(index, 1);
-                state.data.unshift(conversationById);
-
+                handleUpdateBlockChat(state, blockByFetch);
             })
             .addCase(fetchUnBlockConversation.fulfilled, (state, action) => {
                 const unBlockByFetch = action.payload;
-                state.blockBy = unBlockByFetch.blockBy;
-
-                //find and assign
-                const conversationById = state.data.find(item => item.id === state.conversationId);
-                conversationById.blockBy = unBlockByFetch.blockBy;
-
-                //find index and cut and update
-                const index = state.data.findIndex(item => item.id === state.conversationId);
-                state.data.splice(index, 1);
-                state.data.unshift(conversationById);
+                socket.emit('block_message_user_in_group', { info: unBlockByFetch });
+                handleUpdateBlockChat(state, unBlockByFetch);
             });
     },
 });
+
+const handleUpdateBlockChat = (state, dataBlock, key = 'none') => {
+    //update state this user
+    state.blockBy = dataBlock.blockBy;
+
+    const conversationId = key === 'none' ? dataBlock.id : dataBlock.conversationId;
+    //find and assign
+    const conversation = state.data.find((item) => item.id === conversationId);
+    conversation.blockBy = dataBlock.blockBy;
+
+    //find index and cut and update
+    const index = state.data.findIndex((item) => item.id === conversationId);
+    state.data.splice(index, 1);
+    state.data.unshift(conversation);
+};
 
 /**
  * get success full conversation of account user by id
@@ -278,7 +284,7 @@ export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdat
             body: dataForm,
         });
         const avatarGroup = await res.json();
-        console.log('avatarGroup --->', avatarGroup);
+        //console.log('avatarGroup --->', avatarGroup);
         return avatarGroup;
     } catch (err) {
         console.log(`err fetch avatar group: ${err}`);
@@ -298,7 +304,7 @@ export const fetchDeleteConversations = createAsyncThunk('conversations/fetchDel
     });
 
     const jsonData = await response.json();
-    console.log('jsonData', jsonData);
+    //console.log('jsonData', jsonData);
     return jsonData;
 });
 
@@ -317,7 +323,6 @@ export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlock
     const jsonData = await response.json();
     return jsonData;
 });
-
 
 export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnBlockConversation', async (data) => {
     const { idConversation } = data;

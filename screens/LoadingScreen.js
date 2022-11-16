@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useIsFocused } from '@react-navigation/native';
 
-import { getItem } from '../utils/asyncStorage';
+import { getItem, removeItem } from '../utils/asyncStorage';
 import { fetchUserInfo } from '../redux/slice/userInfoSlice';
 import { fetchUsers } from '../redux/slice/usersSlice';
 import { userInfoLoadingSelector, userLoadingSelector } from '../redux/selector';
@@ -15,7 +15,7 @@ function LoadingScreen({ navigation, route }) {
     const userInfoLoading = useSelector(userInfoLoadingSelector);
     const usersLoading = useSelector(userLoadingSelector);
 
-    // removeItem("user_token");
+    //removeItem("user_token");
 
     useEffect(() => {
         if (userInfoLoading === 1 || usersLoading === 1) return;

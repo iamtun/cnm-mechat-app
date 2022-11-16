@@ -19,13 +19,13 @@ function PhoneBookScreen({ navigation }) {
     useEffect(() => {
         socket.off('send_friends');
         socket.on('send_friends', (friends) => {
-            console.log('send_friends', friends);
+            //console.log('send_friends', friends);
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
 
         socket.off('receive_friends');
         socket.on('receive_friends', (friends) => {
-            console.log('receive_friends', friends);
+            //console.log('receive_friends', friends);
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
     }, []);

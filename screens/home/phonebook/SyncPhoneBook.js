@@ -96,7 +96,9 @@ function SyncPhoneBook({ navigation }) {
                         )}
                     />
                 ) : (
-                    <Text>Không có bạn bè nào trong danh bạ!</Text>
+                    <View style={{width: '100%', height: '80%', justifyContent: 'center', alignItems:'center'}}>
+                        <Text>Không có bạn bè nào trong danh bạ!</Text>
+                    </View>
                 )}
             </View>
         </>

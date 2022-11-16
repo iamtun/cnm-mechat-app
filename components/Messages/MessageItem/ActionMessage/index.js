@@ -4,7 +4,7 @@ function ActionMessage({ message, createAt }) {
     return (
         <View style={styles.body}>
             <View style={styles.message}>
-                <Text>{message}</Text>
+                <Text style={styles.textMessage}>{message}</Text>
                 <Text style={styles.createAt}>{createAt}</Text>
             </View>
         </View>
@@ -19,15 +19,19 @@ const styles = StyleSheet.create({
     },
     message: {
         backgroundColor: '#fff',
-        maxWidth: '95%',
-        padding: 8,
+        width: '97%',
+        paddingVertical: 4,
         borderRadius: 50,
         flexDirection: 'column',
     },
+    textMessage: {
+        textAlign: 'center',
+        fontSize: 12
+    },
     createAt: {
         textAlign: 'center',
-        marginLeft: 8,
         color: '#abf',
+        fontSize: 12
     },
 });
 export default ActionMessage;

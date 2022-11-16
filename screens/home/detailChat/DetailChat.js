@@ -24,11 +24,11 @@ export default function DetailChat({ route, navigation }) {
     const dispatch = useDispatch();
 
     const userInfo = useSelector(userInfoSelector);
-    const listBlockBy= useSelector(conversationBlockBySelector);
+    const listBlockBy = useSelector(conversationBlockBySelector);
 
     const { isGroup, members, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
-    
+
     //use state
     const [isOutGroup, setIsOutGroup] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);
@@ -57,7 +57,7 @@ export default function DetailChat({ route, navigation }) {
             userId: userInfo._id,
         };
 
-        console.log(data);
+        //console.log(data);
         dispatch(fetchOutGroup(data));
         setIsOutGroup(true);
     };
@@ -69,7 +69,7 @@ export default function DetailChat({ route, navigation }) {
             newName: newNameGroup,
             userId: userInfo._id,
         };
-        console.log(data);
+        //console.log(data);
         dispatch(fetchChangeNameGroup(data));
 
         setModalVisible(!modalVisible);
@@ -105,7 +105,7 @@ export default function DetailChat({ route, navigation }) {
             navigation.navigate('HomeScreen');
         }
     }, [debounce]);
-    
+
     // remove conversation
     const handleRemoveConversation = () => {
         const data = {
@@ -187,7 +187,11 @@ export default function DetailChat({ route, navigation }) {
             <Header />
             <View style={styles.container}>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Tùy chọn</Text>
@@ -292,7 +296,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         width: '100%',
-        height: 50,
+        height: 60,
         backgroundColor: '#3475F5',
     },
     infoUser: {

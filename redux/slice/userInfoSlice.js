@@ -108,7 +108,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
     try {
         let dataForm;
         dataForm = createFormDataUpdate(data.avatarLink, data.key);
-        console.log('dataForm', dataForm);
+        //console.log('dataForm', dataForm);
         const res = await fetch(`${config.LINK_API_V4}/users/update-avatar/${data.userID}`, {
             method: 'POST',
             headers: {

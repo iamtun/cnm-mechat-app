@@ -5,13 +5,14 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import userInfoSlice from '../../redux/slice/userInfoSlice';
 import { userInfoSelector, friendListSelector, friendListFriendSendSelector } from '../../redux/selector';
-import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
+import friendListSlice, { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
 import conversationsSlice, {
     fetchBlockConversation,
     fetchRemoveMember,
     fetchUnBlockConversation,
 } from '../../redux/slice/conversationSlice';
 import { Alert } from 'react-native';
+import { socket } from '../../config';
 
 function SearchItem({
     id,
@@ -32,17 +33,17 @@ function SearchItem({
     const [isLeader, setIsLeader] = useState(false);
 
     const _userInfoSelector = useSelector(userInfoSelector);
-    const listFriendSend = useSelector(friendListFriendSendSelector)
-    
+    const listFriendSend = useSelector(friendListFriendSendSelector);
+
     // list idFriendRequest and id receiver
     let idFriendRequest;
-    let listIdReceiver = []
-    
+    let listIdReceiver = [];
+
     //set list id receiver
-    for(let item of listFriendSend){
+    for (let item of listFriendSend) {
         listIdReceiver.push(item.receiverId);
-        if(item.receiverId === id){
-            idFriendRequest = item.idFriendRequest
+        if (item.receiverId === id) {
+            idFriendRequest = item.idFriendRequest;
         }
     }
 
@@ -51,12 +52,19 @@ function SearchItem({
         if (createdBy === _userInfoSelector._id) {
             setIsLeader(true);
         }
-        if(listIdReceiver) {
-            if(listIdReceiver.includes(id)){
+        if (listIdReceiver.length > 0) {
+            if (listIdReceiver.includes(id)) {
                 setIsRequest(true);
             }
         }
     }, [listFriendSend]);
+
+    useEffect(() => {
+        socket.on('remove_request', (id) => {
+            //console.log('id', id);
+            dispatch(friendListSlice.actions.updateFriendRequestSendFromSocket(id));
+        });
+    }, []);
 
     // request make friend
     const _handleSendRequest = () => {
@@ -101,8 +109,8 @@ function SearchItem({
         dispatch(conversationsSlice.actions.getMembers(members));
     };
 
-     //Question remove member
-     const showConfirmDialogRemove = (id) => {
+    //Question remove member
+    const showConfirmDialogRemove = (id) => {
         Alert.alert('Xóa thành viên', 'Bạn có muốn xóa thành viên này ra khỏi nhóm ?', [
             {
                 text: 'Có',
@@ -121,7 +129,7 @@ function SearchItem({
             idConversation: idConversation,
             userId: id,
         };
-    
+
         dispatch(fetchBlockConversation(data));
     };
 
@@ -130,9 +138,9 @@ function SearchItem({
             idConversation: idConversation,
             userId: id,
         };
-    
+
         dispatch(fetchUnBlockConversation(data));
-    }
+    };
 
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
@@ -160,10 +168,12 @@ function SearchItem({
                         isLeader ? (
                             createdBy === id ? null : (
                                 <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity
-                                        onPress={isBlock ? handleUnBlockMember : handleBlockMember}
-                                    >
-                                        <Icon name={isBlock ? "close-circle-outline": "remove-circle-outline"} color="black" size={25}></Icon>
+                                    <TouchableOpacity onPress={isBlock ? handleUnBlockMember : handleBlockMember}>
+                                        <Icon
+                                            name={isBlock ? 'close-circle-outline' : 'remove-circle-outline'}
+                                            color="black"
+                                            size={25}
+                                        ></Icon>
                                     </TouchableOpacity>
                                     <TouchableOpacity
                                         style={{ marginLeft: 20 }}
@@ -183,7 +193,7 @@ function SearchItem({
                                 >
                                     <Icon color="#3777F3" name={isRequest ? 'close' : 'person-add-outline'} size={20} />
                                     <Text style={{ marginLeft: 5, color: '#59AFC4' }}>
-                                        {isRequest? 'Thu hồi' : 'Kết bạn'}
+                                        {isRequest ? 'Thu hồi' : 'Kết bạn'}
                                     </Text>
                                 </TouchableOpacity>
                             )

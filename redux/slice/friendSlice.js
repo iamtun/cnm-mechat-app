@@ -16,11 +16,26 @@ const friendListSlice = createSlice({
             state.friendId = action.payload;
         },
         friendRequestReceiverSocket: (state, action) => {
-            state.data.push(action.payload);
+            const _request = action.payload;
+            const isExist = state.data.some((request) => request.idFriendRequest === _request.idFriendRequest);
+            if (!isExist) state.data.push(_request);
         },
         receiveFriendOnlineWithSocket: (state, action) => {
             state.friendOnline = action.payload;
         },
+        removeFriendRequestSocket: (state, action) => {
+            const id = action.payload;
+            const index = state.data.findIndex((request) => request.idFriendRequest === id);
+            state.data.splice(index, 1);
+        },
+        updateFriendRequestSendFromSocket: (state, action) => {
+            const id = action.payload;
+           // console.log('id -> ', id);
+            const index = state.friendRequestSends.findIndex((request) => request.idFriendRequest === id);
+            //console.log('index ->', index);
+            if(index > -1)
+                state.friendRequestSends.splice(index, 1);
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -34,11 +49,14 @@ const friendListSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(fetchListFriendRequestSent.fulfilled, (state, action) => {
+                //console.log('request', action.payload);
                 state.friendRequestSends = action.payload;
                 //state.data = action.payload;
             })
             .addCase(fetchBackFriendRequest.fulfilled, (state, action) => {
-                state.friendRequestSends = action.payload;
+                const { data, deleted } = action.payload;
+                socket.emit('recall_friend_request', { deleted });
+                state.friendRequestSends = data;
             })
             .addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
                 const { friendRequestID, listFriendsReceiver, listFriendsSender, sender, receiver, conversation } =
@@ -46,7 +64,7 @@ const friendListSlice = createSlice({
                 const index = state.data.findIndex((request) => request.idFriendRequest === friendRequestID);
                 state.data.splice(index, 1);
 
-                if ((friendRequestID, listFriendsReceiver && listFriendsSender && sender && receiver && conversation)) {
+                if (friendRequestID && listFriendsReceiver && listFriendsSender && sender && receiver && conversation) {
                     socket.emit('accept_friend_request', {
                         listFriendsReceiver,
                         listFriendsSender,
@@ -54,6 +72,8 @@ const friendListSlice = createSlice({
                         receiver,
                         conversation,
                     });
+                } else {
+                    socket.emit('cancel_friend_request', { data: action.payload });
                 }
             });
     },
@@ -103,9 +123,9 @@ export const fetchHandleFriendsRequest = createAsyncThunk('friends/fetchHandleFr
             },
             body: JSON.stringify({ status, senderID, receiverID }),
         });
-        const user = await res.json();
-        console.log('result accept', user);
-        return user;
+        const request = await res.json();
+        // console.log('result accept', request);
+        return request;
     } catch (err) {
         console.warn(`[fetchHandleFriendsRequest]: ${err}`);
     }

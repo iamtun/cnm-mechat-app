@@ -22,6 +22,9 @@ function NewFriendScreen({ navigation }) {
         socket.on('receiver_friend_request', (request) => {
             dispatch(friendListSlice.actions.friendRequestReceiverSocket(request));
         });
+        socket.on('delete_friend_request', (id) => {
+            dispatch(friendListSlice.actions.removeFriendRequestSocket(id));
+        });
     }, []);
 
     useEffect(() => {

@@ -134,7 +134,7 @@ function RegisterScreen({ navigation }) {
                     });
                 })
                 .catch((err) => {
-                    console.log('ERRR', err);
+                    console.log('Error', err);
                     return;
                 });
         }

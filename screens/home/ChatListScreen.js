@@ -51,11 +51,16 @@ function ChatListScreen({ navigation }) {
         });
     }, [conversations]);
 
+    useEffect(() => {
+        socket.on('blocked_message_user', (data) => {
+            dispatch(conversationsSlice.actions.updateBlockChat(data));
+        });
+    }, []);
     // loading conversation
     const onRefresh = () => {
         dispatch(fetchConversations());
-        if(!conversationLoading) setRefreshing(false);
-    }
+        if (!conversationLoading) setRefreshing(false);
+    };
 
     // UI
     return (
@@ -75,7 +80,7 @@ function ChatListScreen({ navigation }) {
                             name={item.name}
                             image={item.imageLinkOfConver}
                             members={item.members}
-                            blockBy = {item.blockBy}
+                            blockBy={item.blockBy}
                             message={item.content ? item.content : item.lastMessage}
                             time={moment(item.time).fromNow()}
                             navigation={navigation}
@@ -83,13 +88,7 @@ function ChatListScreen({ navigation }) {
                             createdBy={item.createdBy}
                         />
                     )}
-
-                    refreshControl={
-                        <RefreshControl
-                            refreshing={refreshing}
-                            onRefresh={onRefresh}
-                        />
-                    }
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />
             )}
         </>
