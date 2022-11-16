@@ -16,6 +16,7 @@ export const userInfoLoadingSelector = (state) => state.info.loading;
 export const friendListSelector = (state) => state.friends.data;
 export const friendIdSelector = (state) => state.friends.friendId;
 export const friendOnlineSelector = (state) => state.friends.friendOnline;
+export const friendListFriendSendSelector = (state) => state.friends.friendRequestSends;
 
 export const conversationsListSelector = (state) => state.conversations.data;
 export const newGroupChatSelector = (state) => state.conversations.newGroup;
@@ -23,7 +24,6 @@ export const conversationListLoadingSelector = (state) => state.conversations.lo
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 export const conversationMembersSelector = (state) => state.conversations.members;
 export const conversationBlockBySelector = (state) => state.conversations.blockBy;
-
 /**
  * get friend list then user info changed
  * update status user online by socket

@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import userInfoSlice from '../../redux/slice/userInfoSlice';
-import { userInfoSelector, friendListSelector } from '../../redux/selector';
+import { userInfoSelector, friendListSelector, friendListFriendSendSelector } from '../../redux/selector';
 import { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
 import conversationsSlice, {
     fetchBlockConversation,
@@ -31,17 +31,33 @@ function SearchItem({
     const [isRequest, setIsRequest] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
 
-    // const usersByPhone = useSelector(getUserByPhoneNumber);
     const _userInfoSelector = useSelector(userInfoSelector);
-    const allFriendsRequest = useSelector(friendListSelector);
+    const listFriendSend = useSelector(friendListFriendSendSelector)
+    
+    // list idFriendRequest and id receiver
+    let idFriendRequest;
+    let listIdReceiver = []
+    
+    //set list id receiver
+    for(let item of listFriendSend){
+        listIdReceiver.push(item.receiverId);
+        if(item.receiverId === id){
+            idFriendRequest = item.idFriendRequest
+        }
+    }
 
     //set leader
     useEffect(() => {
         if (createdBy === _userInfoSelector._id) {
             setIsLeader(true);
         }
-    }, []);
-    
+        if(listIdReceiver) {
+            if(listIdReceiver.includes(id)){
+                setIsRequest(true);
+            }
+        }
+    }, [listFriendSend]);
+
     // request make friend
     const _handleSendRequest = () => {
         //Set data for send require make friend
@@ -58,11 +74,10 @@ function SearchItem({
     const _handleCloseRequest = () => {
         setIsRequest(false);
         const data = {
-            friendRequestID: allFriendsRequest.idFriendRequest,
+            friendRequestID: idFriendRequest,
             status: isRequest,
             senderID: _userInfoSelector._id,
         };
-        // console.log('Data', data);
         dispatch(fetchBackFriendRequest(data));
     };
 
@@ -168,7 +183,7 @@ function SearchItem({
                                 >
                                     <Icon color="#3777F3" name={isRequest ? 'close' : 'person-add-outline'} size={20} />
                                     <Text style={{ marginLeft: 5, color: '#59AFC4' }}>
-                                        {isRequest ? 'Thu hồi' : 'Kết bạn'}
+                                        {isRequest? 'Thu hồi' : 'Kết bạn'}
                                     </Text>
                                 </TouchableOpacity>
                             )
