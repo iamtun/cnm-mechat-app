@@ -91,7 +91,7 @@ function RegisterScreen({ navigation }) {
 
     // function fetch api get user with phone number
     const getUserByPhoneNumber = async () => {
-        return await fetch(`${config.LINK_API_V4}/users/get-user-by-phone/${phoneNumber}`)
+        return await fetch(`${config.LINK_API}/users/get-user-by-phone/${phoneNumber}`)
             .then((res) => res.json())
             .then((resData) => {
                 if (resData._id != null) {

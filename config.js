@@ -1,13 +1,13 @@
-import { LINK_API_V4, LINK_API_LOCALHOST } from '@env';
+import { LINK_API, LINK_API_LOCALHOST } from '@env';
 import { io } from 'socket.io-client';
 
-console.log('API -->', LINK_API_V4);
+console.log('API ---->', LINK_API);
 export default {
-    LINK_API_V4,
+    LINK_API,
     LINK_API_LOCALHOST
 };
 
-export const socket = io('https://a8ee-2405-4802-913b-6e60-d54d-5a2f-30bf-1151.ap.ngrok.io', {
+export const socket = io('https://cnm-socket-server-heroku.herokuapp.com', {
     transports: ['websocket'],
     //reconnection: true,
     withCredentials: true,

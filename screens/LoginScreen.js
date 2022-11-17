@@ -48,7 +48,7 @@ function LoginScreen({ navigation }) {
 
     // function fetch sign with api
     const sign = () => {
-        return fetch(`${config.LINK_API_V4}/auths/login`, {
+        return fetch(`${config.LINK_API}/auths/login`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

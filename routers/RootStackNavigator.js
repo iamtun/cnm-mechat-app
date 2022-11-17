@@ -20,6 +20,7 @@ import ImageScreen from '../screens/home/detailChat/ImageScreen';
 import NewGroupChat from '../screens/home/groupChat/NewGroupChat';
 import ViewFileScreen from '../screens/home/messages/ViewFileScreen';
 import AllMembers from '../screens/home/detailChat/detailGroup/AllMembers';
+import ReportScreen from '../screens/home/messages/ReportScreen';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -43,7 +44,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="DetailChat" component={DetailChat} />
                 <Stack.Screen name="InfoSelf" component={InfoSelf} />
                 <Stack.Screen name="ChatListScreen" component={ChatListScreen} />
-                <Stack.Screen name="SearchScreen" component={SearchScreen}></Stack.Screen>
+                <Stack.Screen name="SearchScreen" component={SearchScreen}/>
                 <Stack.Screen name="SyncPhoneBook" component={SyncPhoneBook} />
                 <Stack.Screen name="ConfirmPhoneNumber" component={ConfirmPhoneNumber} />
                 <Stack.Screen name="ReplacePassWord" component={ReplacePassWord} />
@@ -53,6 +54,7 @@ function RootStackNavigator() {
                 <Stack.Screen name="NewGroupChat" component={NewGroupChat} />
                 <Stack.Screen name='ViewFileScreen' component={ViewFileScreen}/>
                 <Stack.Screen name='AllMembers' component={AllMembers}/>
+                <Stack.Screen name='ReportScreen' component={ReportScreen}/>
             </Stack.Navigator>
         </NavigationContainer>
     );

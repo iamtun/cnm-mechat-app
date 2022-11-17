@@ -89,7 +89,7 @@ const messageListSlice = createSlice({
 export const fetchMessagesById = createAsyncThunk('messages/fetchMessagesById', async ({ id }) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V4}/messages/ten-last-messages/${id}`, {
+            const res = await fetch(`${config.LINK_API}/messages/ten-last-messages/${id}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ export const fetch10NextMessagesById = createAsyncThunk(
     async ({ id, countMessage }) => {
         if (id) {
             try {
-                const res = await fetch(`${config.LINK_API_V4}/messages/ten-last-messages/${id}`, {
+                const res = await fetch(`${config.LINK_API}/messages/ten-last-messages/${id}`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export const fetch10NextMessagesById = createAsyncThunk(
  */
 export const sendMessage = createAsyncThunk('messages/add', async (message) => {
     if (message) {
-        const res = await fetch(`${config.LINK_API_V4}/messages`, {
+        const res = await fetch(`${config.LINK_API}/messages`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -154,7 +154,7 @@ export const sendImageMessage = createAsyncThunk('messages/send-image', async (i
         let formData = createFormData(imageLinks, 'imageLinks');
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
-        const res = await fetch(`${config.LINK_API_V4}/messages`, {
+        const res = await fetch(`${config.LINK_API}/messages`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -180,7 +180,7 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
         formData.append('senderID', senderID);
         formData.append('conversationID', conversationID);
         formData.append('fileLink', fileToUpload);
-        const res = await fetch(`${config.LINK_API_V4}/messages`, {
+        const res = await fetch(`${config.LINK_API}/messages`, {
             method: 'POST',
             body: formData,
             headers: {
@@ -203,7 +203,7 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
 export const recallMessage = createAsyncThunk('message/recall', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V4}/messages/recall/${id}`);
+            const res = await fetch(`${config.LINK_API}/messages/recall/${id}`);
             const message = await res.json();
             //console.log("message", message);
             return message;
@@ -216,7 +216,7 @@ export const recallMessage = createAsyncThunk('message/recall', async (id) => {
 export const deleteMessage = createAsyncThunk('message/delete', async (data) => {
     if (data) {
         try {
-            const res = await fetch(`${config.LINK_API_V4}/messages/delete-for-you/${data.messageId}`, {
+            const res = await fetch(`${config.LINK_API}/messages/delete-for-you/${data.messageId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',
