@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Tooltip } from 'react-native-elements';
 import MenuItem from './MenuItem';
 

@@ -84,7 +84,7 @@ function AuthenticationScreen({ route, navigation }) {
 
     // fetch api register
     const register = () => {
-        return fetch(`${config.LINK_API_V4}/auths/signup`, {
+        return fetch(`${config.LINK_API}/auths/signup`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',

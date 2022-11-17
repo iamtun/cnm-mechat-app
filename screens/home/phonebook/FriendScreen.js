@@ -4,16 +4,18 @@ import { AlphabetList } from 'react-native-section-alphabet-list';
 import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import { getConversationIdByIdFriendSelector, getFriendsByUserSelector } from '../../../redux/selector';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import friendListSlice from '../../../redux/slice/friendSlice';
+import MenuItem from '../../../components/SearchBar/Menu/MenuItem';
+import Tooltip from 'react-native-walkthrough-tooltip';
 
 function FriendScreen({ navigation }) {
     const dispatch = useDispatch();
+    const [isVisible, setIsVisible] = useState(false);
 
     //selector
     const _conversation = useSelector(getConversationIdByIdFriendSelector);
     const friends = useSelector(getFriendsByUserSelector);
-
     // data info user
     let friendInfo = [];
 
@@ -57,23 +59,38 @@ function FriendScreen({ navigation }) {
                 onPress={() => {
                     handleSendChat(item.key);
                 }}
+                onLongPress={() => {
+                    setIsVisible(true);
+                }}
                 styles={{ flex: 1 }}
             >
-                <ListItem key={item.key} bottomDivider>
-                    <Avatar rounded size={70} source={{ uri: item.avatar }} />
-                    <ListItem.Content>
-                        <ListItem.Subtitle>
-                            {item.value} {item.online ? <Icon name="ellipse" size={14} color="#38A3A5" /> : null}
-                        </ListItem.Subtitle>
-                        <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-                    </ListItem.Content>
-                    <TouchableOpacity>
-                        <Icon style={{ marginRight: 20 }} name="call-outline" color="#000" size={25} />
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon name="videocam-outline" color="#000" size={25} />
-                    </TouchableOpacity>
-                </ListItem>
+                <Tooltip
+                    isVisible={isVisible}
+                    content={<MenuItem icon="delete-forever" title="Xóa" color="red" />}
+                    placement={'bottom'}
+                    onClose={() => setIsVisible(false)}
+                    contentStyle={{ width: 100 }}
+                    showChildInTooltip={false} //No duplicate item
+                    {...(Platform.OS === 'ios'
+                        ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
+                        : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
+                >
+                    <ListItem key={item.key} bottomDivider>
+                        <Avatar rounded size={70} source={{ uri: item.avatar }} />
+                        <ListItem.Content>
+                            <ListItem.Subtitle>
+                                {item.value} {item.online ? <Icon name="ellipse" size={14} color="#38A3A5" /> : null}
+                            </ListItem.Subtitle>
+                            <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
+                        </ListItem.Content>
+                        <TouchableOpacity>
+                            <Icon style={{ marginRight: 20 }} name="call-outline" color="#000" size={25} />
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Icon name="videocam-outline" color="#000" size={25} />
+                        </TouchableOpacity>
+                    </ListItem>
+                </Tooltip>
             </TouchableOpacity>
         );
     }

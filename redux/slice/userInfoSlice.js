@@ -59,7 +59,7 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
         socket.emit('status_user', _id);
 
         try {
-            const res = await fetch(`${config.LINK_API_V4}/users/${_id}`);
+            const res = await fetch(`${config.LINK_API}/users/${_id}`);
             const userInfo = await res.json();
 
             return userInfo.data;
@@ -74,7 +74,7 @@ export const fetchUserInfo = createAsyncThunk('info/fetchUserInfo', async (token
 export const fetchUserByPhone = createAsyncThunk('info/fetchUserByPhone', async (phone) => {
     if (phone) {
         try {
-            const res = await fetch(`${config.LINK_API_V4}/users/get-user-by-phone/${phone}`);
+            const res = await fetch(`${config.LINK_API}/users/get-user-by-phone/${phone}`);
             const userInfoByPhone = await res.json();
             return userInfoByPhone;
         } catch (err) {
@@ -89,7 +89,7 @@ export const fetchUpdateInfoUsers = createAsyncThunk('info/fetchUpdateInfoUsers'
 
         const { fullName, gender, birthday, bio } = data;
 
-        const res = await fetch(`${config.LINK_API_V4}/users/${userID}`, {
+        const res = await fetch(`${config.LINK_API}/users/${userID}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -109,7 +109,7 @@ export const fetchUpdateAvatarUsers = createAsyncThunk('info/fetchUpdateAvatarUs
         let dataForm;
         dataForm = createFormDataUpdate(data.avatarLink, data.key);
         //console.log('dataForm', dataForm);
-        const res = await fetch(`${config.LINK_API_V4}/users/update-avatar/${data.userID}`, {
+        const res = await fetch(`${config.LINK_API}/users/update-avatar/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -129,7 +129,7 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
         let dataForm;
         dataForm = createFormDataUpdate(data.backLink, data.key);
 
-        const res = await fetch(`${config.LINK_API_V4}/users/update-background/${data.userID}`, {
+        const res = await fetch(`${config.LINK_API}/users/update-background/${data.userID}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -147,7 +147,7 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
 
 export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', async (data) => {
     try {
-        await fetch(`${config.LINK_API_V4}/accounts/forget-password`, {
+        await fetch(`${config.LINK_API}/accounts/forget-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -162,7 +162,7 @@ export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', 
 export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) => {
     if (id) {
         try {
-            const res = await fetch(`${config.LINK_API_V4}/users/${id}`);
+            const res = await fetch(`${config.LINK_API}/users/${id}`);
             const userInfoByID = await res.json();
             return userInfoByID.data;
         } catch (err) {

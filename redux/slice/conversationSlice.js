@@ -154,7 +154,7 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
     try {
         const token = await getItem('user_token');
         const { _id } = jwtDecode(token);
-        const res = await fetch(`${config.LINK_API_V4}/conversations/${_id}`, {
+        const res = await fetch(`${config.LINK_API}/conversations/${_id}`, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
@@ -173,7 +173,7 @@ export const fetchConversations = createAsyncThunk('conversations/fetchConversat
 
 export const fetchCreateGroupChat = createAsyncThunk('conversations/fetchCreateGroupChat', async (data) => {
     try {
-        const res = await fetch(`${config.LINK_API_V4}/conversations/create-conversation`, {
+        const res = await fetch(`${config.LINK_API}/conversations/create-conversation`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ export const fetchRemoveMember = createAsyncThunk('conversations/fetchRemoveMemb
         const { idConversation } = data;
         const { memberId, mainId } = data;
 
-        const res = await fetch(`${config.LINK_API_V4}/conversations/delete-member/${idConversation}`, {
+        const res = await fetch(`${config.LINK_API}/conversations/delete-member/${idConversation}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',
@@ -215,7 +215,7 @@ export const fetchOutGroup = createAsyncThunk('conversations/fetchOutGroup', asy
         const { idConversation } = data;
         const { userId } = data;
 
-        const res = await fetch(`${config.LINK_API_V4}/conversations/out-conversation/${idConversation}`, {
+        const res = await fetch(`${config.LINK_API}/conversations/out-conversation/${idConversation}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -239,7 +239,7 @@ export const fetchAddMembers = createAsyncThunk('conversations/fetchAddMembers',
         const { idConversation } = data;
         const { newMemberID, memberAddID } = data;
 
-        const res = await fetch(`${config.LINK_API_V4}/conversations/add-member-conversation/${idConversation}`, {
+        const res = await fetch(`${config.LINK_API}/conversations/add-member-conversation/${idConversation}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -257,7 +257,7 @@ export const fetchChangeNameGroup = createAsyncThunk('conversations/fetchChangeN
     const { idConversation } = data;
     const { newName, userId } = data;
 
-    const response = await fetch(`${config.LINK_API_V4}/conversations/change-name/${idConversation}`, {
+    const response = await fetch(`${config.LINK_API}/conversations/change-name/${idConversation}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -275,7 +275,7 @@ export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdat
         const idConversation = data.idConversation;
         dataForm = createFormDataUpdateAvatarGroup(data.imageLink, data.key1, data.userId, data.key2);
         //console.log('dataForm', dataForm);
-        const res = await fetch(`${config.LINK_API_V4}/conversations/change-avatar/${idConversation}`, {
+        const res = await fetch(`${config.LINK_API}/conversations/change-avatar/${idConversation}`, {
             method: 'POST',
             headers: {
                 Accept: 'application/json',
@@ -295,7 +295,7 @@ export const fetchDeleteConversations = createAsyncThunk('conversations/fetchDel
     const { idConversation } = data;
     const { mainId } = data;
 
-    const response = await fetch(`${config.LINK_API_V4}/conversations/delete-conversation/${idConversation}`, {
+    const response = await fetch(`${config.LINK_API}/conversations/delete-conversation/${idConversation}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -312,7 +312,7 @@ export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlock
     const { idConversation } = data;
     const { userId } = data;
 
-    const response = await fetch(`${config.LINK_API_V4}/conversations/block-conversation/${idConversation}`, {
+    const response = await fetch(`${config.LINK_API}/conversations/block-conversation/${idConversation}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -328,7 +328,7 @@ export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnB
     const { idConversation } = data;
     const { userId } = data;
 
-    const response = await fetch(`${config.LINK_API_V4}/conversations/remove-block-conversation/${idConversation}`, {
+    const response = await fetch(`${config.LINK_API}/conversations/remove-block-conversation/${idConversation}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

@@ -25,6 +25,13 @@ function MessageItem({ message, id, navigation }) {
                 dispatch(deleteMessage(data));
             },
         },
+        {
+            title: 'Báo cáo',
+            onPress: () => {
+                navigation.navigate('ReportScreen', {message: message});
+                console.log('id message -> ', message._id);
+            },
+        },
     ];
 
     return (
@@ -54,37 +61,25 @@ function MessageItem({ message, id, navigation }) {
                         ]}
                     >
                         <View>
-                            {isMe ? (
-                                <ToolTipCustom height={80} width={100} items={items} backgroundColor="#fff">
-                                    <Text style={styles.username}>{message.user.name}</Text>
-                                    {message?.imageLink?.length > 0 ? (
-                                        message.imageLink.length === 1 ? (
-                                            <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
-                                        ) : (
-                                            <ImageMessage images={message.imageLink} content={message.content} />
-                                        )
-                                    ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} navigation={navigation} />
+                            <ToolTipCustom
+                                height={isMe ? 100 : 60}
+                                width={100}
+                                items={isMe ? [items[0], items[1]] : [items[items.length - 1]]}
+                                backgroundColor="#fff"
+                            >
+                                <Text style={styles.username}>{message.user.name}</Text>
+                                {message?.imageLink?.length > 0 ? (
+                                    message.imageLink.length === 1 ? (
+                                        <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
                                     ) : (
-                                        <Text style={[styles.message]}>{message.content}</Text>
-                                    )}
-                                </ToolTipCustom>
-                            ) : (
-                                <>
-                                    <Text style={styles.username}>{message.user.name}</Text>
-                                    {message?.imageLink?.length > 0 ? (
-                                        message.imageLink.length === 1 ? (
-                                            <ImageMessage imageURI={message.imageLink[0]} content={message.content} />
-                                        ) : (
-                                            <ImageMessage images={message.imageLink} content={message.content} />
-                                        )
-                                    ) : message.fileLink ? (
-                                        <FileMessage fileUri={message.fileLink} navigation={navigation} />
-                                    ) : (
-                                        <Text style={[styles.message]}>{message.content}</Text>
-                                    )}
-                                </>
-                            )}
+                                        <ImageMessage images={message.imageLink} content={message.content} />
+                                    )
+                                ) : message.fileLink ? (
+                                    <FileMessage fileUri={message.fileLink} navigation={navigation} />
+                                ) : (
+                                    <Text style={[styles.message]}>{message.content}</Text>
+                                )}
+                            </ToolTipCustom>
                             <Text style={styles.time}>{message.createdAt}</Text>
                         </View>
                     </View>
