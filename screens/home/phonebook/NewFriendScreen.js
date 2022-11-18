@@ -25,12 +25,10 @@ function NewFriendScreen({ navigation }) {
         socket.on('delete_friend_request', (id) => {
             dispatch(friendListSlice.actions.removeFriendRequestSocket(id));
         });
-    }, []);
-
-    useEffect(() => {
+        
         dispatch(fetchLoadFriendsRequest(_id));
     }, []);
-
+    
     // get all request friends
     const allFriendsRequest = useSelector(friendListSelector);
 
