@@ -32,6 +32,7 @@ function SearchItem({
     const [isRequest, setIsRequest] = useState(false);
     const [isLeader, setIsLeader] = useState(false);
 
+    //selector
     const _userInfoSelector = useSelector(userInfoSelector);
     const listFriendSend = useSelector(friendListFriendSendSelector);
 
