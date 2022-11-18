@@ -4,7 +4,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import { useDispatch, useSelector } from 'react-redux';
 
 import userInfoSlice from '../../redux/slice/userInfoSlice';
-import { userInfoSelector, friendListSelector, friendListFriendSendSelector } from '../../redux/selector';
+import { userInfoSelector, friendListFriendSendSelector } from '../../redux/selector';
 import friendListSlice, { fetchFriendsRequest, fetchBackFriendRequest } from '../../redux/slice/friendSlice';
 import conversationsSlice, {
     fetchBlockConversation,
@@ -52,19 +52,22 @@ function SearchItem({
         if (createdBy === _userInfoSelector._id) {
             setIsLeader(true);
         }
+
         if (listIdReceiver.length > 0) {
             if (listIdReceiver.includes(id)) {
                 setIsRequest(true);
             }
+        } else{
+            setIsRequest(false)
         }
+
     }, [listFriendSend]);
 
     useEffect(() => {
-        socket.on('remove_request', (id) => {
-            //console.log('id', id);
-            dispatch(friendListSlice.actions.updateFriendRequestSendFromSocket(id));
+        socket.on('remove_request', (_id) => {
+            dispatch(friendListSlice.actions.updateFriendRequestSendFromSocket(_id));
         });
-    }, []);
+    },[])
 
     // request make friend
     const _handleSendRequest = () => {
@@ -142,6 +145,7 @@ function SearchItem({
         dispatch(fetchUnBlockConversation(data));
     };
 
+    // UI
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
             {isNull ? (

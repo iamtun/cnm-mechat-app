@@ -1,6 +1,6 @@
 import { ActivityIndicator, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { View, StyleSheet, Text } from 'react-native';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -16,7 +16,8 @@ import GlobalStyle from '../../../styles/GlobalStyle';
 function MessageScreen({ route, navigation }) {
     const dispatch = useDispatch();
     const { id, isGroup, members, blockBy, name, image, createdBy } = route.params;
-
+    const [idLeader, setIsLeader] = useState(createdBy);
+    
     // const isFocus = useIsFocused();
     const messages = useSelector(getMessageByIdConversationSelector);
     const isLoading = useSelector(messageLoadingSelector);
@@ -37,6 +38,7 @@ function MessageScreen({ route, navigation }) {
         socket.on('receiver_recall_message', (message) => {
             dispatch(messageListSlice.actions.recallMessageFromSocket(message));
         });
+        setIsLeader(createdBy)
     }, []);
 
     const renderItem = ({ item }) => (item ? <MessageItem message={item} id={id} navigation={navigation} /> : null);
@@ -60,7 +62,7 @@ function MessageScreen({ route, navigation }) {
                     <TopBar
                         blockBy={blockBy}
                         idConversation={id}
-                        createdBy={createdBy}
+                        createdBy={idLeader}
                         isGroup={isGroup}
                         members={members}
                         name={name}

@@ -30,9 +30,10 @@ const friendListSlice = createSlice({
         },
         updateFriendRequestSendFromSocket: (state, action) => {
             const id = action.payload;
-           // console.log('id -> ', id);
+        //    console.log('id -> ', id);
+
             const index = state.friendRequestSends.findIndex((request) => request.idFriendRequest === id);
-            //console.log('index ->', index);
+            // console.log('index ->', index);
             if(index > -1)
                 state.friendRequestSends.splice(index, 1);
         }
