@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import moment from 'moment';
 
-import { conversationListLoadingSelector, conversationsListSelector } from '../../redux/selector';
+import { conversationListLoadingSelector, conversationsListSelector, getConversationWithDeleteBy, userInfoSelector } from '../../redux/selector';
 import SearchBar from '../../components/SearchBar';
 import ChatItem from '../../components/ChatItem';
 import Header from '../../components/Header';
@@ -18,9 +18,9 @@ function ChatListScreen({ navigation }) {
 
     // use selector
     const conversationLoading = useSelector(conversationListLoadingSelector);
-    const conversations = useSelector(conversationsListSelector);
-    const [refreshing, setRefreshing] = useState(false);
+    const conversations = useSelector(getConversationWithDeleteBy);
 
+    const [refreshing, setRefreshing] = useState(false);
     // socket
     useEffect(() => {
         //init

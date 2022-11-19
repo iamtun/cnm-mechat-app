@@ -1,9 +1,10 @@
+import { onLongPress } from 'deprecated-react-native-prop-types/DeprecatedTextPropTypes';
 import { TouchableOpacity, Text, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function MenuItem({ icon, title, color, onPress }) {
     return (
-        <TouchableOpacity style={styles.body} onPress={onPress}>
+        <TouchableOpacity style={styles.body} onPress={onPress} >
             <Icon name={icon} size={20} />
             <Text style={[styles.title, { color: color }]}>{title}</Text>
         </TouchableOpacity>

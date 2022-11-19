@@ -163,4 +163,6 @@ export const fetchListFriendRequestSent = createAsyncThunk('friends/fetchListFri
     }
 });
 
+
+
 export default friendListSlice;

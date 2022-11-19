@@ -1,13 +1,27 @@
 import { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import Tooltip from 'react-native-walkthrough-tooltip';
-import { useDispatch } from 'react-redux';
-import conversationsSlice from '../../redux/slice/conversationSlice';
-import MenuItem from '../SearchBar/Menu/MenuItem';
+import { useDispatch, useSelector } from 'react-redux';
+import { userInfoSelector } from '../../redux/selector';
+import conversationsSlice, { fetchDeleteConversationYourSide } from '../../redux/slice/conversationSlice';
+import ToolTipCustom from '../SearchBar/Menu/TooltipCustom';
 
 function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, message, time, navigation }) {
-    const [isVisible, setIsVisible] = useState(false);
     const dispatch = useDispatch();
+    const _userInfoSelector = useSelector(userInfoSelector);
+
+    const items = [
+        {
+            title: 'Xóa',
+            onPress: () => {
+                const data = {
+                    idConversation: id,
+                    userId: _userInfoSelector._id,
+                };
+                dispatch(fetchDeleteConversationYourSide(data));
+            },
+        },
+    ];
 
     return (
         <TouchableOpacity
@@ -17,32 +31,24 @@ function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, messa
                 dispatch(conversationsSlice.actions.getBlockBy(blockBy));
                 navigation.navigate('MessageScreen', { id, blockBy, createdBy, isGroup, members, name, image });
             }}
-            onLongPress={() => setIsVisible(true)}
         >
             <View style={styles.left}>
-                <View style={styles.imageView}>
-                    {image ? (
-                        <Image source={{ uri: image }} style={styles.image} />
-                    ) : (
-                        <Image source={require('../../assets/no-avatar.png')} style={styles.image} />
-                    )}
-                </View>
-                <Tooltip
-                    isVisible={isVisible}
-                    content={<MenuItem icon="delete-forever" title="Xóa" color="red" />}
-                    placement={'bottom'}
-                    onClose={() => setIsVisible(false)}
-                    contentStyle={{ width: 100 }}
-                    showChildInTooltip={false} //No duplicate item
-                    {...(Platform.OS === 'ios'
-                        ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
-                        : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
-                >
+                <ToolTipCustom width={100} height={60} items={items}>
+                    <View style={styles.imageView}>
+                        {image ? (
+                            <Image source={{ uri: image }} style={styles.image} />
+                        ) : (
+                            <Image source={require('../../assets/no-avatar.png')} style={styles.image} />
+                        )}
+                    </View>
+                </ToolTipCustom>
+
+                <View>
                     <Text style={styles.nameText}>{name}</Text>
                     <Text style={styles.messageText}>
                         {message?.length > 20 ? message.slice(0, 20) + '...' : message}
                     </Text>
-                </Tooltip>
+                </View>
             </View>
             <View>
                 {/* Thời gian được tính theo thời gian gửi tin nhắn cuối cùng */}

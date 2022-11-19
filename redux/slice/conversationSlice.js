@@ -128,7 +128,12 @@ const conversationsSlice = createSlice({
                 const unBlockByFetch = action.payload;
                 socket.emit('block_message_user_in_group', { info: unBlockByFetch });
                 handleUpdateBlockChat(state, unBlockByFetch);
-            });
+            })
+            .addCase(fetchDeleteConversationYourSide.fulfilled, (state, action) => {
+                const { id } = action.payload;
+                const index = state.data.findIndex((_conversation) => _conversation.id === id);
+                state.data.splice(index, 1);
+            });;
     },
 });
 
@@ -338,6 +343,22 @@ export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnB
 
     const jsonData = await response.json();
     return jsonData;
+});
+
+export const fetchDeleteConversationYourSide =  createAsyncThunk('conversations/fetchDeleteConversationYourSide', async (data) => {
+    const { idConversation } = data;
+    const { userId } = data;
+
+    const response = await fetch(`${config.LINK_API}/conversations/delete-for-you/${idConversation}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ userId }),
+    });
+
+    const id = await response.json();
+    return id;
 });
 
 export default conversationsSlice;

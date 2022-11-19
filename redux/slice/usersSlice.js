@@ -81,4 +81,23 @@ export const reportUserByMessage = createAsyncThunk('users/reportUserByMessage',
     }
 });
 
+
+export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', async (data) => {
+    try {
+        const { userId } = data;
+        const { status, userDeleteId } = data;
+
+        const res = await fetch(`${config.LINK_API}/users/delete-friend/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({status, userDeleteId }),
+        });
+        const dataDeleteFriend = await res.json();
+        return dataDeleteFriend;
+    } catch (err) {
+        console.warn(`[fetchDeleteFriend]: ${err}`);
+    }
+});
 export default userListSlice;

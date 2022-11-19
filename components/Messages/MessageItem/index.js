@@ -1,3 +1,5 @@
+import { useRef } from 'react';
+import { useState } from 'react';
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../../redux/selector';
@@ -11,11 +13,14 @@ function MessageItem({ message, id, navigation }) {
     const { _id } = useSelector(userInfoSelector);
     const isMe = message.user.id === _id;
     const dispatch = useDispatch();
+    const [visible, setVisible] = useState(true);
+
     const items = [
         {
             title: 'Thu hồi',
             onPress: () => {
                 dispatch(recallMessage(message._id));
+                setVisible(false);
             },
         },
         {
@@ -26,11 +31,20 @@ function MessageItem({ message, id, navigation }) {
             },
         },
         {
+            title: 'Chuyển tiếp',
+            onPress: () => {
+               
+                console.log('ok!');
+                navigation.navigate('NewGroupChat', {isCreate: false, members: [], isMoveMessage: true, idMessage: message._id})
+            },
+        },
+        {
             title: 'Báo cáo',
             onPress: () => {
-                navigation.navigate('ReportScreen', {message: message});
+                navigation.navigate('ReportScreen', { message: message });
                 console.log('id message -> ', message._id);
-            },
+                setVisible(false);
+            }, 
         },
     ];
 
@@ -62,10 +76,11 @@ function MessageItem({ message, id, navigation }) {
                     >
                         <View>
                             <ToolTipCustom
-                                height={isMe ? 100 : 60}
+                                height={isMe ? 140 : 80}
                                 width={100}
-                                items={isMe ? [items[0], items[1]] : [items[items.length - 1]]}
+                                items={isMe ? [items[0], items[1], items[2]] : [items[items.length - 1]]}
                                 backgroundColor="#fff"
+                                visible={visible}
                             >
                                 <Text style={styles.username}>{message.user.name}</Text>
                                 {message?.imageLink?.length > 0 ? (

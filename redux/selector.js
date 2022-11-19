@@ -5,6 +5,8 @@ export const messageListSelector = (state) => state.messages.data;
 export const messageLoadingSelector = (state) => state.messages.loading;
 
 export const searchTextSelector = (state) => state.filters.search;
+export const searchGroupSelector = (state) => state.filters.searchGroup;
+
 export const userListSelector = (state) => state.users.data;
 export const userLoadingSelector = (state) => state.users.loading;
 
@@ -24,6 +26,7 @@ export const conversationListLoadingSelector = (state) => state.conversations.lo
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 export const conversationMembersSelector = (state) => state.conversations.members;
 export const conversationBlockBySelector = (state) => state.conversations.blockBy;
+
 /**
  * get friend list then user info changed
  * update status user online by socket
@@ -105,6 +108,22 @@ export const usersRemainingSelector = createSelector(
     },
 );
 
+export const searchGroupChatSelector = createSelector(
+    searchGroupSelector,
+    conversationsListSelector,
+    (search, conversations) => {
+        try {
+            if (search != null) {
+                const _conversations = conversations.filter((conversation) => conversation.name.includes(search));
+                return _conversations;
+            }
+    
+            return conversations;
+        } catch (error) {
+            console.warn('searchGroupChatSelector', error);
+        }
+    },
+);
 /**
  * get user info then click item search your friend
  */
@@ -159,6 +178,23 @@ export const getConversationIdByIdGroupConversation = createSelector(
             return conversation[0];
         }
         return 0;
+    },
+);
+
+export const getConversationWithDeleteBy = createSelector(
+    userInfoSelector,
+    conversationsListSelector,
+    (user, conversations) => {
+        try {
+            if (user && conversations) {
+                const _conversations = conversations.filter((conversation) => {
+                    return !conversation.deleteBy.includes(user._id);
+                });
+                return _conversations;
+            }
+        } catch (error) {
+            console.warn('getConversationWithDeleteBy ->', error);
+        }
     },
 );
 
@@ -269,15 +305,15 @@ export const getFriendsWithMembers = createSelector(
     conversationMembersSelector,
     conversationBlockBySelector,
     userListSelector,
-    (friends, members,blockBy, users) => {
+    (friends, members, blockBy, users) => {
         const _members = users.filter((user) => members.includes(user._id));
         const _friends = friends.map((friend) => friend._id);
         const friendWithMember = _members.map((member) => {
             return _friends.includes(member._id) ? { ...member, isFriend: true } : { ...member, isFriend: false };
         });
         const _memberBlockBy = friendWithMember.map((member) => {
-            return blockBy.includes(member._id) ? { ...member, isBlock: true } : { ...member, isBlock: false }
-        })
+            return blockBy.includes(member._id) ? { ...member, isBlock: true } : { ...member, isBlock: false };
+        });
         return _memberBlockBy;
     },
 );
