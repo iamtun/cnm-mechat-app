@@ -56,7 +56,6 @@ function NewGroupChat({ route, navigation }) {
     // search
     useEffect(() => {
         if (isMove) {
-            console.log("search", searchInput);
             dispatch(filterSlice.actions.searchGroupChange(searchInput));
         } else {
             dispatch(filterSlice.actions.searchFilterChange(searchInput));

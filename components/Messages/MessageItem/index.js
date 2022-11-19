@@ -9,7 +9,7 @@ import ActionMessage from './ActionMessage';
 import FileMessage from './FileMessage';
 import ImageMessage from './ImageMessage';
 
-function MessageItem({ message, id, navigation }) {
+function MessageItem({ message, navigation }) {
     const { _id } = useSelector(userInfoSelector);
     const isMe = message.user.id === _id;
     const dispatch = useDispatch();
