@@ -7,6 +7,7 @@ import { Image } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { reportUserByMessage } from '../../../redux/slice/usersSlice';
 import { Alert } from 'react-native';
+import { Platform } from 'react-native';
 
 function ReportScreen({ navigation, route }) {
     const [image, setImage] = useState('');
@@ -25,16 +26,22 @@ function ReportScreen({ navigation, route }) {
         });
 
         if (!result.cancelled) {
-            const size = result.fileSize / 1024 / 1024;
-            if (size < 5) {
-                //MB
+            const size = result.fileName / 1024 / 1024;
+            if (Platform.OS === 'ios') {
+                if (size < 5) {
+                    //MB
+                    if (result.type === 'image') setImage(result.uri);
+                    else Alert.alert('Thông báo', 'Vui lòng chọn hình ảnh!');
+                } else {
+                    Alert.alert(
+                        'Thông báo',
+                        'Hình ảnh bạn gửi lớn hơn 5MB - Vui lòng chọn lại, Xin lỗi vì sự bất tiện này',
+                    );
+                }
+            } else {
                 if (result.type === 'image') setImage(result.uri);
                 else Alert.alert('Thông báo', 'Vui lòng chọn hình ảnh!');
-            } else
-                Alert.alert(
-                    'Thông báo',
-                    'Hình ảnh bạn gửi lớn hơn 5MB - Vui lòng chọn lại, Xin lỗi vì sự bất tiện này',
-                );
+            }
         }
     };
 
@@ -82,7 +89,7 @@ function ReportScreen({ navigation, route }) {
                             <TouchableOpacity onPress={pickImage} style={{ width: '100%', height: '100%' }}>
                                 <Image
                                     source={{ uri: image }}
-                                    resizeMode="contain"
+                                    resizeMode="stretch"
                                     style={{ width: '100%', height: '100%', borderRadius: 8 }}
                                 />
                             </TouchableOpacity>

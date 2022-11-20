@@ -3,11 +3,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AlphabetList } from 'react-native-section-alphabet-list';
 import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
-import { getConversationIdByIdFriendSelector, getFriendsByUserSelector } from '../../../redux/selector';
+import { getConversationIdByIdFriendSelector, getFriendsByUserSelector, userInfoSelector } from '../../../redux/selector';
 import { useEffect, useState } from 'react';
 import friendListSlice from '../../../redux/slice/friendSlice';
 import MenuItem from '../../../components/SearchBar/Menu/MenuItem';
 import Tooltip from 'react-native-walkthrough-tooltip';
+import ToolTipCustom from '../../../components/SearchBar/Menu/TooltipCustom';
+import { fetchDeleteFriend } from '../../../redux/slice/usersSlice';
 
 function FriendScreen({ navigation }) {
     const dispatch = useDispatch();
@@ -16,6 +18,7 @@ function FriendScreen({ navigation }) {
     //selector
     const _conversation = useSelector(getConversationIdByIdFriendSelector);
     const friends = useSelector(getFriendsByUserSelector);
+    const _userInfoSelector = useSelector(userInfoSelector);
     // data info user
     let friendInfo = [];
 
@@ -35,7 +38,6 @@ function FriendScreen({ navigation }) {
 
     //Change screen message with id conversation
     useEffect(() => {
-        getUserItem;
         if (_conversation) {
             dispatch(friendListSlice.actions.clickSendChat(0));
             navigation.navigate('MessageScreen', {
@@ -64,33 +66,40 @@ function FriendScreen({ navigation }) {
                 }}
                 styles={{ flex: 1 }}
             >
-                <Tooltip
-                    isVisible={isVisible}
-                    content={<MenuItem icon="delete-forever" title="Xóa" color="red" />}
-                    placement={'bottom'}
-                    onClose={() => setIsVisible(false)}
-                    contentStyle={{ width: 100 }}
-                    showChildInTooltip={false} //No duplicate item
-                    {...(Platform.OS === 'ios'
-                        ? { tooltipStyle: { marginLeft: 17, marginTop: 10 } }
-                        : { tooltipStyle: { marginLeft: 17, marginTop: -40 } })}
-                >
-                    <ListItem key={item.key} bottomDivider>
+                <ListItem key={item.key} bottomDivider>
+                    <ToolTipCustom
+                        width={70}
+                        height={70}
+                        items={[
+                            {
+                                title: 'Xóa',
+                                onPress: () => {
+                                    const data = {
+                                        userId: _userInfoSelector._id,
+                                        status: true,
+                                        userDeleteId: item.key,
+                                    };
+                                    dispatch(fetchDeleteFriend(data));
+                                },
+                            },
+                        ]}
+                        backgroundColor="#ccc"
+                    >
                         <Avatar rounded size={70} source={{ uri: item.avatar }} />
-                        <ListItem.Content>
-                            <ListItem.Subtitle>
-                                {item.value} {item.online ? <Icon name="ellipse" size={14} color="#38A3A5" /> : null}
-                            </ListItem.Subtitle>
-                            <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
-                        </ListItem.Content>
-                        <TouchableOpacity>
-                            <Icon style={{ marginRight: 20 }} name="call-outline" color="#000" size={25} />
-                        </TouchableOpacity>
-                        <TouchableOpacity>
-                            <Icon name="videocam-outline" color="#000" size={25} />
-                        </TouchableOpacity>
-                    </ListItem>
-                </Tooltip>
+                    </ToolTipCustom>
+                    <ListItem.Content>
+                        <ListItem.Subtitle>
+                            {item.value} {item.online ? <Icon name="ellipse" size={14} color="#38A3A5" /> : null}
+                        </ListItem.Subtitle>
+                        <ListItem.Subtitle>{item.bio}</ListItem.Subtitle>
+                    </ListItem.Content>
+                    <TouchableOpacity>
+                        <Icon style={{ marginRight: 20 }} name="call-outline" color="#000" size={25} />
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name="videocam-outline" color="#000" size={25} />
+                    </TouchableOpacity>
+                </ListItem>
             </TouchableOpacity>
         );
     }

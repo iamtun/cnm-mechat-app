@@ -9,6 +9,7 @@ import {
     conversationsListSelector,
     getFriendsByUserSelector,
     newGroupChatSelector,
+    searchGroupChatSelector,
     userIdSelector,
     userInfoSelector,
     usersRemainingSelector,
@@ -21,9 +22,11 @@ import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
 
 function NewGroupChat({ route, navigation }) {
-    const { isCreate, members, idConversation } = route.params;
+    const { isCreate, members, idConversation, isMoveMessage, idMessage} = route.params;
     const dispatch = useDispatch();
 
+    // is move screen
+    const [isMove, setIsMove] = useState(isMoveMessage);
     // info me
     const userID = useSelector(userInfoSelector);
     const { _id } = userID;
@@ -52,35 +55,53 @@ function NewGroupChat({ route, navigation }) {
 
     // search
     useEffect(() => {
-        dispatch(filterSlice.actions.searchFilterChange(searchInput));
+        if (isMove) {
+            dispatch(filterSlice.actions.searchGroupChange(searchInput));
+        } else {
+            dispatch(filterSlice.actions.searchFilterChange(searchInput));
+        }
+        setIsMove(isMoveMessage)
     }, [debounceSearch]);
 
     const userSearching = useSelector(usersRemainingSelector);
+    const conversationSearching = useSelector(searchGroupChatSelector);
 
     // set first load
     useEffect(() => {
-        if (userSearching && userSearching !== 1) {
-            for (let item of userSearching) {
+        if(isMove){
+            for (let item of conversationSearching) {
                 listFriends.push({
-                    _id: item._id,
-                    fullName: item.fullName,
-                    avatarLink: item.avatarLink,
+                    _id: item.id,
+                    fullName: item.name,
+                    avatarLink: item.imageLinkOfConver,
                     isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
                 });
             }
-        } else if (userSearching === 1 || userSearching === false) {
-            for (let item of friends) {
-                listFriends.push({
-                    _id: item._id,
-                    fullName: item.fullName,
-                    avatarLink: item.avatarLink,
-                    isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
-                });
+        } else {
+            if (userSearching && userSearching !== 1) {
+                for (let item of userSearching) {
+                    listFriends.push({
+                        _id: item._id,
+                        fullName: item.fullName,
+                        avatarLink: item.avatarLink,
+                        isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
+                    });
+                }
+            } else if (userSearching === 1 || userSearching === false) {
+                for (let item of friends) {
+                    listFriends.push({
+                        _id: item._id,
+                        fullName: item.fullName,
+                        avatarLink: item.avatarLink,
+                        isChecked: members.includes(item._id) ? true : idFriend.includes(item._id) ? true : false,
+                    });
+                }
             }
+    
         }
-
+        
         setData(listFriends);
-    }, [userSearching]);
+    }, [conversationSearching,userSearching]);
 
     // handle select items
     const handleChange = (id) => {
@@ -131,17 +152,16 @@ function NewGroupChat({ route, navigation }) {
     const handleAddMembers = () => {
         const data = {
             idConversation: idConversation,
-            newMemberID : idFriend,
-            memberAddID: _id
-        }
+            newMemberID: idFriend,
+            memberAddID: _id,
+        };
 
-        dispatch(fetchAddMembers(data))
+        dispatch(fetchAddMembers(data));
         setIsCreateGroup(true);
-    }
+    };
 
     //change screen message
     useEffect(() => {
-        //console.log(group);
         if (isCreateGroup) {
             navigation.navigate('MessageScreen', {
                 id: group.id,
@@ -153,12 +173,22 @@ function NewGroupChat({ route, navigation }) {
             });
         }
     }, [debounceGroup]);
-    
+
+
+    // move message
+    const handleMoveMessage = () => {
+        const data = {
+            idConversation: idFriend,
+            idMessage: idMessage
+        }
+
+        console.log("data", data);
+    }
     // render item
     function getFriendItem({ item: friend }) {
         return (
             <TouchableOpacity
-                disabled={members.includes(friend._id) ? true: false}
+                disabled={members.includes(friend._id) ? true : false}
                 onPress={() => {
                     handleChange(friend._id);
                 }}
@@ -190,7 +220,7 @@ function NewGroupChat({ route, navigation }) {
                     <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                 </TouchableOpacity>
                 <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>
-                    {isCreate ? 'Tạo nhóm' : 'Thêm thành viên'}{' '}
+                    {isMove ? 'Chuyển tin nhắn' : isCreate ? 'Tạo nhóm' : 'Thêm thành viên'}
                 </Text>
             </View>
             <View style={styles.container}>
@@ -213,7 +243,7 @@ function NewGroupChat({ route, navigation }) {
                     <View style={{ width: '90%' }}>
                         <TextInput
                             style={{ marginLeft: 5, width: '100%', height: '100%' }}
-                            placeholder="Tìm tên hoặc số điện thoại"
+                            placeholder={isMove ? 'Tìm cuộc trò chuyện' : 'Tìm tên hoặc số điện thoại'}
                             value={searchInput}
                             onChangeText={(value) => {
                                 setSearchInput(value);
@@ -229,20 +259,27 @@ function NewGroupChat({ route, navigation }) {
                             : { width: '100%', height: '63%', marginTop: 10 }
                     }
                 >
-                    <Text style={{ marginLeft: 15, fontSize: 16, width: '70%', fontWeight: 'bold' }}>Danh bạ</Text>
+                    <Text style={{ marginLeft: 15, fontSize: 16, width: '70%', fontWeight: 'bold' }}>
+                        {isMoveMessage ? 'Cuộc trò chuyện' : 'Danh bạ'}
+                    </Text>
                     <FlatList
                         data={data}
                         keyExtractor={(friend) => friend._id.toString() + '_'}
                         renderItem={getFriendItem}
                     />
                 </View>
-                {isCreate ? (
+                {isMove ? (
+                    <TouchableOpacity style={styles.addMembers} onPress={handleMoveMessage}>
+                        <Text style={{ color: 'white', fontSize: 18 }}>Chuyển</Text>
+                        <Icon style={{ marginLeft: 10 }} name="arrow-redo-sharp" size={22} color="white" />
+                    </TouchableOpacity>
+                ) : isCreate ? (
                     <TouchableOpacity style={styles.successRegister} onPress={createGroup}>
                         <Icon style={{ marginRight: 10 }} name="create-outline" size={22} />
                         <Text>Tạo nhóm</Text>
                     </TouchableOpacity>
                 ) : (
-                    <TouchableOpacity style={styles.addMembers} onPress ={handleAddMembers}>
+                    <TouchableOpacity style={styles.addMembers} onPress={handleAddMembers}>
                         <Icon style={{ marginRight: 10 }} name="person-add-outline" size={22} color="white" />
                         <Text style={{ color: 'white', fontSize: 18 }}>Thêm</Text>
                     </TouchableOpacity>
