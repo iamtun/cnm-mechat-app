@@ -5,15 +5,18 @@ import Header from '../../components/Header';
 import FriendScreen from './phonebook/FriendScreen';
 import GroupChatScreen from './phonebook/GroupChatScreen';
 import NewFriendScreen from './phonebook/NewFriendScreen';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { useEffect } from 'react';
 import { socket } from '../../config';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import userInfoSlice from '../../redux/slice/userInfoSlice';
+import { friendListSelector } from '../../redux/selector';
 
 const Tab = createMaterialTopTabNavigator();
 function PhoneBookScreen({ navigation }) {
     const dispatch = useDispatch();
+
+    const friendRequest = useSelector(friendListSelector);
 
     // socket
     useEffect(() => {
@@ -25,7 +28,7 @@ function PhoneBookScreen({ navigation }) {
 
         socket.off('receive_friends');
         socket.on('receive_friends', (friends) => {
-            //console.log('receive_friends', friends);
+            console.log('receive_friends', friends);
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
     }, []);
@@ -41,7 +44,31 @@ function PhoneBookScreen({ navigation }) {
                 <Tab.Screen
                     name="NewFriend"
                     component={NewFriendScreen}
-                    options={{ tabBarBadge: () => <Text>3</Text>, tabBarLabel: 'Lời mời' }}
+                    options={{
+                        tabBarBadge: () => (
+                            <View
+                                style={
+                                    friendRequest.length > 0
+                                        ? {
+                                              marginTop: 14,
+                                              marginRight: 14,
+                                              width: 20,
+                                              height: 20,
+                                              backgroundColor: 'red',
+                                              borderRadius: 16,
+                                              justifyContent: 'center',
+                                              alignItems: 'center',
+                                          }
+                                        : null
+                                }
+                            >
+                                <Text style={{ textAlign: 'center', color: '#fff', fontSize: 12, fontWeight: 'bold' }}>
+                                    {friendRequest.length}
+                                </Text>
+                            </View>
+                        ),
+                        tabBarLabel: 'Lời mời',
+                    }}
                 />
             </Tab.Navigator>
         </>

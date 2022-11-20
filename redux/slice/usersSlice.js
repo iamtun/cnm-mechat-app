@@ -17,7 +17,8 @@ const userListSlice = createSlice({
             .addCase(reportUserByMessage.fulfilled, (state, action) => {
                 Alert.alert('Thông báo', 'Bạn đã gửi báo cáo thành công vui lòng đợi quản trị duyệt!');
                 action.payload.navigation.goBack();
-            }).addCase(reportUserByMessage.pending, (state, action) => {
+            })
+            .addCase(reportUserByMessage.pending, (state, action) => {
                 Alert.alert('Đang gửi ...');
             })
             .addCase(reportUserByMessage.rejected, (state, action) => {
@@ -74,7 +75,7 @@ export const reportUserByMessage = createAsyncThunk('users/reportUserByMessage',
 
         const report = await res.json();
         if (report?.id) {
-            return {...report, navigation};
+            return { ...report, navigation };
         }
     } catch (error) {
         console.log(`err reportUserByMessage: ${err}`);
@@ -82,22 +83,4 @@ export const reportUserByMessage = createAsyncThunk('users/reportUserByMessage',
 });
 
 
-export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', async (data) => {
-    try {
-        const { userId } = data;
-        const { status, userDeleteId } = data;
-
-        const res = await fetch(`${config.LINK_API}/users/delete-friend/${userId}`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({status, userDeleteId }),
-        });
-        const dataDeleteFriend = await res.json();
-        return dataDeleteFriend;
-    } catch (err) {
-        console.warn(`[fetchDeleteFriend]: ${err}`);
-    }
-});
 export default userListSlice;

@@ -30,13 +30,12 @@ const friendListSlice = createSlice({
         },
         updateFriendRequestSendFromSocket: (state, action) => {
             const id = action.payload;
-        //    console.log('id -> ', id);
+            //    console.log('id -> ', id);
 
             const index = state.friendRequestSends.findIndex((request) => request.idFriendRequest === id);
             // console.log('index ->', index);
-            if(index > -1)
-                state.friendRequestSends.splice(index, 1);
-        }
+            if (index > -1) state.friendRequestSends.splice(index, 1);
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -62,6 +61,7 @@ const friendListSlice = createSlice({
             .addCase(fetchHandleFriendsRequest.fulfilled, (state, action) => {
                 const { friendRequestID, listFriendsReceiver, listFriendsSender, sender, receiver, conversation } =
                     action.payload;
+                //console.log('conversation accept ->', conversation);
                 const index = state.data.findIndex((request) => request.idFriendRequest === friendRequestID);
                 state.data.splice(index, 1);
 
@@ -162,7 +162,5 @@ export const fetchListFriendRequestSent = createAsyncThunk('friends/fetchListFri
         }
     }
 });
-
-
 
 export default friendListSlice;
