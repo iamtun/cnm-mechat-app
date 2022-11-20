@@ -50,9 +50,12 @@ function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, messa
                     </Text>
                 </View>
             </View>
-            <View>
+            <View style={styles.right}>
                 {/* Thời gian được tính theo thời gian gửi tin nhắn cuối cùng */}
-                <Text>{time}</Text>
+                <Text style={styles.time}>{time}</Text>
+                {/* <View style={styles.viewCount}>
+                    <Text style={styles.count}>5</Text>
+                </View> */}
             </View>
         </TouchableOpacity>
     );
@@ -61,13 +64,14 @@ function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, messa
 const styles = StyleSheet.create({
     body: {
         flexDirection: 'row',
-        alignItems: 'flex-start',
+        alignItems: 'center',
         justifyContent: 'space-between',
         padding: 12,
         borderBottomWidth: 1,
         borderBottomColor: '#ccc',
     },
     left: {
+        width: '70%',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
@@ -81,11 +85,27 @@ const styles = StyleSheet.create({
         borderRadius: 50,
     },
     nameText: {
-        fontSize: 16,
+        fontSize: 14,
         fontWeight: '600',
     },
     messageText: {
         fontSize: 14,
+    },
+    right: {
+        width: '30%',
+        alignItems: 'center',
+    },
+    time: {
+        fontSize: 12,
+    },
+    viewCount: {
+        width: 20,
+        height: 20,
+        backgroundColor: '#ccc',
+        borderRadius: 5,
+    },
+    count: {
+        textAlign: 'center',
     },
 });
 export default ChatItem;

@@ -33,8 +33,7 @@ function MessageItem({ message, navigation }) {
         {
             title: 'Chuyển tiếp',
             onPress: () => {
-               
-                console.log('ok!');
+                setVisible(false);
                 navigation.navigate('NewGroupChat', {isCreate: false, members: [], isMoveMessage: true, idMessage: message._id})
             },
         },
@@ -77,7 +76,7 @@ function MessageItem({ message, navigation }) {
                         <View>
                             <ToolTipCustom
                                 height={isMe ? 140 : 80}
-                                width={100}
+                                width={120}
                                 items={isMe ? [items[0], items[1], items[2]] : [items[items.length - 1]]}
                                 backgroundColor="#fff"
                                 visible={visible}

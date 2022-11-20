@@ -3,13 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AlphabetList } from 'react-native-section-alphabet-list';
 import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
-import { getConversationIdByIdFriendSelector, getFriendsByUserSelector, userInfoSelector } from '../../../redux/selector';
+import {
+    getConversationIdByIdFriendSelector,
+    getFriendsByUserSelector,
+    userInfoSelector,
+} from '../../../redux/selector';
 import { useEffect, useState } from 'react';
 import friendListSlice from '../../../redux/slice/friendSlice';
-import MenuItem from '../../../components/SearchBar/Menu/MenuItem';
-import Tooltip from 'react-native-walkthrough-tooltip';
 import ToolTipCustom from '../../../components/SearchBar/Menu/TooltipCustom';
-import { fetchDeleteFriend } from '../../../redux/slice/usersSlice';
+import { fetchDeleteFriend } from '../../../redux/slice/userInfoSlice';
 
 function FriendScreen({ navigation }) {
     const dispatch = useDispatch();

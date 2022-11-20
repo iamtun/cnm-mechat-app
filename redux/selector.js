@@ -110,14 +110,18 @@ export const usersRemainingSelector = createSelector(
 
 export const searchGroupChatSelector = createSelector(
     searchGroupSelector,
+    userInfoSelector,
     conversationsListSelector,
-    (search, conversations) => {
+    (search, user, conversations) => {
         try {
             if (search != null) {
-                const _conversations = conversations.filter((conversation) => conversation.name.includes(search));
+                const _conversations = conversations.filter(
+                    (conversation) => conversation.name.includes(search) && !conversation.blockBy.includes(user._id),
+                );
+
                 return _conversations;
             }
-    
+
             return conversations;
         } catch (error) {
             console.warn('searchGroupChatSelector', error);
@@ -185,10 +189,11 @@ export const getConversationWithDeleteBy = createSelector(
     userInfoSelector,
     conversationsListSelector,
     (user, conversations) => {
+        //console.log(conversations);
         try {
             if (user && conversations) {
                 const _conversations = conversations.filter((conversation) => {
-                    return !conversation.deleteBy.includes(user._id);
+                    return !conversation?.deleteBy.includes(user._id);
                 });
                 return _conversations;
             }

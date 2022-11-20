@@ -85,6 +85,7 @@ const styles = StyleSheet.create({
         marginLeft: 8,
     },
     nameText: {
+        width: '100%',
         fontSize: 16,
         fontWeight: '600',
         color: '#fff',

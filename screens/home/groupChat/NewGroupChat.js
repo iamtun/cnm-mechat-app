@@ -20,9 +20,10 @@ import { Alert } from 'react-native';
 import { fetchAddMembers, fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
+import { moveMessage } from '../../../redux/slice/messageSlice';
 
 function NewGroupChat({ route, navigation }) {
-    const { isCreate, members, idConversation, isMoveMessage, idMessage} = route.params;
+    const { isCreate, members, idConversation, isMoveMessage, idMessage } = route.params;
     const dispatch = useDispatch();
 
     // is move screen
@@ -60,7 +61,7 @@ function NewGroupChat({ route, navigation }) {
         } else {
             dispatch(filterSlice.actions.searchFilterChange(searchInput));
         }
-        setIsMove(isMoveMessage)
+        setIsMove(isMoveMessage);
     }, [debounceSearch]);
 
     const userSearching = useSelector(usersRemainingSelector);
@@ -68,7 +69,7 @@ function NewGroupChat({ route, navigation }) {
 
     // set first load
     useEffect(() => {
-        if(isMove){
+        if (isMove) {
             for (let item of conversationSearching) {
                 listFriends.push({
                     _id: item.id,
@@ -97,11 +98,10 @@ function NewGroupChat({ route, navigation }) {
                     });
                 }
             }
-    
         }
-        
+
         setData(listFriends);
-    }, [conversationSearching,userSearching]);
+    }, [conversationSearching, userSearching]);
 
     // handle select items
     const handleChange = (id) => {
@@ -174,16 +174,19 @@ function NewGroupChat({ route, navigation }) {
         }
     }, [debounceGroup]);
 
-
     // move message
     const handleMoveMessage = () => {
         const data = {
             idConversation: idFriend,
-            idMessage: idMessage
-        }
+            idMessage: idMessage,
+            userId: _id,
+            navigation,
+        };
 
-        console.log("data", data);
-    }
+       //console.log('data', data);
+        dispatch(moveMessage(data));
+    };
+
     // render item
     function getFriendItem({ item: friend }) {
         return (

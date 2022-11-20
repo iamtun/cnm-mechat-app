@@ -17,7 +17,7 @@ const userInfoSlice = createSlice({
         },
         receiveFriendListFromSocket: (state, action) => {
             state.data.friends = action.payload;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -42,6 +42,14 @@ const userInfoSlice = createSlice({
             })
             .addCase(fetchUserByID.fulfilled, (state, action) => {
                 state.data = action.payload;
+            })
+            .addCase(fetchDeleteFriend.fulfilled, (state, action) => {
+                const { conversationDeleted, idReceive, idSender, listFriendsUser, listFriendsUserDelete } =
+                    action.payload;
+                //update friends after delete
+                state.data.friends = listFriendsUser;
+                const request = { idReceive, conversationDeleted, idSender, listFriendsUserDelete };
+                socket.emit('delete_friend', { request });
             });
     },
 });
@@ -168,6 +176,26 @@ export const fetchUserByID = createAsyncThunk('info/fetchUserByID', async (id) =
         } catch (err) {
             console.log(`[fetch messages]: ${err}`);
         }
+    }
+});
+
+export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', async (data) => {
+    try {
+        const { userId } = data;
+        const { status, userDeleteId } = data;
+
+        const res = await fetch(`${config.LINK_API}/users/delete-friend/${userId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status, userDeleteId }),
+        });
+        const dataDeleteFriend = await res.json();
+        console.log('dataDeleteFriend ->', dataDeleteFriend);
+        return dataDeleteFriend;
+    } catch (err) {
+        console.warn(`[fetchDeleteFriend]: ${err}`);
     }
 });
 

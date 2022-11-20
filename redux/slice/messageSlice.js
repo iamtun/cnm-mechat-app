@@ -47,6 +47,7 @@ const messageListSlice = createSlice({
             .addCase(sendMessage.fulfilled, (state, action) => {
                 state.data.unshift(action.payload);
                 //send success socket
+                //console.log(action.payload);
                 socket.emit('send_message', { message: action.payload });
             })
             .addCase(sendImageMessage.rejected, (state, action) => {
@@ -79,6 +80,15 @@ const messageListSlice = createSlice({
                 const { id } = action.payload;
                 const index = state.data.findIndex((_message) => _message._id === id);
                 state.data.splice(index, 1);
+            })
+            .addCase(moveMessage.fulfilled, (state, action) => {
+                const {messages, navigation} = action.payload;
+                messages.forEach((message) => {
+                    console.log(message);
+                    socket.emit('send_message', { message: message });
+                });
+
+                navigation.goBack();
             });
     },
 });
@@ -227,6 +237,33 @@ export const deleteMessage = createAsyncThunk('message/delete', async (data) => 
             return id;
         } catch (err) {
             console.log(`[fetch delete message]: ${err}`);
+        }
+    }
+});
+
+export const moveMessage = createAsyncThunk('message/move', async (data) => {
+    if (data) {
+        const { idConversation, idMessage, userId, navigation } = data;
+        try {
+            const req = await fetch(`${config.LINK_API}/messages/move-message/${idMessage}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ conversationId: idConversation, userId }),
+            });
+
+            const res = await req.json();
+            if (res?.newMessage) {
+                return {
+                    messages: res.newMessage,
+                    navigation,
+                };
+            } else {
+                Alert.alert('Chuyển tiếp tin nhắn thất bại!');
+            }
+        } catch (error) {
+            console.warn(`[moveMessage] -> ${error}`);
         }
     }
 });
