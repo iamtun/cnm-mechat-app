@@ -8,13 +8,14 @@ function HomeScreen() {
     const dispatch = useDispatch();
 
     const _userInfoSelector = useSelector(userInfoSelector);
-
     useEffect(() => {
         socket.on('get_users', (users) => {
             const usersOnline = users.map((user) => user.userId);
             dispatch(friendListSlice.actions.receiveFriendOnlineWithSocket(usersOnline));
         });
-        dispatch(fetchListFriendRequestSent(_userInfoSelector._id))
+        if(_userInfoSelector){
+            dispatch(fetchListFriendRequestSent(_userInfoSelector._id))
+        }
     }, []);
     return <HomeTabNavigator />;
 }

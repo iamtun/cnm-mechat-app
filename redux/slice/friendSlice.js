@@ -90,7 +90,6 @@ export const fetchFriendsRequest = createAsyncThunk('friends/fetchFriendsRequest
             body: JSON.stringify(data),
         });
         const friendRequest = await res.json();
-        // console.log("---friendRequest",friendRequest);
         if (friendRequest?.data) return friendRequest;
         return null;
     } catch (err) {

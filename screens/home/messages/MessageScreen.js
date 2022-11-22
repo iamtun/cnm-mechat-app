@@ -9,7 +9,7 @@ import MessageInputBox from '../../../components/Messages/MessageInputBox';
 import MessageItem from '../../../components/Messages/MessageItem';
 import TopBar from '../../../components/Messages/TopBar/TopBar';
 import { socket } from '../../../config';
-import { conversationBlockBySelector, getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
+import {  getMessageByIdConversationSelector, messageLoadingSelector, userInfoSelector } from '../../../redux/selector';
 import messageListSlice, { fetch10NextMessagesById, fetchMessagesById } from '../../../redux/slice/messageSlice';
 import GlobalStyle from '../../../styles/GlobalStyle';
 
@@ -20,6 +20,7 @@ function MessageScreen({ route, navigation }) {
     
     // const isFocus = useIsFocused();
     const messages = useSelector(getMessageByIdConversationSelector);
+    console.log(messages);
     const isLoading = useSelector(messageLoadingSelector);
 
     useEffect(() => {

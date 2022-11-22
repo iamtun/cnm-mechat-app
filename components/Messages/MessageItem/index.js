@@ -40,8 +40,7 @@ function MessageItem({ message, navigation }) {
         {
             title: 'Báo cáo',
             onPress: () => {
-                navigation.navigate('ReportScreen', { message: message });
-                console.log('id message -> ', message._id);
+                navigation.navigate('ReportScreen', { message: message, senderId: _id });
                 setVisible(false);
             }, 
         },

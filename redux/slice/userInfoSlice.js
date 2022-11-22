@@ -4,7 +4,7 @@ import config, { socket, createFormDataUpdate } from '../../config';
 
 const userInfoSlice = createSlice({
     name: 'info',
-    initialState: { data: null, userId: null, loading: 0 },
+    initialState: { data: null, userId: null, loading: 0, dataChangePass: null },
     reducers: {
         clickSearchItem: (state, action) => {
             state.userId = action.payload;
@@ -50,6 +50,9 @@ const userInfoSlice = createSlice({
                 state.data.friends = listFriendsUser;
                 const request = { idReceive, conversationDeleted, idSender, listFriendsUserDelete };
                 socket.emit('delete_friend', { request });
+            })
+            .addCase(fetchChangePass.fulfilled, (state, action) => {
+                state.dataChangePass = action.payload;
             });
     },
 });
@@ -194,6 +197,25 @@ export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', asy
         const dataDeleteFriend = await res.json();
         console.log('dataDeleteFriend ->', dataDeleteFriend);
         return dataDeleteFriend;
+    } catch (err) {
+        console.warn(`[fetchDeleteFriend]: ${err}`);
+    }
+});
+
+
+export const fetchChangePass = createAsyncThunk('users/fetchChangePass', async (data) => {
+    try {
+        const { userId, oldPass, newPassword,confirmNewPass } = data;
+
+        const res = await fetch(`${config.LINK_API}/accounts/change-password/${userId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ oldPass, newPassword,confirmNewPass }),
+        });
+        const changePass = await res.json();
+        return changePass;
     } catch (err) {
         console.warn(`[fetchDeleteFriend]: ${err}`);
     }

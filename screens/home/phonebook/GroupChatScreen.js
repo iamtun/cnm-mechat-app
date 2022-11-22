@@ -48,6 +48,7 @@ function GroupChatScreen({ navigation }) {
             dispatch(conversationsSlice.actions.clickGroupChat(0));
             navigation.navigate('MessageScreen', {
                 id: conversation.id,
+                createdBy: conversation.createdBy,
                 name: conversation.name,
                 members: conversation.members,
                 image: conversation.imageLinkOfConver,
