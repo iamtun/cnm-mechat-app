@@ -195,7 +195,6 @@ export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', asy
             body: JSON.stringify({ status, userDeleteId }),
         });
         const dataDeleteFriend = await res.json();
-        console.log('dataDeleteFriend ->', dataDeleteFriend);
         return dataDeleteFriend;
     } catch (err) {
         console.warn(`[fetchDeleteFriend]: ${err}`);

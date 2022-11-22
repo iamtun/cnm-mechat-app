@@ -159,15 +159,10 @@ export const getConversationIdByIdFriendSelector = createSelector(
     friendIdSelector,
     conversationsListSelector,
     (friendId, conversations) => {
-        console.log('friendIdSelector selector', friendId);
 
         const conversation = conversations.filter((_conversation) => {
-            // if (_conversation.isGroup == false && _conversation.members.includes(friendId)) {
-            //     return _conversation;
-            // }
             return _conversation.isGroup == false && _conversation.members.includes(friendId)
         });
-        console.log('---------selector ->', conversation);
         if (conversation.length > 0) {
             
             return conversation[0];

@@ -18,7 +18,6 @@ import Header from '../../../components/Header';
 import { fetchUpdateAvatarUsers, fetchUpdateBackgroundUsers } from '../../../redux/slice/userInfoSlice';
 import { useState } from 'react';
 import { socket } from '../../../config';
-import conversationsSlice from '../../../redux/slice/conversationSlice';
 import { fetchMessagesById } from '../../../redux/slice/messageSlice';
 moment().format();
 
@@ -35,6 +34,7 @@ function PersonalScreen({ route, navigation }) {
     const listFriendSend = useSelector(friendListFriendSendSelector);
 
     const [isClick, setIsClick] = useState(false);
+
     // list idFriendRequest and id receiver
     let idFriendRequest;
     let listIdReceiver = [];
@@ -94,13 +94,11 @@ function PersonalScreen({ route, navigation }) {
         }
     }, [listFriendSend]);
 
-    console.log('conversation personal screen', conversation);
 
     //change screen message
     useEffect(() => {
         console.log( conversation);
         if (conversation && isClick) {
-            console.log(conversation.id);
             dispatch(fetchMessagesById({id: conversation.id}));
             navigation.navigate('MessageScreen', {
                 id: conversation.id,
@@ -111,12 +109,9 @@ function PersonalScreen({ route, navigation }) {
         }
     }, [isClick]);
 
-    console.log('infoMe', infoMe);
     //sen chat
     const handleSendChat = () => {
-        console.log('id me personal', infoMe[0]._id);
         dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
-        
         setIsClick(true)
     };
 

@@ -20,7 +20,6 @@ function MessageScreen({ route, navigation }) {
     
     // const isFocus = useIsFocused();
     const messages = useSelector(getMessageByIdConversationSelector);
-    console.log(messages);
     const isLoading = useSelector(messageLoadingSelector);
 
     useEffect(() => {
