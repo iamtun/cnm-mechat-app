@@ -12,7 +12,7 @@ import { Platform } from 'react-native';
 function ReportScreen({ navigation, route }) {
     const [image, setImage] = useState('');
     const [content, setContent] = useState('');
-    const { message } = route.params;
+    const { message, senderId } = route.params;
 
     const dispatch = useDispatch();
 
@@ -49,6 +49,7 @@ function ReportScreen({ navigation, route }) {
         const data = {
             imageLink: image,
             messageId: message._id,
+            senderId,
             contentReport: content,
             navigation: navigation,
         };

@@ -133,7 +133,7 @@ const conversationsSlice = createSlice({
                 const { id } = action.payload;
                 const index = state.data.findIndex((_conversation) => _conversation.id === id);
                 state.data.splice(index, 1);
-            });;
+            });
     },
 });
 
@@ -259,19 +259,23 @@ export const fetchAddMembers = createAsyncThunk('conversations/fetchAddMembers',
 });
 
 export const fetchChangeNameGroup = createAsyncThunk('conversations/fetchChangeNameGroup', async (data) => {
-    const { idConversation } = data;
-    const { newName, userId } = data;
+    try {
+        const { idConversation } = data;
+        const { newName, userId } = data;
 
-    const response = await fetch(`${config.LINK_API}/conversations/change-name/${idConversation}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ newName, userId }),
-    });
+        const response = await fetch(`${config.LINK_API}/conversations/change-name/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ newName, userId }),
+        });
 
-    const jsonData = await response.json();
-    return jsonData;
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.log(`err fetchChangeNameGroup: ${error}`);
+    }
 });
 
 export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdateAvatarGroup', async (data) => {
@@ -297,68 +301,87 @@ export const fetchUpdateAvatarGroup = createAsyncThunk('conversations/fetchUpdat
 });
 
 export const fetchDeleteConversations = createAsyncThunk('conversations/fetchDeleteConversations', async (data) => {
-    const { idConversation } = data;
-    const { mainId } = data;
+    try {
+        const { idConversation } = data;
+        const { mainId } = data;
 
-    const response = await fetch(`${config.LINK_API}/conversations/delete-conversation/${idConversation}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ mainId }),
-    });
+        const response = await fetch(`${config.LINK_API}/conversations/delete-conversation/${idConversation}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ mainId }),
+        });
 
-    const jsonData = await response.json();
-    //console.log('jsonData', jsonData);
-    return jsonData;
+        const jsonData = await response.json();
+        //console.log('jsonData', jsonData);
+        return jsonData;
+    } catch (error) {
+        console.log(`err fetchDeleteConversations: ${error}`);
+    }
 });
 
 export const fetchBlockConversation = createAsyncThunk('conversations/fetchBlockConversation', async (data) => {
-    const { idConversation } = data;
-    const { userId } = data;
+    try {
+        const { idConversation } = data;
+        const { userId } = data;
 
-    const response = await fetch(`${config.LINK_API}/conversations/block-conversation/${idConversation}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-    });
+        const response = await fetch(`${config.LINK_API}/conversations/block-conversation/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }),
+        });
 
-    const jsonData = await response.json();
-    return jsonData;
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.log(`err fetchBlockConversation: ${error}`);
+    }
 });
 
 export const fetchUnBlockConversation = createAsyncThunk('conversations/fetchUnBlockConversation', async (data) => {
-    const { idConversation } = data;
-    const { userId } = data;
+    try {
+        const { idConversation } = data;
+        const { userId } = data;
 
-    const response = await fetch(`${config.LINK_API}/conversations/remove-block-conversation/${idConversation}`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-    });
+        const response = await fetch(`${config.LINK_API}/conversations/remove-block-conversation/${idConversation}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId }),
+        });
 
-    const jsonData = await response.json();
-    return jsonData;
+        const jsonData = await response.json();
+        return jsonData;
+    } catch (error) {
+        console.log(`err fetchUnBlockConversation: ${error}`);
+    }
 });
 
-export const fetchDeleteConversationYourSide =  createAsyncThunk('conversations/fetchDeleteConversationYourSide', async (data) => {
-    const { idConversation } = data;
-    const { userId } = data;
+export const fetchDeleteConversationYourSide = createAsyncThunk(
+    'conversations/fetchDeleteConversationYourSide',
+    async (data) => {
+        try {
+            const { idConversation } = data;
+            const { userId } = data;
 
-    const response = await fetch(`${config.LINK_API}/conversations/delete-for-you/${idConversation}`, {
-        method: 'DELETE',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ userId }),
-    });
+            const response = await fetch(`${config.LINK_API}/conversations/delete-for-you/${idConversation}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId }),
+            });
 
-    const id = await response.json();
-    return id;
-});
+            const id = await response.json();
+            return id;
+        } catch (error) {
+            console.log(`err fetchDeleteConversationYourSide: ${error}`);
+        }
+    },
+);
 
 export default conversationsSlice;

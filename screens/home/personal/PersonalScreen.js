@@ -4,11 +4,12 @@ import React from 'react';
 import { TouchableOpacity } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
+    friendListFriendSendSelector,
     getConversationIdByIdFriendSelector,
     searchItemClickSelector,
     userInfoSelector,
 } from '../../../redux/selector';
-import friendListSlice from '../../../redux/slice/friendSlice';
+import friendListSlice, { fetchBackFriendRequest, fetchFriendsRequest } from '../../../redux/slice/friendSlice';
 import * as ImagePicker from 'expo-image-picker';
 
 import moment from 'moment';
@@ -16,17 +17,33 @@ import { useEffect } from 'react';
 import Header from '../../../components/Header';
 import { fetchUpdateAvatarUsers, fetchUpdateBackgroundUsers } from '../../../redux/slice/userInfoSlice';
 import { useState } from 'react';
+import { socket } from '../../../config';
+import { fetchMessagesById } from '../../../redux/slice/messageSlice';
 moment().format();
 
 function PersonalScreen({ route, navigation }) {
     const dispatch = useDispatch();
-    
+
     const [isMe, setIsMe] = useState(route.params.isMe);
+    const [isRequest, setIsRequest] = useState(false);
     let isRegister = route.params?.isRegister;
 
     // selector
     const infoSelf = useSelector(userInfoSelector);
     const conversation = useSelector(getConversationIdByIdFriendSelector);
+    const listFriendSend = useSelector(friendListFriendSendSelector);
+
+    const [isClick, setIsClick] = useState(false);
+
+    // list idFriendRequest and id receiver
+    let idFriendRequest;
+    let listIdReceiver = [];
+
+    useEffect(() => {
+        socket.on('remove_request', (_id) => {
+            dispatch(friendListSlice.actions.updateFriendRequestSendFromSocket(_id));
+        });
+    }, []);
 
     //data info user
     let userInfo;
@@ -57,10 +74,32 @@ function PersonalScreen({ route, navigation }) {
         });
     }
 
+    //set list id receiver
+    for (let item of listFriendSend) {
+        listIdReceiver.push(item.receiverId);
+        if (item.receiverId === infoMe[0]._id) {
+            idFriendRequest = item.idFriendRequest;
+        }
+    }
+
+    useEffect(() => {
+        if (listIdReceiver.length > 0) {
+            if (listIdReceiver.includes(infoMe[0]._id)) {
+                setIsRequest(true);
+            } else {
+                setIsRequest(false);
+            }
+        } else {
+            setIsRequest(false);
+        }
+    }, [listFriendSend]);
+
+
     //change screen message
     useEffect(() => {
-        if (conversation) {
-            dispatch(friendListSlice.actions.clickSendChat(null));
+        console.log( conversation);
+        if (conversation && isClick) {
+            dispatch(fetchMessagesById({id: conversation.id}));
             navigation.navigate('MessageScreen', {
                 id: conversation.id,
                 name: conversation.name,
@@ -68,11 +107,12 @@ function PersonalScreen({ route, navigation }) {
                 image: conversation.imageLinkOfConver,
             });
         }
-    }, [conversation]);
+    }, [isClick]);
 
     //sen chat
     const handleSendChat = () => {
         dispatch(friendListSlice.actions.clickSendChat(infoMe[0]._id));
+        setIsClick(true)
     };
 
     // update info
@@ -115,6 +155,29 @@ function PersonalScreen({ route, navigation }) {
         }
     };
 
+    //send friend request
+    const _handleSendRequest = () => {
+        //Set data for send require make friend
+        const data = {
+            senderID: infoSelf._id,
+            receiverID: infoMe[0]._id,
+        };
+        // console.log("Data", data);
+        setIsRequest(true);
+        dispatch(fetchFriendsRequest(data));
+    };
+
+    //Close request make friend
+    const _handleCloseRequest = () => {
+        setIsRequest(false);
+        const data = {
+            friendRequestID: idFriendRequest,
+            status: isRequest,
+            senderID: infoSelf._id,
+        };
+        dispatch(fetchBackFriendRequest(data));
+    };
+
     //UI
     return (
         <>
@@ -152,9 +215,17 @@ function PersonalScreen({ route, navigation }) {
                     </View>
                     {!isMe ? (
                         !infoMe[0].isFriend ? (
-                            <TouchableOpacity style={styles.buttonMakeFriend}>
-                                <Icon style={{ marginRight: 10 }} name="person-add-outline" color="#4ACFED" size={20} />
-                                <Text>Kết bạn</Text>
+                            <TouchableOpacity
+                                style={styles.buttonMakeFriend}
+                                onPress={() => (isRequest ? _handleCloseRequest() : _handleSendRequest())}
+                            >
+                                <Icon
+                                    style={{ marginRight: 10 }}
+                                    name={isRequest ? 'close' : 'person-add-outline'}
+                                    color="#4ACFED"
+                                    size={20}
+                                />
+                                <Text>{isRequest ? 'Thu hồi' : 'Kết bạn'}</Text>
                             </TouchableOpacity>
                         ) : (
                             <TouchableOpacity

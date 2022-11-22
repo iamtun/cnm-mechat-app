@@ -145,6 +145,7 @@ function AuthenticationScreen({ route, navigation }) {
                 style={[GlobalStyle.textSize, styles.textInput]}
                 value={code}
                 onChangeText={handleTextChange}
+                editable = {counter == 0 ? false: true}
                 {...(Platform.OS === 'ios' ? { keyboardType: 'number-pad' } : { keyboardType: 'number-pad' })}
             />
 

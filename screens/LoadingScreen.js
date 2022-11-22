@@ -33,7 +33,6 @@ function LoadingScreen({ navigation, route }) {
                             dispatch(fetchUserInfo(token));
                             return;
                         }
-                        
                     }
                 })
                 .catch((err) => {
