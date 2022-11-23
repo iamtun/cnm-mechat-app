@@ -121,7 +121,7 @@ function RegisterScreen({ navigation }) {
     const _handleRegister = async () => {
         const userPhone = await getUserByPhoneNumber();
         if (isPolicy == false) {
-            setErrPolicy('Vui lòng đọc chính sách trước khi đăng ký');
+            setErrPolicy('Vui lòng đồng ý chính sách trước khi đăng ký');
         } else{
             setErrPolicy(null)
         }
