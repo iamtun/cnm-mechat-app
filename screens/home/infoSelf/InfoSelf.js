@@ -10,6 +10,8 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUpdateInfoUsers } from '../../../redux/slice/userInfoSlice';
 import { userInfoSelector } from '../../../redux/selector';
+import useDebounce from '../../../hooks/useDebounce';
+import { useEffect } from 'react';
 
 export default function InfoSelf({ route, navigation }) {
     const dispatch = useDispatch();
@@ -23,6 +25,19 @@ export default function InfoSelf({ route, navigation }) {
     const [textName, setTextName] = useState(userInfo.fullName);
     const [textBio, setTextBio] = useState(userInfo.bio);
     const [chosenOption, setChosenOption] = useState(userInfo.gender);
+    const [errUserName, setErrUserName] = useState(null);
+
+    console.log('textName', textName);
+    const debouncedUseName = useDebounce(textName, 500);
+
+    // check username register
+    useEffect(() => {
+        if (textName === '') {
+            setErrUserName('Vui lòng nhập tên người dùng');
+        } else {
+            setErrUserName(null);
+        }
+    }, [debouncedUseName]);
 
     //selected
     const options = [
@@ -41,8 +56,13 @@ export default function InfoSelf({ route, navigation }) {
 
     // update info
     const _handleUpdateInfo = () => {
-        dispatch(fetchUpdateInfoUsers(data));
-        navigation.navigate('PersonalScreen', { isMe: true, isRegister: isRegister });
+        if (textName === null) {
+            setTextName('');
+        } else if (errUserName != null) {
+        } else {
+            dispatch(fetchUpdateInfoUsers(data));
+            navigation.navigate('PersonalScreen', { isMe: true, isRegister: isRegister });
+        }
     };
 
     //UI
@@ -71,7 +91,7 @@ export default function InfoSelf({ route, navigation }) {
                                 value={textName}
                                 onChangeText={(value) => setTextName(value)}
                             ></TextInput>
-
+                           {errUserName ? (<Text style={{color: 'red', marginRight: "45%" }}>{errUserName}</Text>) : (null)} 
                             <TextInput
                                 value={textBio}
                                 style={styles.input}
@@ -87,7 +107,8 @@ export default function InfoSelf({ route, navigation }) {
                                 <DatePicker
                                     mode="calendar"
                                     selected={getFormatedDate(userInfo.birthday, 'YYYY/MM/DD')}
-                                    selectorStartingYear={2000}
+                                    selectorStartingYear={1967}
+                                    selectorEndingYear={2012}
                                     onSelectedChange={(date) => setSelectedDate(date)}
                                     locale="vie"
                                 />

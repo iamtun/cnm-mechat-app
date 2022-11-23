@@ -12,6 +12,7 @@ import { Alert } from 'react-native';
 import { useEffect } from 'react';
 import { useState } from 'react';
 import config from '../../../config';
+import { setItem } from '../../../utils/asyncStorage';
 
 function ReplacePassWord({ route, navigation }) {
     const dispatch = useDispatch();
@@ -26,6 +27,7 @@ function ReplacePassWord({ route, navigation }) {
     const [errPass, setErrPass] = useState(null);
     const [errPassOld, setErrPassOld] = useState(null);
     const [errPassAgain, setErrPassAgain] = useState(null);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const debouncedPass = useDebounce(password, 500);
     const debouncedPassAgain = useDebounce(passwordAgain, 500);
@@ -79,6 +81,64 @@ function ReplacePassWord({ route, navigation }) {
         }
     }, [debouncedPassAgain]);
 
+    
+    
+    // function fetch sign with api
+    const signWithNewPass = () => {
+        return fetch(`${config.LINK_API}/auths/login`, {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-type': 'application/json',
+            },
+            body: JSON.stringify({
+                phoneNumber: phoneNumber,
+                passWord: passwordAgain,
+            }),
+        })
+            .then((res) => res.json())
+            .then((resData) => {
+                if (resData.status == 'success') {
+                    return resData._token;
+                }
+                if (resData?.error.statusCode === 403) throw new Error(403);
+                if (resData?.error.statusCode === 402) throw new Error(402);
+            });
+    };
+
+    const _handleLogin = () => {
+        signWithNewPass()
+            .then((token) => {
+                setItem('user_token', token)
+                    .then((key) => {
+                        console.log(`save ${key} success!`);
+                        navigation.navigate('LoadingScreen');
+                    })
+                    .catch((err) => {
+                        console.log(`save ${key} err!`, err);
+                    });
+            })
+            .catch((err) => {
+                if (err.message === '403') {
+                    console.log('Sai mật khẩu');
+                }
+                if (err.message === '402') {
+                    console.log('Số điện thoại này chưa đăng ký tài khoản');
+                }
+            });
+    };
+
+    // login
+    useEffect(() => {
+        if(isSuccess) {
+            console.log("Ok");
+            const handle = setTimeout(() => {
+                console.log("No ok");
+                _handleLogin();
+            }, 2000)
+        }
+    },[isSuccess])
+
     //button forgot pass
     const _handleForgotPass = () => {
         if (password === null) {
@@ -91,7 +151,7 @@ function ReplacePassWord({ route, navigation }) {
             const data = { phoneNumber: phoneNumber, newPassword: passwordAgain };
             dispatch(fetchForgetPassword(data));
             Alert.alert('Đổi mật khẩu thành công');
-            navigation.navigate('LoginScreen');
+            setIsSuccess(true)
         }
     };
 
@@ -148,7 +208,7 @@ function ReplacePassWord({ route, navigation }) {
                             placeholder="Nhập mật khẩu hiện tại"
                             isPass={true}
                         />
-                        <Text style={{ marginLeft: 15, color: 'red' }}>{errPassOld}</Text>
+                        {errPassOld ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPassOld}</Text> : null}
                     </View>
                 ) : null}
                 <TextInputPrimary
@@ -158,7 +218,7 @@ function ReplacePassWord({ route, navigation }) {
                     placeholder="Nhập mật khẩu mới"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>
+                {errPass ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text> : null}
                 <TextInputPrimary
                     onChange={(value) => {
                         setPasswordAgain(value);
@@ -166,7 +226,7 @@ function ReplacePassWord({ route, navigation }) {
                     placeholder="Nhập lại mật khẩu"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text>
+                {errPassAgain ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text> : null}
 
                 <ButtonPrimary title="Xác nhận" onPress={isChange ? _handleChangePass : _handleForgotPass} />
             </View>

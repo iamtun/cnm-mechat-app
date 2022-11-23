@@ -23,6 +23,10 @@ const styles = StyleSheet.create({
     enterData: {
         marginTop: 10,
     },
+    policy: {
+        marginLeft: 250,
+        bottom: "8%",
+    }
 });
 
 export default styles;

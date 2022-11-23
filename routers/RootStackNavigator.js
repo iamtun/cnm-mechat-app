@@ -21,6 +21,7 @@ import NewGroupChat from '../screens/home/groupChat/NewGroupChat';
 import ViewFileScreen from '../screens/home/messages/ViewFileScreen';
 import AllMembers from '../screens/home/detailChat/detailGroup/AllMembers';
 import ReportScreen from '../screens/home/messages/ReportScreen';
+import PolicyScreen from '../screens/home/policy/PolicyScreen';
 const Stack = createNativeStackNavigator();
 
 function RootStackNavigator() {
@@ -55,6 +56,8 @@ function RootStackNavigator() {
                 <Stack.Screen name='ViewFileScreen' component={ViewFileScreen}/>
                 <Stack.Screen name='AllMembers' component={AllMembers}/>
                 <Stack.Screen name='ReportScreen' component={ReportScreen}/>
+                <Stack.Screen name='PolicyScreen' component={PolicyScreen}/>
+
             </Stack.Navigator>
         </NavigationContainer>
     );
