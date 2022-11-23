@@ -28,7 +28,7 @@ function PhoneBookScreen({ navigation }) {
 
         socket.off('receive_friends');
         socket.on('receive_friends', (friends) => {
-            console.log('receive_friends', friends);
+            //console.log('receive_friends', friends);
             dispatch(userInfoSlice.actions.receiveFriendListFromSocket(friends));
         });
     }, []);

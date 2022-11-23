@@ -1,7 +1,15 @@
 # ME CHAT - APP
 
+## Cách chạy ứng dụng
+- Chạy dòng lệnh: `npm i` để cài đặt node_modules
+- Tạo file .env
+```js
+    LINK_API=LINK_API_PROVIDED
+```
+- Chạy dòng lệnh: `npm start`
+- Sử dụng điện thoại có cài phần mềm expo để quét mã QR
+- Tương tác với ứng dụng -> ✔
 ## Một số hướng dẫn và cách khắc phục lỗi trong khi phát triển ứng dụng:
-
 ### Dựng layout cho ứng dụng -> Sử dụng react-navigation
 
 -   Tạo các màn hình
