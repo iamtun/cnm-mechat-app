@@ -47,6 +47,9 @@ function LoadingScreen({ navigation, route }) {
                 ? navigation.navigate('InfoSelf', { screen: 'InfoSelf', isRegister: isRegister })
                 : navigation.navigate('HomeScreen', { screen: 'HomeScreen' });
         }
+        // else if(usersLoading === 2 && usersLoading === 403){
+        //     navigation.navigate('LoginScreen', { screen: 'LoginScreen' });
+        // }
     }, [isFocus, userInfoLoading, usersLoading]);
 
     return <Loading />;
