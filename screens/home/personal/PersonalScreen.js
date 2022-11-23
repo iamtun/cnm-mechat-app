@@ -97,7 +97,6 @@ function PersonalScreen({ route, navigation }) {
 
     //change screen message
     useEffect(() => {
-        console.log( conversation);
         if (conversation && isClick) {
             dispatch(fetchMessagesById({id: conversation.id}));
             navigation.navigate('MessageScreen', {

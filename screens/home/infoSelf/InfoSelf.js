@@ -87,7 +87,8 @@ export default function InfoSelf({ route, navigation }) {
                                 <DatePicker
                                     mode="calendar"
                                     selected={getFormatedDate(userInfo.birthday, 'YYYY/MM/DD')}
-                                    selectorStartingYear={2000}
+                                    selectorStartingYear={1967}
+                                    selectorEndingYear={2012}
                                     onSelectedChange={(date) => setSelectedDate(date)}
                                     locale="vie"
                                 />
