@@ -176,15 +176,19 @@ function NewGroupChat({ route, navigation }) {
 
     // move message
     const handleMoveMessage = () => {
-        const data = {
-            idConversation: idFriend,
-            idMessage: idMessage,
-            userId: _id,
-            navigation,
-        };
+        if (idFriend.length < 1) {
+            Alert.alert('Thông báo', 'Vui lòng chọn ít nhất một cuộc trò chuyện để chuyển tin nhắn');
+        } else {
+            const data = {
+                idConversation: idFriend,
+                idMessage: idMessage,
+                userId: _id,
+                navigation,
+            };
 
-       //console.log('data', data);
-        dispatch(moveMessage(data));
+            //console.log('data', data);
+            dispatch(moveMessage(data));
+        }
     };
 
     // render item
