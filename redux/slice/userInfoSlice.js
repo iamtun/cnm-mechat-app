@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import jwtDecode from 'jwt-decode';
+import { Alert } from 'react-native';
 import config, { socket, createFormDataUpdate } from '../../config';
+import { removeItem } from '../../utils/asyncStorage';
 
 const userInfoSlice = createSlice({
     name: 'info',
@@ -22,8 +24,27 @@ const userInfoSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchUserInfo.fulfilled, (state, action) => {
-                state.data = action.payload;
-                state.loading = 2;
+                const userInfo = action.payload;
+                //check status lock account
+                if (!userInfo.status) {
+                    state.loading = 0;
+                    removeItem('user_token');
+                    Alert.alert(
+                        'Thông báo',
+                        `Tài khoản của bạn bị khóa vì vi phạm chính sách của chúng tôi nhiều lần!`,
+                    );
+                    return;
+                } else {
+                    // check warning account
+                    if (userInfo.warning > 0) {
+                        Alert.alert(
+                            'Thông báo',
+                            ` Bạn đã vi phạm chính sách của chúng tôi ${userInfo.warning} lần. Vui lòng kiểm soát hoạt động của mình, xin cảm ơn!`,
+                        );
+                    }
+                    state.data = userInfo;
+                    state.loading = 2;
+                }
             })
             .addCase(fetchUserInfo.pending, (state, action) => {
                 state.loading = 1;
@@ -201,17 +222,16 @@ export const fetchDeleteFriend = createAsyncThunk('users/fetchDeleteFriend', asy
     }
 });
 
-
 export const fetchChangePass = createAsyncThunk('users/fetchChangePass', async (data) => {
     try {
-        const { userId, oldPass, newPassword,confirmNewPass } = data;
+        const { userId, oldPass, newPassword, confirmNewPass } = data;
 
         const res = await fetch(`${config.LINK_API}/accounts/change-password/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ oldPass, newPassword,confirmNewPass }),
+            body: JSON.stringify({ oldPass, newPassword, confirmNewPass }),
         });
         const changePass = await res.json();
         return changePass;

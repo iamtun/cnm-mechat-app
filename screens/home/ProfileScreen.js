@@ -44,8 +44,8 @@ function ProfileScreen({ navigation }) {
         Alert.alert('ĐĂNG XUẤT', 'Bạn có muốn đăng xuất?', [
             {
                 text: 'Có',
-                onPress: () => {
-                    logoutScreen();
+                onPress: async () => {
+                    await logoutScreen();
                 },
             },
             {
@@ -53,11 +53,11 @@ function ProfileScreen({ navigation }) {
             },
         ]);
     };
-    
+
     // change pass word
     const changePass = () => {
-        navigation.navigate("ReplacePassWord", {isChange: true, phoneNumber, userId: _userInfoSelector._id})
-    }
+        navigation.navigate('ReplacePassWord', { isChange: true, phoneNumber, userId: _userInfoSelector._id });
+    };
     // Render UI Item
     function getUserItem({ item: settings }) {
         return (
@@ -66,8 +66,8 @@ function ProfileScreen({ navigation }) {
                     if (settings.key == 'iaT1Ex') {
                         showConfirmDialog();
                     }
-                    if(settings.key == 'zqsiEw'){
-                        changePass()
+                    if (settings.key == 'zqsiEw') {
+                        changePass();
                     }
                 }}
             >
