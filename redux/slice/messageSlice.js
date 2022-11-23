@@ -67,7 +67,7 @@ const messageListSlice = createSlice({
                     socket.emit('send_message', { message: action.payload });
                     state.data.unshift(action.payload);
                 } else {
-                    Alert.alert('Thông báo', 'File này không gửi được');
+                    Alert.alert('Thông báo', 'File này lớn hơn 5 MB nên không gửi được');
                 }
             })
             .addCase(recallMessage.fulfilled, (state, action) => {
