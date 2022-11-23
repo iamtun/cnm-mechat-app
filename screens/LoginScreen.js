@@ -109,11 +109,13 @@ function LoginScreen({ navigation }) {
     return (
         <View style={GlobalStyle.container}>
             {/*  logo  */}
+            <TouchableOpacity style = {LoginStyles.policy} onPress={() => {navigation.navigate("PolicyScreen")}}>
+                    <Text style={{textDecorationLine: 'underline'}}>Chính sách</Text>
+            </TouchableOpacity>
             <View style={LoginStyles.logo}>
                 <Image style={LoginStyles.img} source={require('../assets/mechat-logo.png')} />
                 <Text style={LoginStyles.title}>Đăng nhập</Text>
                 <Text style={LoginStyles.subtitle}>Chào mừng bạn đến với MeChat</Text>
-                <Text style={{ color: 'red' }}>{errAccount}</Text>
             </View>
             {/* Login */}
             <View style={LoginStyles.enterData}>
@@ -129,7 +131,8 @@ function LoginScreen({ navigation }) {
                     placeholder="Nhập số điện thoại"
                     keyboardType="number-pad"
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text>
+                {errPhone ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text>) : (null)}
+                {errAccount ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errAccount}</Text>) : (null)}
                 <TextInputPrimary
                     value={password}
                     onChange={(value) => {
@@ -139,7 +142,8 @@ function LoginScreen({ navigation }) {
                     placeholder="Mật khẩu"
                     isPass
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>
+                {errPass ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>) : (null)}
+
                 <View style={styles.newData}>
                     <TouchableOpacity
                         onPress={() => {

@@ -11,9 +11,10 @@ import ButtonPrimary from '../components/Buttons/ButtonPrimary';
 import TextInputPrimary from '../components/Inputs/TextInputPrimary';
 import useDebounce from '../hooks/useDebounce';
 import { useEffect } from 'react';
+import { CheckBox } from 'react-native-elements/dist/checkbox/CheckBox';
+import { TouchableOpacity } from 'react-native';
 
 function RegisterScreen({ navigation }) {
-    
     //ui state
     const [phoneNumber, setPhoneNumber] = useState(null);
     const [userName, setUserName] = useState(null);
@@ -23,6 +24,9 @@ function RegisterScreen({ navigation }) {
     const [errUserName, setErrUserName] = useState(null);
     const [errPass, setErrPass] = useState(null);
     const [errPassAgain, setErrPassAgain] = useState(null);
+    const [errPolicy, setErrPolicy] = useState(null);
+    const [isPolicy, setIsPolicy] = useState(false);
+    const [successPolicy, setSuccessPolicy] = useState(null)
 
     const debouncedPhone = useDebounce(phoneNumber, 500);
     const debouncedUseName = useDebounce(userName, 500);
@@ -71,6 +75,16 @@ function RegisterScreen({ navigation }) {
         }
     }, [debouncedPassAgain]);
 
+    // check policy
+    useEffect(() => {
+        if (isPolicy === false ) {
+            setSuccessPolicy('No success!')
+        } else {
+            setErrPolicy(null)
+            setSuccessPolicy(null);
+        }
+    }, [isPolicy]);
+
     //firebase captcha
     const recaptchaVerifier = useRef(null);
     const [verificationId, setVerificationId] = useState(null);
@@ -105,6 +119,11 @@ function RegisterScreen({ navigation }) {
     //function register with check error, api, senOTP
     const _handleRegister = async () => {
         const userPhone = await getUserByPhoneNumber();
+        if (isPolicy == false) {
+            setErrPolicy('Vui lòng đọc chính sách trước khi đăng ký');
+        } else{
+            setErrPolicy(null)
+        }
 
         if (phoneNumber === null) {
             setPhoneNumber('');
@@ -119,7 +138,13 @@ function RegisterScreen({ navigation }) {
             setPasswordAgain('');
         } else if (userPhone) {
             setErrPhone('Số điện thoại đã đăng ký tài khoản');
-        } else if (errPhone != null || errPass != null || errUserName != null || errPassAgain != null) {
+        } else if (
+            errPhone != null ||
+            errPass != null ||
+            errUserName != null ||
+            errPassAgain != null ||
+            successPolicy != null
+        ) {
         } else {
             senOTP()
                 .then((otp) => {
@@ -166,7 +191,7 @@ function RegisterScreen({ navigation }) {
                     placeholder="Số điện thoại"
                     isPass={false}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text>
+                {errPhone ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text> : null}
                 <TextInputPrimary
                     onChange={(value) => {
                         setUserName(value);
@@ -174,7 +199,7 @@ function RegisterScreen({ navigation }) {
                     placeholder="Tên người dùng"
                     isPass={false}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errUserName}</Text>
+                {errUserName ? <Text style={{ marginLeft: 15, color: 'red' }}>{errUserName}</Text> : null}
                 <TextInputPrimary
                     onChange={(value) => {
                         setPassword(value);
@@ -182,7 +207,7 @@ function RegisterScreen({ navigation }) {
                     placeholder="Nhập mật khẩu"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>
+                {errPass ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text> : null}
                 <TextInputPrimary
                     onChange={(value) => {
                         setPasswordAgain(value);
@@ -190,7 +215,30 @@ function RegisterScreen({ navigation }) {
                     placeholder="Nhập lại mật khẩu"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text>
+                {errPassAgain ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text> : null}
+
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CheckBox
+                        checkedColor="green"
+                        textStyle={{ color: isPolicy ? 'green' : 'black' }}
+                        title="Đồng ý chính sách"
+                        checked={isPolicy}
+                        containerStyle={{ width: '55%' }}
+                        onPress={() => {
+                            setIsPolicy(!isPolicy);
+                        }}
+                    />
+                    <TouchableOpacity
+                        style={{ marginLeft: '3%' }}
+                        onPress={() => {
+                            navigation.navigate('PolicyScreen');
+                        }}
+                    >
+                        <Text style={{ textDecorationLine: 'underline' }}>Chính sách</Text>
+                    </TouchableOpacity>
+                </View>
+                {errPolicy ? <Text style={{ marginLeft: 15, color: 'red' }}>{errPolicy}</Text> : null}
+
                 <ButtonPrimary
                     title="Đăng ký"
                     onPress={() => {
@@ -198,6 +246,7 @@ function RegisterScreen({ navigation }) {
                     }}
                 />
             </View>
+
             {Platform.OS === 'ios' ? (
                 <KeyboardAvoidingView behavior="padding" keyboardVerticalOffset={20} />
             ) : (

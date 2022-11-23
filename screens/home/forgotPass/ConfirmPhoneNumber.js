@@ -117,7 +117,7 @@ function ConfirmPhoneNumber({ navigation }) {
                     placeholder="Số điện thoại"
                     keyboardType="number-pad"
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text>
+                {errPhone ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPhone}</Text>) : (null)}
                 <ButtonPrimary title="Tiếp tục" onPress={_handleForgotPass} />
             </View>
             <TouchableOpacity

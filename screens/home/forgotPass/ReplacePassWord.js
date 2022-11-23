@@ -148,7 +148,7 @@ function ReplacePassWord({ route, navigation }) {
                             placeholder="Nhập mật khẩu hiện tại"
                             isPass={true}
                         />
-                        <Text style={{ marginLeft: 15, color: 'red' }}>{errPassOld}</Text>
+                       {errPassOld ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPassOld}</Text>) : (null)} 
                     </View>
                 ) : null}
                 <TextInputPrimary
@@ -158,7 +158,7 @@ function ReplacePassWord({ route, navigation }) {
                     placeholder="Nhập mật khẩu mới"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>
+                 {errPass ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPass}</Text>) : (null)} 
                 <TextInputPrimary
                     onChange={(value) => {
                         setPasswordAgain(value);
@@ -166,7 +166,7 @@ function ReplacePassWord({ route, navigation }) {
                     placeholder="Nhập lại mật khẩu"
                     isPass={true}
                 />
-                <Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text>
+                {errPassAgain ? (<Text style={{ marginLeft: 15, color: 'red' }}>{errPassAgain}</Text>) : (null)} 
 
                 <ButtonPrimary title="Xác nhận" onPress={isChange ? _handleChangePass : _handleForgotPass} />
             </View>
