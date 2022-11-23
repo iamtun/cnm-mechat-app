@@ -109,9 +109,6 @@ function LoginScreen({ navigation }) {
     return (
         <View style={GlobalStyle.container}>
             {/*  logo  */}
-            <TouchableOpacity style = {LoginStyles.policy} onPress={() => {navigation.navigate("PolicyScreen")}}>
-                    <Text style={{textDecorationLine: 'underline'}}>Chính sách</Text>
-            </TouchableOpacity>
             <View style={LoginStyles.logo}>
                 <Image style={LoginStyles.img} source={require('../assets/mechat-logo.png')} />
                 <Text style={LoginStyles.title}>Đăng nhập</Text>
