@@ -48,6 +48,7 @@ function MessageInputBox({ conversationId, blockBy }) {
             setIsWrite(false);
         } else {
             //send white space
+            setMessage('');
             setIsWrite(false);
         }
     };
@@ -66,6 +67,7 @@ function MessageInputBox({ conversationId, blockBy }) {
             });
 
             if (!result.cancelled) {
+                let isTrue = true;
                 const images = result.selected.map((image) => {
                     const fileMB = image.fileSize / 1024 / 1024;
                     // console.log(fileMB);
@@ -73,11 +75,15 @@ function MessageInputBox({ conversationId, blockBy }) {
                     if (fileMB < 5) {
                         return image.uri;
                     } else {
-                        Alert.alert('Thông báo', 'Ảnh bạn gửi lớn hơn 5MB, vui lòng chọn ảnh khác!');
+                        isTrue = false;
+                        Alert.alert('Thông báo', 'Tệp đa phương tiện bạn gửi lớn hơn 5MB, vui lòng chọn ảnh khác!');
                     }
                 });
-                const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
-                dispatch(sendImageMessage(data));
+
+                if (isTrue) {
+                    const data = { senderID: userInfo._id, conversationID: conversationId, imageLinks: images };
+                    dispatch(sendImageMessage(data));
+                }
             }
         } else if (Platform.OS === 'android') {
             let result = await ImagePicker.launchImageLibraryAsync({
