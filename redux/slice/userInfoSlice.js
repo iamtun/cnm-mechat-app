@@ -179,13 +179,15 @@ export const fetchUpdateBackgroundUsers = createAsyncThunk('info/fetchUpdateBack
 
 export const fetchForgetPassword = createAsyncThunk('info/fetchForgetPassword', async (data) => {
     try {
-        await fetch(`${config.LINK_API}/accounts/forget-password`, {
+        const json = await fetch(`${config.LINK_API}/accounts/forget-password`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
         });
+        const background = await json.json();
+        console.log("json",background);
     } catch (err) {
         console.log(`err fetch users: ${err}`);
     }
