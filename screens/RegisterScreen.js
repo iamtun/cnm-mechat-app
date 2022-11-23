@@ -28,6 +28,7 @@ function RegisterScreen({ navigation }) {
     const [isPolicy, setIsPolicy] = useState(false);
     const [successPolicy, setSuccessPolicy] = useState(null)
 
+    //double text
     const debouncedPhone = useDebounce(phoneNumber, 500);
     const debouncedUseName = useDebounce(userName, 500);
     const debouncedPass = useDebounce(password, 500);
