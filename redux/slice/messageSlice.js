@@ -84,7 +84,7 @@ const messageListSlice = createSlice({
             .addCase(moveMessage.fulfilled, (state, action) => {
                 const {messages, navigation} = action.payload;
                 messages.forEach((message) => {
-                    console.log(message);
+                    //console.log(message);
                     socket.emit('send_message', { message: message });
                 });
 
@@ -202,7 +202,7 @@ export const sendFile = createAsyncThunk('message/sendFile', async (message) => 
         const _message = await res.json();
         // console.log(_message);
         if (_message?._id) {
-            console.log('file message -> ', _message);
+            //console.log('file message -> ', _message);
             return _message;
         } else {
             // console.log(_message);
