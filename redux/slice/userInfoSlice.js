@@ -65,11 +65,11 @@ const userInfoSlice = createSlice({
                 state.data = action.payload;
             })
             .addCase(fetchDeleteFriend.fulfilled, (state, action) => {
-                const { conversationDeleted, idReceive, idSender, listFriendsUser, listFriendsUserDelete } =
+                const { conversationDeleted, idReceiver, idSender, listFriendsUser, listFriendsUserDelete } =
                     action.payload;
                 //update friends after delete
                 state.data.friends = listFriendsUser;
-                const request = { idReceive, conversationDeleted, idSender, listFriendsUserDelete };
+                const request = { idReceiver, conversationDeleted, idSender, listFriendsUserDelete };
                 socket.emit('delete_friend', { request });
             })
             .addCase(fetchChangePass.fulfilled, (state, action) => {

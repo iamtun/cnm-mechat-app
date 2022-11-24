@@ -28,7 +28,6 @@ export default function DetailChat({ route, navigation }) {
 
     const { isGroup, members, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
-
     //use state
     const [isOutGroup, setIsOutGroup] = useState(false);
     const [modalVisible, setModalVisible] = useState(false);

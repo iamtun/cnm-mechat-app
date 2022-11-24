@@ -17,7 +17,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { Alert } from 'react-native';
-import { fetchAddMembers, fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
+import conversationsSlice, { fetchAddMembers, fetchCreateGroupChat } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
 import filterSlice from '../../../redux/slice/filterSlice';
 import { moveMessage } from '../../../redux/slice/messageSlice';
@@ -41,10 +41,6 @@ function NewGroupChat({ route, navigation }) {
 
     // text name group
     const [nameGroup, setNameGroup] = useState(null);
-
-    // is create group
-    const [isCreateGroup, setIsCreateGroup] = useState(false);
-    const debounceGroup = useDebounce(isCreateGroup, 2000);
 
     // list all friends
     const friends = useSelector(getFriendsByUserSelector);
@@ -144,7 +140,6 @@ function NewGroupChat({ route, navigation }) {
             };
             dispatch(fetchCreateGroupChat(data));
             // navigation.navigate("HomeScreen");
-            setIsCreateGroup(true);
         }
     };
 
@@ -157,12 +152,11 @@ function NewGroupChat({ route, navigation }) {
         };
 
         dispatch(fetchAddMembers(data));
-        setIsCreateGroup(true);
     };
 
     //change screen message
     useEffect(() => {
-        if (isCreateGroup) {
+        if (group) {
             navigation.navigate('MessageScreen', {
                 id: group.id,
                 isGroup: group.isGroup,
@@ -171,8 +165,9 @@ function NewGroupChat({ route, navigation }) {
                 image: group.imageLink,
                 createdBy: group.createdBy,
             });
+            dispatch(conversationsSlice.actions.resetNewGroup());
         }
-    }, [debounceGroup]);
+    }, [group]);
 
     // move message
     const handleMoveMessage = () => {

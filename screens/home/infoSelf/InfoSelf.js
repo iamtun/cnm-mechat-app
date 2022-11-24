@@ -27,7 +27,6 @@ export default function InfoSelf({ route, navigation }) {
     const [chosenOption, setChosenOption] = useState(userInfo.gender);
     const [errUserName, setErrUserName] = useState(null);
 
-    console.log('textName', textName);
     const debouncedUseName = useDebounce(textName, 500);
 
     // check username register
