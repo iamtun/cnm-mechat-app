@@ -131,9 +131,7 @@ function ReplacePassWord({ route, navigation }) {
     // login
     useEffect(() => {
         if(isSuccess) {
-            console.log("Ok");
             const handle = setTimeout(() => {
-                console.log("No ok");
                 _handleLogin();
             }, 2000)
         }
