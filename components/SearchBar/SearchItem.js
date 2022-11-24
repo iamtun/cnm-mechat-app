@@ -109,7 +109,6 @@ function SearchItem({
             memberId: id,
             mainId: _userInfoSelector._id,
         };
-
         dispatch(fetchRemoveMember(data));
         dispatch(conversationsSlice.actions.getMembers(members));
     };

@@ -66,6 +66,9 @@ const conversationsSlice = createSlice({
             const dataBlock = action.payload;
             handleUpdateBlockChat(state, dataBlock, 'socket');
         },
+        resetNewGroup: (state, action) => {
+            state.newGroup = null;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -83,6 +86,7 @@ const conversationsSlice = createSlice({
             .addCase(fetchCreateGroupChat.fulfilled, (state, action) => {
                 state.newGroup = action.payload;
                 state.data.unshift(action.payload);
+                // state.isCreating = true;
                 //console.log('create_group ->', action.payload);
                 socket.emit('create_group', { conversation: action.payload });
             })
@@ -102,7 +106,6 @@ const conversationsSlice = createSlice({
                 const index = state.members.findIndex((mem) => mem === memberRemove.idMember);
                 state.members.splice(index, 1);
                 socket.emit('block_user_in_group', { info: memberRemove });
-                //console.log('remove member -> ', memberRemove);
             })
             .addCase(fetchOutGroup.fulfilled, (state, action) => {
                 const info = action.payload;

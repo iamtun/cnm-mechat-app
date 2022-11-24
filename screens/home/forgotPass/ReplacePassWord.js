@@ -134,6 +134,8 @@ function ReplacePassWord({ route, navigation }) {
             const handle = setTimeout(() => {
                 _handleLogin();
             }, 2000)
+
+            return (() => setTimeout(handle))
         }
     },[isSuccess])
 

@@ -11,7 +11,7 @@ import Header from '../../../../components/Header';
 
 function AllMembers({ route, navigation }) {
     const dispatch = useDispatch();
-    
+
     const { createdBy, members, isGroup, idConversation } = route.params;
     let listMembers = [];
 
@@ -34,7 +34,11 @@ function AllMembers({ route, navigation }) {
             <Header />
             <View>
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => {navigation.goBack()}}>
+                    <TouchableOpacity
+                        onPress={() => {
+                            navigation.goBack();
+                        }}
+                    >
                         <Icon style={{ marginLeft: 10 }} name="arrow-back-outline" color="white" size={20} />
                     </TouchableOpacity>
                     <Text style={{ color: 'white', fontSize: 15, marginLeft: 10 }}>Danh sách thành viên</Text>
