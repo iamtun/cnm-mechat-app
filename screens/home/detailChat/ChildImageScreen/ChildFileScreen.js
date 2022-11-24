@@ -9,15 +9,18 @@ import { Linking } from 'react-native';
 function ChildImageScreen() {
     const allFile = useSelector(getFileMessage);
     let listFile = [];
-    
-    // Open file 
-    const handleOpenFile = async (fileUri) => {
-        const supported = await Linking.canOpenURL(fileUri);
 
-        if (supported) {
-            await Linking.openURL(fileUri);
-        } else {
-            Alert.alert(`Don't know how to open this URL: ${url}`);
+    // Open file
+    const handleOpenFile = async (fileUri) => {
+        if (Platform.OS === 'ios') navigation.navigate('ViewFileScreen', { link: fileUri });
+        else {
+            const supported = await Linking.canOpenURL(fileUri);
+
+            if (supported) {
+                await Linking.openURL(fileUri);
+            } else {
+                Alert.alert(`Don't know how to open this URL: ${url}`);
+            }
         }
     };
 
@@ -29,7 +32,7 @@ function ChildImageScreen() {
             listFile.push({
                 fileEx: fileEx,
                 fileName: fileName,
-                fileUri: file
+                fileUri: file,
             });
         }
     }
@@ -44,7 +47,12 @@ function ChildImageScreen() {
                         data={listFile}
                         keyExtractor={(item) => '#' + item.fileUri + Math.random()}
                         renderItem={({ item }) => (
-                            <TouchableOpacity style={styles.file} onPress={() => {handleOpenFile(item.fileUri)}}>
+                            <TouchableOpacity
+                                style={styles.file}
+                                onPress={() => {
+                                    handleOpenFile(item.fileUri);
+                                }}
+                            >
                                 <Image
                                     source={iconExtends.includes(item.fileEx) ? icons[item.fileEx] : icons['blank']}
                                     style={styles.icon}
@@ -55,8 +63,8 @@ function ChildImageScreen() {
                     />
                 </View>
             ) : (
-                <View style ={{width:"100%", height: "100%", alignItems:'center', justifyContent:"center"}}>
-                    <Text style={{fontSize: 16}}>Chưa có file</Text>
+                <View style={{ width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center' }}>
+                    <Text style={{ fontSize: 16 }}>Chưa có file</Text>
                 </View>
             )}
         </>

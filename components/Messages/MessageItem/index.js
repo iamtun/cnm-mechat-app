@@ -76,7 +76,7 @@ function MessageItem({ message, navigation }) {
                             <ToolTipCustom
                                 height={isMe ? 140 : 80}
                                 width={120}
-                                items={isMe ? [items[0], items[1], items[2]] : [items[items.length - 1]]}
+                                items={isMe ? [items[0], items[1], items[2]] : [items[items.length - 1], items[items.length - 2]]}
                                 backgroundColor="#fff"
                                 visible={visible}
                             >

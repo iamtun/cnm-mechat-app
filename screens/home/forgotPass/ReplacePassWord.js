@@ -81,8 +81,6 @@ function ReplacePassWord({ route, navigation }) {
         }
     }, [debouncedPassAgain]);
 
-    
-    
     // function fetch sign with api
     const signWithNewPass = () => {
         return fetch(`${config.LINK_API}/auths/login`, {
@@ -130,14 +128,12 @@ function ReplacePassWord({ route, navigation }) {
 
     // login
     useEffect(() => {
-        if(isSuccess) {
-            const handle = setTimeout(() => {
+        if (isSuccess) {
+            setTimeout(() => {
                 _handleLogin();
-            }, 2000)
-
-            return (() => setTimeout(handle))
+            }, 2000);
         }
-    },[isSuccess])
+    }, [isSuccess]);
 
     //button forgot pass
     const _handleForgotPass = () => {
@@ -151,7 +147,7 @@ function ReplacePassWord({ route, navigation }) {
             const data = { phoneNumber: phoneNumber, newPassword: passwordAgain };
             dispatch(fetchForgetPassword(data));
             Alert.alert('Đổi mật khẩu thành công');
-            setIsSuccess(true)
+            setIsSuccess(true);
         }
     };
 
