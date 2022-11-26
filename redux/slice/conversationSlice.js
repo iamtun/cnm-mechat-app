@@ -5,7 +5,7 @@ import { getItem } from '../../utils/asyncStorage';
 
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], blockBy: [], conversationId: null, loading: false, newGroup: null },
+    initialState: { data: [], members: [], blockBy: [], conversationId: null, loading: false, newGroup: null, dataLocal: null},
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -23,7 +23,6 @@ const conversationsSlice = createSlice({
         },
         updateLastMessageOfConversation: (state, action) => {
             const conversationTemp = action.payload;
-
             //find and update
             const _conversation = state.data.find(
                 (conversation) => conversation.id === conversationTemp.conversationID,
@@ -75,6 +74,7 @@ const conversationsSlice = createSlice({
             .addCase(fetchConversations.fulfilled, (state, action) => {
                 if (action.payload) {
                     state.data = action.payload;
+                    state.dataLocal = action.payload;
                     state.loading = false;
                 } else {
                     console.warn('fetch conversations error!');

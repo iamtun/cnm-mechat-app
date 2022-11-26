@@ -4,6 +4,8 @@ import { AlphabetList } from 'react-native-section-alphabet-list';
 import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import {
+    conversationsIdSelector,
+    conversationsListSelector,
     getConversationIdByIdFriendSelector,
     getFriendsByUserSelector,
     userInfoSelector,
@@ -21,6 +23,7 @@ function FriendScreen({ navigation }) {
     const _conversation = useSelector(getConversationIdByIdFriendSelector);
     const friends = useSelector(getFriendsByUserSelector);
     const _userInfoSelector = useSelector(userInfoSelector);
+
     // data info user
     let friendInfo = [];
 
