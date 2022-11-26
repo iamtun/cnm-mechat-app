@@ -6,7 +6,7 @@ import { TouchableOpacity } from 'react-native';
 import { iconExtends, icons, handleFileExtension, handleFileName } from '../../../../utils/filePathConfig';
 import { Linking } from 'react-native';
 
-function ChildImageScreen() {
+function ChildImageScreen({ navigation }) {
     const allFile = useSelector(getFileMessage);
     let listFile = [];
 
