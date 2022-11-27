@@ -256,7 +256,7 @@ export default function DetailChat({ route, navigation }) {
                 </View>
                 <View style={styles.infoUser}>
                     <View style={styles.avatar}>
-                        <TouchableOpacity onPress={pickImage}>
+                        <TouchableOpacity onPress={isGroup ? pickImage : null}>
                             <Avatar rounded size={90} source={{ uri: imageUpdate }}></Avatar>
                         </TouchableOpacity>
 
