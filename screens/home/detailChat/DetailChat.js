@@ -149,7 +149,7 @@ export default function DetailChat({ route, navigation }) {
             },
         ]);
     };
-
+    
     //delete conversation
     const handleDeleteConversation = () => {
         const data = {

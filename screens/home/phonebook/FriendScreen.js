@@ -4,6 +4,7 @@ import { AlphabetList } from 'react-native-section-alphabet-list';
 import { TouchableOpacity, Text } from 'react-native';
 import { ListItem, Avatar } from 'react-native-elements';
 import {
+    conversationBlockBySelector,
     conversationsIdSelector,
     conversationsListSelector,
     getConversationIdByIdFriendSelector,
@@ -14,6 +15,7 @@ import { useEffect, useState } from 'react';
 import friendListSlice from '../../../redux/slice/friendSlice';
 import ToolTipCustom from '../../../components/SearchBar/Menu/TooltipCustom';
 import { fetchDeleteFriend } from '../../../redux/slice/userInfoSlice';
+import conversationsSlice from '../../../redux/slice/conversationSlice';
 
 function FriendScreen({ navigation }) {
     const dispatch = useDispatch();
@@ -43,13 +45,15 @@ function FriendScreen({ navigation }) {
 
     //Change screen message with id conversation
     useEffect(() => {
-        if (_conversation) {
+        if (_conversation != 0) {
             dispatch(friendListSlice.actions.clickSendChat(0));
+            dispatch(conversationsSlice.actions.getBlockBy(_conversation.blockBy));
             navigation.navigate('MessageScreen', {
                 id: _conversation.id,
                 name: _conversation.name,
                 members: _conversation.members,
                 image: _conversation.imageLinkOfConver,
+                blockBy: _conversation.blockBy
             });
         }
     }, [_conversation]);
