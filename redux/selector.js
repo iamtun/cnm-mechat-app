@@ -245,11 +245,12 @@ export const getMessageByIdConversationSelector = createSelector(
 export const getUserByPhoneNumber = createSelector(
     userListSelector,
     getFriendsByUserSelector,
+    userInfoSelector,
     searchTextSelector,
-    (users, friends, search) => {
+    (users, friends,user, search) => {
         if (search) {
             if (search.startsWith('0')) {
-                const usersFilter = users.filter((_user) => _user.phoneNumber === search);
+                const usersFilter = users.filter((_user) => _user.phoneNumber === search  && _user.phoneNumber !== user.phoneNumber );
 
                 const friendFilter = friends.filter((friend) => friend.phoneNumber === search);
 
