@@ -47,7 +47,6 @@ function FriendScreen({ navigation }) {
     useEffect(() => {
         if (_conversation != 0) {
             dispatch(friendListSlice.actions.clickSendChat(0));
-            dispatch(conversationsSlice.actions.getBlockBy(_conversation.blockBy));
             navigation.navigate('MessageScreen', {
                 id: _conversation.id,
                 name: _conversation.name,

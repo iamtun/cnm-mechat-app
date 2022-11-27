@@ -26,8 +26,8 @@ export const newGroupChatSelector = (state) => state.conversations.newGroup;
 export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
 export const conversationMembersSelector = (state) => state.conversations.members;
-export const conversationBlockBySelector = (state) => state.conversations.blockBy;
-
+export const conversationBlockByGroupSelector = (state) => state.conversations.blockByGroup;
+export const conversationBlockByFriendSelector = (state) => state.conversations.blockByGroup;
 /**
  * get friend list then user info changed
  * update status user online by socket
@@ -314,7 +314,7 @@ export const getFileMessage = createSelector(getMessageByIdConversationSelector,
 export const getFriendsWithMembers = createSelector(
     getFriendsByUserSelector,
     conversationMembersSelector,
-    conversationBlockBySelector,
+    conversationBlockByGroupSelector,
     userListSelector,
     (friends, members, blockBy, users) => {
         const _members = users.filter((user) => members.includes(user._id));

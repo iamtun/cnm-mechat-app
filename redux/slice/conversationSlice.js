@@ -8,11 +8,13 @@ const conversationsSlice = createSlice({
     initialState: {
         data: [],
         members: [],
-        blockBy: [],
+        blockByGroup: [],
+        blockByFriend: [],
         conversationId: null,
         loading: false,
         newGroup: null,
         dataLocal: [],
+        isGroup: false
     },
     reducers: {
         clickGroupChat: (state, action) => {
@@ -21,8 +23,11 @@ const conversationsSlice = createSlice({
         getMembers: (state, action) => {
             state.members = action.payload;
         },
-        getBlockBy: (state, action) => {
-            state.blockBy = action.payload;
+        getBlockByGroup: (state, action) => {
+            state.blockByGroup = action.payload;
+        },
+        getBlockByFriend: (state, action) => {
+            state.blockByFriend = action.payload;
         },
         addConversationFromSocket: (state, action) => {
             const conversationExist = state.data.find((conversation) => conversation.id === action.payload.id);
@@ -160,8 +165,8 @@ const conversationsSlice = createSlice({
 });
 
 const handleUpdateBlockChat = (state, dataBlock, key = 'none') => {
-    //update state this user
-    state.blockBy = dataBlock.blockBy;
+    //update state this user group
+    state.blockByGroup = dataBlock.blockByGroup;
 
     const conversationId = key === 'none' ? dataBlock.id : dataBlock.conversationId;
     //find and assign
@@ -169,7 +174,7 @@ const handleUpdateBlockChat = (state, dataBlock, key = 'none') => {
     conversation.blockBy = dataBlock.blockBy;
 
     const conversationLocal = state.dataLocal.find((item) => item.id === conversationId);
-    conversationLocal.blockBy = dataBlock.blockBy;
+    conversationLocal.blockByGroup = dataBlock.blockByGroup;
 
     //find index and cut and update
     const index = state.data.findIndex((item) => item.id === conversationId);
@@ -179,6 +184,26 @@ const handleUpdateBlockChat = (state, dataBlock, key = 'none') => {
     const indexLocal = state.dataLocal.findIndex((item) => item.id === conversationId);
     state.dataLocal.splice(indexLocal, 1);
     state.dataLocal.unshift(conversation);
+
+
+       //update state this user group
+       state.blockByFriend = dataBlock.blockByFriend;
+
+       const conversationIdFriend = key === 'none' ? dataBlock.id : dataBlock.conversationId;
+       //find and assign
+       const conversationFriend = state.data.find((item) => item.id === conversationIdFriend);
+       conversationFriend.blockBy = dataBlock.blockByFriend;
+   
+       const conversationLocalFriend = state.dataLocal.find((item) => item.id === conversationIdFriend);
+       conversationLocalFriend.blockByGroup = dataBlock.blockByFriend;
+   
+       //find index and cut and update
+       const indexFriend = state.data.findIndex((item) => item.id === conversationIdFriend);
+       state.data.splice(indexFriend, 1);
+       state.data.unshift(conversation);
+   
+       const indexLocalFriend = state.dataLocal.findIndex((item) => item.id === conversationIdFriend);
+       state.dataLocal.splice(indexLocalFriend, 1);
 };
 
 /**

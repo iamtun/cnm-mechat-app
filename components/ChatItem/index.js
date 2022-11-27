@@ -26,7 +26,8 @@ function ChatItem({ id, blockBy, createdBy, isGroup, members, name, image, messa
             style={styles.body}
             onPress={() => {
                 dispatch(conversationsSlice.actions.clickGroupChat(id));
-                dispatch(conversationsSlice.actions.getBlockBy(blockBy));
+                dispatch(conversationsSlice.actions.getBlockByGroup(blockBy));
+                dispatch(conversationsSlice.actions.getBlockByFriend(blockBy));
                 navigation.navigate('MessageScreen', { id, blockBy, createdBy, isGroup, members, name, image });
             }}
         >

@@ -10,7 +10,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DetailFeature from '../../../components/DetailFeature/DetailFeature';
 import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
-import { conversationBlockBySelector, userInfoSelector } from '../../../redux/selector';
+import { conversationBlockByFriendSelector, userInfoSelector } from '../../../redux/selector';
 import {
     fetchBlockConversation,
     fetchChangeNameGroup,
@@ -27,7 +27,7 @@ export default function DetailChat({ route, navigation }) {
     const dispatch = useDispatch();
 
     const userInfo = useSelector(userInfoSelector);
-    const listBlockBy = useSelector(conversationBlockBySelector);
+    const listBlockBy = useSelector(conversationBlockByFriendSelector);
     
     const { isGroup, members, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
@@ -331,9 +331,9 @@ export default function DetailChat({ route, navigation }) {
                         ) : null}
                     </>
                 ) : (
-                    <TouchableOpacity style={styles.photo} onPress={listBlockBy.length > 0 ? handleUnBlockMember : showConfirmDialogBlockUser}>
-                        <Icon name={listBlockBy.length > 0 ? "close-circle-outline": "remove-circle-outline"} color="black" size={20}></Icon>
-                        <Text style={{ marginLeft: 10 }}>{listBlockBy.length > 0 ? "Bỏ chặn" : "Chặn tin nhắn"}</Text>
+                    <TouchableOpacity style={styles.photo} onPress={listBlockBy.includes(idFriend) ? handleUnBlockMember : showConfirmDialogBlockUser}>
+                        <Icon name={listBlockBy.includes(idFriend)> 0 ? "close-circle-outline": "remove-circle-outline"} color="black" size={20}></Icon>
+                        <Text style={{ marginLeft: 10 }}>{listBlockBy.includes(idFriend) > 0 ? "Bỏ chặn" : "Chặn tin nhắn"}</Text>
                     </TouchableOpacity>
                 )}
 
