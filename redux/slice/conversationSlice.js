@@ -5,7 +5,15 @@ import { getItem } from '../../utils/asyncStorage';
 
 const conversationsSlice = createSlice({
     name: 'conversations',
-    initialState: { data: [], members: [], blockBy: [], conversationId: null, loading: false, newGroup: null, dataLocal: null},
+    initialState: {
+        data: [],
+        members: [],
+        blockBy: [],
+        conversationId: null,
+        loading: false,
+        newGroup: null,
+        dataLocal: null,
+    },
     reducers: {
         clickGroupChat: (state, action) => {
             state.conversationId = action.payload;
@@ -18,8 +26,14 @@ const conversationsSlice = createSlice({
         },
         addConversationFromSocket: (state, action) => {
             const conversationExist = state.data.find((conversation) => conversation.id === action.payload.id);
-            if (!conversationExist && action.payload.isGroup) state.data.unshift(action.payload);
-            else if (!action.payload.isGroup) state.data.unshift(action.payload);
+            // console.log('conversationExist -> ', conversationExist);
+            if (!conversationExist && action.payload.isGroup) {
+                state.data.unshift(action.payload);
+                state.dataLocal = state.data;
+            } else if (!action.payload.isGroup) {
+                state.data.unshift(action.payload);
+                state.dataLocal = state.data;
+            }
         },
         updateLastMessageOfConversation: (state, action) => {
             const conversationTemp = action.payload;
@@ -27,34 +41,42 @@ const conversationsSlice = createSlice({
             const _conversation = state.dataLocal.find(
                 (conversation) => conversation.id === conversationTemp.conversationID,
             );
-            if (conversationTemp?.name) {
-                _conversation.name = conversationTemp.name;
-            }
-            if (conversationTemp?.imageLink) {
-                _conversation.imageLinkOfConver = conversationTemp.imageLink;
-            }
-            if (conversationTemp?.members) {
-                _conversation.members = conversationTemp.members;
-                state.members = conversationTemp.members;
-            }
-            _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
-            _conversation.time = conversationTemp.createAt;
 
-            //find index and slice
-            const _conversationIndex = state.data.findIndex(
-                (conversation) => conversation.id === conversationTemp.conversationID,
-            );
+            // console.log('conversation -> ', _conversation);
 
-            //cut
-            state.data.splice(_conversationIndex, 1);
+            if (_conversation) {
+                if (conversationTemp?.name) {
+                    _conversation.name = conversationTemp.name;
+                }
+                if (conversationTemp?.imageLink) {
+                    _conversation.imageLinkOfConver = conversationTemp.imageLink;
+                }
+                if (conversationTemp?.members) {
+                    _conversation.members = conversationTemp.members;
+                    state.members = conversationTemp.members;
+                }
+                _conversation.content = conversationTemp.contentMessage || conversationTemp.content;
+                _conversation.time = conversationTemp.createAt;
 
-            //insert first
-            state.data.unshift(_conversation);
+                //find index and slice
+                const _conversationIndex = state.data.findIndex(
+                    (conversation) => conversation.id === conversationTemp.conversationID,
+                );
+                
+                // console.log(_conversationIndex);
+                // //cut
+                if(_conversationIndex > -1) {
+                    state.data.splice(_conversationIndex, 1);
+                }
+
+                //insert first
+                state.data.unshift(_conversation);
+            }
         },
         removeConversationThenRemoveUserInGroup: (state, action) => {
             //find index and slice
             const _conversationIndex = state.data.findIndex((conversation) => conversation.id === action.payload);
-
+            console.log('remove->', _conversationIndex);
             //cut
             state.data.splice(_conversationIndex, 1);
         },
@@ -67,7 +89,7 @@ const conversationsSlice = createSlice({
         },
         resetNewGroup: (state, action) => {
             state.newGroup = null;
-        }
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -135,7 +157,9 @@ const conversationsSlice = createSlice({
             .addCase(fetchDeleteConversationYourSide.fulfilled, (state, action) => {
                 const { id } = action.payload;
                 const index = state.data.findIndex((_conversation) => _conversation.id === id);
-                state.data.splice(index, 1);
+                console.log('index remove', index);
+                if(index > -1)
+                    state.data.splice(index, 1);
             });
     },
 });
