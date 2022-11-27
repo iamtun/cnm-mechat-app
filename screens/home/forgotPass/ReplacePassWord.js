@@ -11,7 +11,7 @@ import useDebounce from '../../../hooks/useDebounce';
 import { Alert } from 'react-native';
 import { useEffect } from 'react';
 import { useState } from 'react';
-import config from '../../../config';
+import config, { regexPass } from '../../../config';
 import { setItem } from '../../../utils/asyncStorage';
 
 function ReplacePassWord({ route, navigation }) {

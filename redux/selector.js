@@ -84,7 +84,7 @@ export const usersRemainingSelector = createSelector(
                 }
 
                 //Cái này check bắt đầu từ A-Z (sau sửa lại cho giống người Việt)
-            } else if (search.match('^[A-Z]')) {
+            } else if (search.match('^[A-Za-z]')) {
                 const friendFilter = friends.filter((friend) => friend.fullName.includes(search));
                 //don't find
                 if (!friendFilter.length) {

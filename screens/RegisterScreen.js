@@ -4,7 +4,7 @@ import firebase from 'firebase/compat/app';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
 
 import { firebaseConfig } from '../utils/firebase';
-import config, { checkPhoneNumber } from '../config';
+import config, { checkPhoneNumber, regexPass } from '../config';
 import GlobalStyle from '../styles/GlobalStyle';
 import LoginStyles from '../styles/LoginStyles';
 import ButtonPrimary from '../components/Buttons/ButtonPrimary';
