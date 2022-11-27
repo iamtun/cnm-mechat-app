@@ -116,9 +116,13 @@ export const searchGroupChatSelector = createSelector(
     (search, user, conversations) => {
         try {
             if (search != null) {
-                const _conversations = conversations.filter(
-                    (conversation) => conversation.name.includes(search) && !conversation.blockBy.includes(user._id),
-                );
+                const _conversations = conversations.filter((conversation) => {
+                    if (conversation) {
+                        return conversation.name.includes(search) && !conversation.blockBy.includes(user._id);
+                    }
+
+                    return null;
+                });
 
                 return _conversations;
             }
@@ -161,9 +165,9 @@ export const getConversationIdByIdFriendSelector = createSelector(
     conversationsLocalListSelector,
     (friendId, conversations) => {
         const conversation = conversations.filter(
-            (_conversation) => _conversation.isGroup == false && _conversation.members.includes(friendId)
+            (_conversation) => _conversation.isGroup == false && _conversation.members.includes(friendId),
         );
-            
+
         if (conversation.length > 0) {
             return conversation[0];
         }
@@ -323,4 +327,3 @@ export const getFriendsWithMembers = createSelector(
         return _memberBlockBy;
     },
 );
-
