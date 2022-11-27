@@ -1,6 +1,4 @@
-import { useState } from 'react';
 import { View, Image, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Tooltip from 'react-native-walkthrough-tooltip';
 import { useDispatch, useSelector } from 'react-redux';
 import { userInfoSelector } from '../../redux/selector';
 import conversationsSlice, { fetchDeleteConversationYourSide } from '../../redux/slice/conversationSlice';

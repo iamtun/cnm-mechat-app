@@ -12,9 +12,12 @@ import Header from '../../../components/Header';
 import userInfoSlice from '../../../redux/slice/userInfoSlice';
 import { conversationBlockBySelector, userInfoSelector } from '../../../redux/selector';
 import {
+    fetchBlockConversation,
     fetchChangeNameGroup,
     fetchDeleteConversations,
+    fetchDeleteConversationYourSide,
     fetchOutGroup,
+    fetchUnBlockConversation,
     fetchUpdateAvatarGroup,
 } from '../../../redux/slice/conversationSlice';
 import useDebounce from '../../../hooks/useDebounce';
@@ -25,7 +28,7 @@ export default function DetailChat({ route, navigation }) {
 
     const userInfo = useSelector(userInfoSelector);
     const listBlockBy = useSelector(conversationBlockBySelector);
-
+    
     const { isGroup, members, name, image, createdBy, idConversation } = route.params;
     const idFriend = userInfo._id === members[0] ? members[1] : members[0];
     //use state
@@ -33,7 +36,7 @@ export default function DetailChat({ route, navigation }) {
     const [modalVisible, setModalVisible] = useState(false);
     const [newNameGroup, setNewNameGroup] = useState(name);
     const [imageUpdate, setImageUpdate] = useState(image);
-
+    
     const debounce = useDebounce(isOutGroup, 1000);
 
     //click info chat
@@ -115,6 +118,62 @@ export default function DetailChat({ route, navigation }) {
         navigation.navigate('HomeScreen');
     };
 
+    //Block user
+    const handleBlockMember = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: idFriend,
+        };
+        dispatch(fetchBlockConversation(data));
+    };
+
+    const handleUnBlockMember = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: idFriend,
+        };
+
+        dispatch(fetchUnBlockConversation(data));
+    };
+
+    const showConfirmDialogBlockUser = () => {
+        Alert.alert('Chặn người dùng', 'Bạn có muốn chặn người dùng này ?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    handleBlockMember();
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
+
+    //delete conversation
+    const handleDeleteConversation = () => {
+        const data = {
+            idConversation: idConversation,
+            userId: userInfo._id,
+        };
+        dispatch(fetchDeleteConversationYourSide(data));
+        navigation.navigate('LoadingScreen');
+    }
+
+    const showConfirmDialogDeleteConversation = () => {
+        Alert.alert('Xóa cuộc trò chuyện', 'Bạn có muốn xóa cuộc trò chuyện này ?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    handleDeleteConversation();
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
+    
     //Question out group
     const showConfirmDialogOutGroup = () => {
         Alert.alert('Thoát nhóm', 'Bạn có muốn thoát khỏi nhóm này?', [
@@ -272,13 +331,13 @@ export default function DetailChat({ route, navigation }) {
                         ) : null}
                     </>
                 ) : (
-                    <TouchableOpacity style={styles.photo}>
-                        <Icon name="remove-circle-outline" color="black" size={20}></Icon>
-                        <Text style={{ marginLeft: 10 }}>Chặn tin nhắn</Text>
+                    <TouchableOpacity style={styles.photo} onPress={listBlockBy.length > 0 ? handleUnBlockMember : showConfirmDialogBlockUser}>
+                        <Icon name={listBlockBy.length > 0 ? "close-circle-outline": "remove-circle-outline"} color="black" size={20}></Icon>
+                        <Text style={{ marginLeft: 10 }}>{listBlockBy.length > 0 ? "Bỏ chặn" : "Chặn tin nhắn"}</Text>
                     </TouchableOpacity>
                 )}
 
-                <TouchableOpacity style={styles.photo}>
+                <TouchableOpacity style={styles.photo} onPress={showConfirmDialogDeleteConversation}>
                     <Icon name="trash-bin-outline" color="red" size={20}></Icon>
                     <Text style={{ marginLeft: 10, color: 'red' }}>Xóa cuộc trò chuyện</Text>
                 </TouchableOpacity>

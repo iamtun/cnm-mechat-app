@@ -146,6 +146,20 @@ function SearchItem({
         dispatch(fetchUnBlockConversation(data));
     };
 
+    const showConfirmDialogBlockUser = () => {
+        Alert.alert('Chặn người dùng', 'Bạn có muốn chặn người dùng này ?', [
+            {
+                text: 'Có',
+                onPress: () => {
+                    handleBlockMember();
+                },
+            },
+            {
+                text: 'Không',
+            },
+        ]);
+    };
+
     // UI
     return (
         <View style={[styles.container, isNull ? styles.noSearchText : null]}>
@@ -173,7 +187,7 @@ function SearchItem({
                         isLeader ? (
                             createdBy === id ? null : (
                                 <View style={{ flexDirection: 'row' }}>
-                                    <TouchableOpacity onPress={isBlock ? handleUnBlockMember : handleBlockMember}>
+                                    <TouchableOpacity onPress={isBlock ? handleUnBlockMember : showConfirmDialogBlockUser}>
                                         <Icon
                                             name={isBlock ? 'close-circle-outline' : 'remove-circle-outline'}
                                             color="black"

@@ -21,6 +21,7 @@ export const friendOnlineSelector = (state) => state.friends.friendOnline;
 export const friendListFriendSendSelector = (state) => state.friends.friendRequestSends;
 
 export const conversationsListSelector = (state) => state.conversations.data;
+export const conversationsLocalListSelector = (state) => state.conversations.dataLocal;
 export const newGroupChatSelector = (state) => state.conversations.newGroup;
 export const conversationListLoadingSelector = (state) => state.conversations.loading;
 export const conversationsIdSelector = (state) => state.conversations.conversationId;
@@ -157,14 +158,13 @@ export const searchItemClickSelector = createSelector(
  */
 export const getConversationIdByIdFriendSelector = createSelector(
     friendIdSelector,
-    conversationsListSelector,
+    conversationsLocalListSelector,
     (friendId, conversations) => {
-
-        const conversation = conversations.filter((_conversation) => {
-            return _conversation.isGroup == false && _conversation.members.includes(friendId)
-        });
-        if (conversation.length > 0) {
+        const conversation = conversations.filter(
+            (_conversation) => _conversation.isGroup == false && _conversation.members.includes(friendId)
+        );
             
+        if (conversation.length > 0) {
             return conversation[0];
         }
         return 0;
@@ -190,7 +190,7 @@ export const getConversationWithDeleteBy = createSelector(
     userInfoSelector,
     conversationsListSelector,
     (user, conversations) => {
-        //console.log(conversations);
+        // console.log(conversations);
         try {
             if (user && conversations) {
                 const _conversations = conversations.filter((conversation) => {
@@ -323,3 +323,12 @@ export const getFriendsWithMembers = createSelector(
         return _memberBlockBy;
     },
 );
+
+export const getFriendWithBlockBy = createSelector(
+    getFriendsByUserSelector,
+    conversationBlockBySelector,
+    (friends, blockBy) => {
+        console.log("friends", friends);
+        console.log("blockBy", blockBy);
+    }
+)
