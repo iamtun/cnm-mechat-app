@@ -19,7 +19,7 @@ function ChatListScreen({ navigation }) {
     // use selector
     const conversationLoading = useSelector(conversationListLoadingSelector);
     const conversations = useSelector(getConversationWithDeleteBy);
-
+    console.log("conversations chat list screen",conversations);
     const [refreshing, setRefreshing] = useState(false);
     // socket
     useEffect(() => {

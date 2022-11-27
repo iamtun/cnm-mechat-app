@@ -324,11 +324,3 @@ export const getFriendsWithMembers = createSelector(
     },
 );
 
-export const getFriendWithBlockBy = createSelector(
-    getFriendsByUserSelector,
-    conversationBlockBySelector,
-    (friends, blockBy) => {
-        console.log("friends", friends);
-        console.log("blockBy", blockBy);
-    }
-)
