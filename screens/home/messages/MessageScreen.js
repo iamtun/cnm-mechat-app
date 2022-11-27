@@ -30,6 +30,7 @@ function MessageScreen({ route, navigation }) {
         dispatch(fetchMessagesById({ id }));
 
         //receiver message from socket
+        socket.off('receiver_message')
         socket.on('receiver_message', (message) => {
             dispatch(messageListSlice.actions.addMessageFromSocket(message));
         });
