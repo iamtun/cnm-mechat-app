@@ -23,7 +23,6 @@ const conversationsSlice = createSlice({
         },
         updateLastMessageOfConversation: (state, action) => {
             const conversationTemp = action.payload;
-            
             //find and update
             const _conversation = state.dataLocal.find(
                 (conversation) => conversation.id === conversationTemp.conversationID,
