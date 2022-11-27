@@ -6,8 +6,8 @@ export default {
     LINK_API,
     LINK_API_LOCALHOST
 };
-//https://cnm-socket-server-heroku.herokuapp.com
-export const socket = io('https://cnm-socket-server-heroku-production.up.railway.app/', {
+//https://cnm-socket-server-heroku-production.up.railway.app/
+export const socket = io('https://cnm-socket-server-heroku-production.up.railway.app', {
     transports: ['websocket'],
     //reconnection: true,
     withCredentials: true,
@@ -21,6 +21,8 @@ export const checkPhoneNumber = (phoneNumber) => {
     }
     return true;
 };
+
+export const regexPass = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/
 
 export const createFormData = (images, key) => {
     const _images = images.map(link => {

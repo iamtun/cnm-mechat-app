@@ -12,7 +12,7 @@ const conversationsSlice = createSlice({
         conversationId: null,
         loading: false,
         newGroup: null,
-        dataLocal: null,
+        dataLocal: [],
     },
     reducers: {
         clickGroupChat: (state, action) => {
@@ -42,8 +42,6 @@ const conversationsSlice = createSlice({
                 (conversation) => conversation.id === conversationTemp.conversationID,
             );
 
-            // console.log('conversation -> ', _conversation);
-
             if (_conversation) {
                 if (conversationTemp?.name) {
                     _conversation.name = conversationTemp.name;
@@ -62,10 +60,9 @@ const conversationsSlice = createSlice({
                 const _conversationIndex = state.data.findIndex(
                     (conversation) => conversation.id === conversationTemp.conversationID,
                 );
-                
-                // console.log(_conversationIndex);
+
                 // //cut
-                if(_conversationIndex > -1) {
+                if (_conversationIndex > -1) {
                     state.data.splice(_conversationIndex, 1);
                 }
 
@@ -76,7 +73,6 @@ const conversationsSlice = createSlice({
         removeConversationThenRemoveUserInGroup: (state, action) => {
             //find index and slice
             const _conversationIndex = state.data.findIndex((conversation) => conversation.id === action.payload);
-            console.log('remove->', _conversationIndex);
             //cut
             state.data.splice(_conversationIndex, 1);
         },
@@ -157,9 +153,8 @@ const conversationsSlice = createSlice({
             .addCase(fetchDeleteConversationYourSide.fulfilled, (state, action) => {
                 const { id } = action.payload;
                 const index = state.data.findIndex((_conversation) => _conversation.id === id);
-                console.log('index remove', index);
-                if(index > -1)
-                    state.data.splice(index, 1);
+                // console.log('index remove', index);
+                if (index > -1) state.data.splice(index, 1);
             });
     },
 });
