@@ -60,7 +60,13 @@ function RegisterScreen({ navigation }) {
     useEffect(() => {
         if (password === '') {
             setErrPass('Vui lòng nhập mật khẩu');
-        } else {
+        }else if (password != null && password.length > 0) {
+            if(!regexPass.test(password)){
+                setErrPass('Mật khẩu phải có 8 kí tự bao gồm  chữ số,\nký tự hoa, ký tự thường');
+            } else{
+                setErrPass(null);
+            }
+        }  else {
             setErrPass(null);
         }
     }, [debouncedPass]);
