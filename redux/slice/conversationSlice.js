@@ -166,19 +166,24 @@ const handleUpdateBlockChat = (state, dataBlock, key = 'none') => {
     const conversationId = key === 'none' ? dataBlock.id : dataBlock.conversationId;
     //find and assign
     const conversation = state.data.find((item) => item.id === conversationId);
-    conversation.blockBy = dataBlock.blockBy;
-
-    const conversationLocal = state.dataLocal.find((item) => item.id === conversationId);
-    conversationLocal.blockBy = dataBlock.blockBy;
+    if (conversation) conversation.blockBy = dataBlock.blockBy;
 
     //find index and cut and update
     const index = state.data.findIndex((item) => item.id === conversationId);
-    state.data.splice(index, 1);
-    state.data.unshift(conversation);
+    if (index > -1) {
+        state.data.splice(index, 1);
+        state.data.unshift(conversation);
+    }
+
+    const conversationLocal = state.dataLocal.find((item) => item.id === conversationId);
+    if (conversationLocal) conversationLocal.blockBy = dataBlock.blockBy;
 
     const indexLocal = state.dataLocal.findIndex((item) => item.id === conversationId);
-    state.dataLocal.splice(indexLocal, 1);
-    state.dataLocal.unshift(conversation);
+
+    if (indexLocal > -1) {
+        state.dataLocal.splice(indexLocal, 1);
+        state.dataLocal.unshift(conversationLocal);
+    }
 };
 
 /**

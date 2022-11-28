@@ -15,7 +15,6 @@ import { socket } from '../../../config';
 function MessageInputBox({ conversationId, blockBy }) {
     const dispatch = useDispatch();
     
-    console.log("blockBy",blockBy);
     const [isWrite, setIsWrite] = useState(false);
     const [message, setMessage] = useState('');
     const [block, setBlock] = useState(blockBy);

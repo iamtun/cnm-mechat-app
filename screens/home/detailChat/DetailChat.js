@@ -331,9 +331,9 @@ export default function DetailChat({ route, navigation }) {
                         ) : null}
                     </>
                 ) : (
-                    <TouchableOpacity style={styles.photo} onPress={listBlockBy.length > 0 ? handleUnBlockMember : showConfirmDialogBlockUser}>
-                        <Icon name={listBlockBy.length > 0 ? "close-circle-outline": "remove-circle-outline"} color="black" size={20}></Icon>
-                        <Text style={{ marginLeft: 10 }}>{listBlockBy.length > 0 ? "Bỏ chặn" : "Chặn tin nhắn"}</Text>
+                    <TouchableOpacity style={styles.photo} onPress={listBlockBy.includes(idFriend) ? handleUnBlockMember : showConfirmDialogBlockUser}>
+                        <Icon name={listBlockBy.includes(idFriend) ? "close-circle-outline": "remove-circle-outline"} color="black" size={20}></Icon>
+                        <Text style={{ marginLeft: 10 }}>{listBlockBy.includes(idFriend) ? "Bỏ chặn" : "Chặn tin nhắn"}</Text>
                     </TouchableOpacity>
                 )}
 
